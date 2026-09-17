@@ -15,8 +15,8 @@ datasource db {
 }
 
 enum Role {
-  ADMIN
-  STAFF
+  Admin
+  Staff
 }
 
 model User {
@@ -25,7 +25,7 @@ model User {
   email     String   @unique
   password  String
   phone     String
-  role      Role     @default(STAFF)
+  role      Role     @default(Staff)
   sessions  Session[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

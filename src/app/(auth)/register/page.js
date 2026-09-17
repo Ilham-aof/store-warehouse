@@ -5,6 +5,7 @@ import {
   Input,
   Description,
   FieldError,
+  ErrorMessage,
   Button,
 } from "@heroui/react";
 import Link from "next/link";
@@ -23,11 +24,9 @@ function getPasswordStrength(password) {
 
   const score = rules.filter(Boolean).length;
 
-  if (score <= 1)
-    return { score, label: "Lemah", text: "p-1 text-xs text-red-500" };
-  if (score <= 3)
-    return { score, label: "Sedang", text: "p-1 text-xs text-yellow-500" };
-  return { score, label: "Kuat", text: "p-1 text-xs text-green-600" };
+  if (score <= 1) return { score, label: "Lemah", text: "text-red-500" };
+  if (score <= 3) return { score, label: "Sedang", text: "text-yellow-500" };
+  return { score, label: "Kuat", text: "text-green-600" };
 }
 
 export default function page() {
@@ -59,15 +58,12 @@ export default function page() {
               return "Nama wajib diisi";
             }
           }}
-          validationErrors={
-            state.errors?.name ? [state.errors.name] : undefined
-          }
         >
           <Input placeholder="Nama" className="hover:bg-gray-200" />
           <Description />
           <div className="min-h-5">
             {state.errors?.name ? (
-              <p className="pl-1 text-xs text-red-500">{state.errors.name}</p>
+              <ErrorMessage>{state.errors.name}</ErrorMessage>
             ) : (
               <FieldError />
             )}
@@ -87,15 +83,12 @@ export default function page() {
               return "E-mail wajib menggunakan @gmail.com";
             }
           }}
-          validationErrors={
-            state.errors?.email ? [state.errors.email] : undefined
-          }
         >
           <Input placeholder="E-mail" className="hover:bg-gray-200" />
           <Description />
           <div className="min-h-5">
             {state.errors?.email ? (
-              <p className="pl-1 text-xs text-red-500">{state.errors.email}</p>
+              <ErrorMessage>{state.errors.email}</ErrorMessage>
             ) : (
               <FieldError />
             )}
@@ -119,9 +112,6 @@ export default function page() {
               return "Nomor HP tidak valid";
             }
           }}
-          validationErrors={
-            state.errors?.phone ? [state.errors.phone] : undefined
-          }
         >
           <Input
             placeholder="Nomor HP"
@@ -131,7 +121,7 @@ export default function page() {
           <Description />
           <div className="min-h-5">
             {state.errors?.phone ? (
-              <p className="pl-1 text-xs text-red-500">{state.errors.phone}</p>
+              <ErrorMessage>{state.errors.phone}</ErrorMessage>
             ) : (
               <FieldError />
             )}
@@ -150,9 +140,6 @@ export default function page() {
               return "Password wajib diisi";
             }
           }}
-          validationErrors={
-            state.errors?.password ? [state.errors.password] : undefined
-          }
         >
           <Input placeholder="Password" className="hover:bg-gray-200" />
           <p className="text-xs text-neutral-500">
@@ -163,14 +150,16 @@ export default function page() {
             {!password ? (
               <FieldError />
             ) : (
-              <p className={strength.text}>Password {strength.label}</p>
+              <ErrorMessage className={strength.text}>
+                Password {strength.label}
+              </ErrorMessage>
             )}
           </div>
         </TextField>
 
         <div className="min-h-5">
           {state.errors?.general && (
-            <p className="text-sm text-red-500">{state.errors.general}</p>
+            <ErrorMessage>{state.errors.general}</ErrorMessage>
           )}
         </div>
 

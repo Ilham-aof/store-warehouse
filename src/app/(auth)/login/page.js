@@ -6,6 +6,7 @@ import {
   Description,
   FieldError,
   Button,
+  ErrorMessage,
 } from "@heroui/react";
 import Link from "next/link";
 import { useActionState } from "react";
@@ -38,14 +39,15 @@ export default function page() {
               return "E-mail wajib menggunakan @gmail.com";
             }
           }}
-          validationErrors={
-            state.errors?.email ? [state.errors.email] : undefined
-          }
         >
           <Input placeholder="E-mail" className="hover:bg-gray-200" />
           <Description />
           <div className="min-h-5">
-            <FieldError />
+            {state.errors?.email ? (
+              <ErrorMessage>{state.errors.email}</ErrorMessage>
+            ) : (
+              <FieldError />
+            )}
           </div>
         </TextField>
 
@@ -59,20 +61,21 @@ export default function page() {
               return "Password wajib diisi";
             }
           }}
-          validationErrors={
-            state.errors?.email ? [state.errors.email] : undefined
-          }
         >
           <Input placeholder="Password" className="hover:bg-gray-200" />
           <Description />
           <div className="min-h-5">
-            <FieldError />
+            {state.errors?.password ? (
+              <ErrorMessage>{state.errors.password}</ErrorMessage>
+            ) : (
+              <FieldError />
+            )}
           </div>
         </TextField>
 
         <div className="min-h-5">
           {state.errors?.general && (
-            <p className="text-sm text-red-500">{state.errors.general}</p>
+            <ErrorMessage>{state.errors.general}</ErrorMessage>
           )}
         </div>
 
