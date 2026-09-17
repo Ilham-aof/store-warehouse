@@ -8,30 +8,75 @@ import {
   Button,
 } from "@heroui/react";
 import Link from "next/link";
+import { useActionState } from "react";
+import { loginAction } from "@/app/action/auth/login";
 
 export default function page() {
+  const [state, action, pending] = useActionState(loginAction, {
+    success: false,
+    errors: {},
+  });
+
   return (
     <main className="flex flex-col justify-center items-center w-xl p-4 space-y-3 border-2 border-amber-600 rounded-2xl">
       <h1 className="text-3xl font-bold">Login</h1>
 
-      <form className="flex flex-col justify-center items-center">
-        <TextField type="email" className="w-64" isRequired>
-          <Input placeholder="E-mail" />
+      <form
+        action={action}
+        className="flex flex-col justify-center items-center"
+      >
+        <TextField
+          name="email"
+          aria-label="Email"
+          type="email"
+          className="w-64"
+          validate={(value) => {
+            if (!value) {
+              return "E-mail wajib diisi";
+            }
+            if (!value.endsWith("@gmail.com")) {
+              return "E-mail wajib menggunakan @gmail.com";
+            }
+          }}
+          validationErrors={
+            state.errors?.email ? [state.errors.email] : undefined
+          }
+        >
+          <Input placeholder="E-mail" className="hover:bg-gray-200" />
           <Description />
           <div className="min-h-5">
-            <FieldError>E-mail wajib diisi</FieldError>
+            <FieldError />
           </div>
         </TextField>
 
-        <TextField type="password" className="w-64" isRequired>
-          <Input placeholder="Password" />
+        <TextField
+          name="password"
+          aria-label="Password"
+          type="password"
+          className="w-64"
+          validate={(value) => {
+            if (!value) {
+              return "Password wajib diisi";
+            }
+          }}
+          validationErrors={
+            state.errors?.email ? [state.errors.email] : undefined
+          }
+        >
+          <Input placeholder="Password" className="hover:bg-gray-200" />
           <Description />
           <div className="min-h-5">
-            <FieldError>Password wajib diisi</FieldError>
+            <FieldError />
           </div>
         </TextField>
 
-        <Button type="submit" className="w-64">
+        <div className="min-h-5">
+          {state.errors?.general && (
+            <p className="text-sm text-red-500">{state.errors.general}</p>
+          )}
+        </div>
+
+        <Button type="submit" className="w-64 mt-2">
           Login
         </Button>
       </form>

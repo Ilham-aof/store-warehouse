@@ -64,12 +64,11 @@ export async function registerAction(prevState, formData) {
     });
 
     if (existingUser) {
-      console.log("EMAIL SUDAH ADA!");
-      errors.email = "Email sudah terdaftar";
-      console.log("ERRORS:", errors);
       return {
         success: false,
-        errors,
+        errors: {
+          email: "E-mail sudah terdaftar",
+        },
       };
     }
 

@@ -176,7 +176,7 @@ export default function page() {
 
         <Button
           type="submit"
-          className="w-64 mt-3"
+          className="w-64 mt-2"
           isDisabled={!isStrongEnough}
         >
           Register
