@@ -38,3 +38,24 @@ model Session {
   expiresAt DateTime
   createdAt DateTime @default(now())
 }
+
+model Product {
+  id        String        @id @default(cuid())
+  name      String
+  type      String
+  brand     String
+  price     Int
+  quantity  Int
+  productIn DateTime      @default(now())
+
+  stockOuts StockOut[]
+}
+
+model StockOut {
+  id        String   @id @default(cuid())
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
