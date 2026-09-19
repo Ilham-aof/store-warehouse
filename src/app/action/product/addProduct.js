@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export async function addProductAction(prevState, formData) {
   const cookieStore = await cookies();
@@ -90,5 +91,6 @@ export async function addProductAction(prevState, formData) {
       },
     };
   }
+  revalidatePath("/");
   redirect("/");
 }
