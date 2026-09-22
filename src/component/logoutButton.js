@@ -13,9 +13,11 @@ export function LogoutButton() {
         <Button type="submit" isDisabled={isPending}>
           {isPending ? "Logging out..." : "Logout"}
         </Button>
-        {state?.error && (
-          <p className="mt-2 text-sm text-red-500">{state.error}</p>
-        )}
+        <div className="min-h-6">
+          {state?.error && (
+            <p className="mt-2 text-sm text-red-500">{state.error}</p>
+          )}
+        </div>
       </form>
     </main>
   );

@@ -1,3 +1,4 @@
+"use client";
 import {
   Modal,
   Input,
@@ -131,7 +132,11 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       </div>
                     </TextField>
                   </div>
-                  {state?.error && <p className="text-danger">{state.error}</p>}
+                  <div className="min-h-6">
+                    {state?.error && (
+                      <p className="text-danger">{state.error}</p>
+                    )}
+                  </div>
                 </Modal.Body>
 
                 <Modal.Footer>

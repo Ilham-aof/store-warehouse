@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { UpdateProductModal } from "@/component/updateProductModal";
 import { DeleteProductModal } from "@/component/deleteProductModal";
+import { AddProductStockModal } from "@/component/addProductStockModal";
+import { TakeProductStockModal } from "@/component/takeProductStockModal";
 
 export function ProductList({ products }) {
   const [sortDescriptor, setSortDescriptor] = useState(null);
@@ -136,20 +138,20 @@ export function ProductList({ products }) {
                           className="gap-5 p-3"
                         >
                           <Dropdown.Item
-                            id="stock-in"
-                            textValue="Open file"
+                            id="add-stock"
+                            textValue="Add Stock"
                             className="flex items-center"
                           >
                             <PackagePlus />
-                            <Label>Produk Masuk</Label>
+                            <Label>Tambahkan Stok</Label>
                           </Dropdown.Item>
                           <Dropdown.Item
-                            id="stock-out"
-                            textValue="Open file"
+                            id="take-stock"
+                            textValue="Take Stock"
                             className="flex items-center"
                           >
                             <PackageMinus />
-                            <Label>Produk Keluar</Label>
+                            <Label>Kurangi Stok</Label>
                           </Dropdown.Item>
                           <Dropdown.Item
                             id="edit"
@@ -187,6 +189,18 @@ export function ProductList({ products }) {
       />
       <DeleteProductModal
         isOpen={activeModal === "delete"}
+        selectedProduct={selectedProduct}
+        onClose={() => setActiveModal(null)}
+      />
+      <AddProductStockModal
+        key={`stockIn-${selectedProduct?.id}`}
+        isOpen={activeModal === "add-stock"}
+        selectedProduct={selectedProduct}
+        onClose={() => setActiveModal(null)}
+      />
+      <TakeProductStockModal
+        key={`stockOut-${selectedProduct?.id}`}
+        isOpen={activeModal === "take-stock"}
         selectedProduct={selectedProduct}
         onClose={() => setActiveModal(null)}
       />

@@ -1,12 +1,5 @@
 "use client";
-import {
-  Modal,
-  Input,
-  TextField,
-  FieldError,
-  Label,
-  Button,
-} from "@heroui/react";
+import { Modal, Button } from "@heroui/react";
 import { TriangleAlert } from "lucide-react";
 import { useActionState } from "react";
 import { deleteProductAction } from "@/app/action/product/deleteProduct";
@@ -52,7 +45,11 @@ export function DeleteProductModal({ isOpen, selectedProduct, onClose }) {
                     </span>
                     ?
                   </p>
-                  {state?.error && <p className="text-danger">{state.error}</p>}
+                  <div className="min-h-6">
+                    {state?.error && (
+                      <p className="text-danger">{state.error}</p>
+                    )}
+                  </div>
                 </Modal.Body>
                 <Modal.Footer>
                   <Button type="button" variant="secondary" onPress={onClose}>
