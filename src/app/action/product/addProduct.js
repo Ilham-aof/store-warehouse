@@ -78,8 +78,19 @@ export async function addProductAction(prevState, formData) {
     };
   }
   try {
-    await prisma.product.createMany({
-      data: products,
+    await prisma.$transaction(async (tx) => {
+      for (const productData of products) {
+        const product = await tx.product.create({
+          data: productData,
+        });
+
+        await tx.stockIn.create({
+          data: {
+            productId: product.id,
+            quantity: productData.quantity,
+          },
+        });
+      }
     });
   } catch (error) {
     console.error("Add product error:", error);

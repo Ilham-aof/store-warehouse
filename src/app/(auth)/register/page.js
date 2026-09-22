@@ -36,7 +36,7 @@ export default function page() {
   const strength = getPasswordStrength(password);
   const isStrongEnough = strength.score === 4;
 
-  const [state, action, pending] = useActionState(registerAction, {
+  const [state, action, isPending] = useActionState(registerAction, {
     success: false,
     errors: {},
   });
@@ -163,12 +163,8 @@ export default function page() {
           )}
         </div>
 
-        <Button
-          type="submit"
-          className="w-64 mt-2"
-          isDisabled={!isStrongEnough}
-        >
-          Register
+        <Button type="submit" className="w-64 mt-2" isDisabled={isPending}>
+          {isPending ? "Mendaftar..." : "Daftar"}
         </Button>
       </form>
       <p>

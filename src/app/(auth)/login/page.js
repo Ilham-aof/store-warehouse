@@ -13,7 +13,7 @@ import { useActionState } from "react";
 import { loginAction } from "@/app/action/auth/login";
 
 export default function page() {
-  const [state, action, pending] = useActionState(loginAction, {
+  const [state, action, isPending] = useActionState(loginAction, {
     success: false,
     errors: {},
   });
@@ -79,14 +79,14 @@ export default function page() {
           )}
         </div>
 
-        <Button type="submit" className="w-64 mt-2">
-          Login
+        <Button type="submit" className="w-64 mt-2" isDisabled={isPending}>
+          {isPending ? "Memproses..." : "Login"}
         </Button>
       </form>
       <p>
         Tidak punya akun ?{" "}
         <Link href="/register" className="text-blue-500 hover:underline">
-          Register disini
+          Daftar disini
         </Link>
       </p>
     </main>

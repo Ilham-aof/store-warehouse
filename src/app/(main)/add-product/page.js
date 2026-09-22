@@ -17,7 +17,7 @@ export default function page() {
   const [quantity, setQuantity] = useState({});
   const [price, setPrice] = useState({});
 
-  const [state, action, pending] = useActionState(addProductAction, {
+  const [state, action, isPending] = useActionState(addProductAction, {
     success: false,
     errors: {},
   });
@@ -184,7 +184,9 @@ export default function page() {
             )}
           </div>
 
-          <Button type="submit">Save</Button>
+          <Button type="submit" isDisabled={isPending}>
+            {isPending ? "Menambahkan Produk..." : "Tambahkan Produk"}
+          </Button>
         </form>
       </div>
     </main>

@@ -46,9 +46,21 @@ model Product {
   brand     String
   price     Int
   quantity  Int
-  productIn DateTime      @default(now())
 
+  stockIns  StockIn[]
   stockOuts StockOut[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model StockIn {
+  id        String   @id @default(cuid())
+  productId String
+  quantity  Int
+  createdAt DateTime @default(now())
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model StockOut {

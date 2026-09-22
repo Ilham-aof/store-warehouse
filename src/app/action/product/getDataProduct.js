@@ -9,10 +9,19 @@ export async function getDataProduct() {
       brand: true,
       quantity: true,
       price: true,
-      productIn: true,
+
+      stockIns: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 1,
+        select: {
+          createdAt: true,
+        },
+      },
     },
     orderBy: {
-      productIn: "desc",
+      createdAt: "desc",
     },
   });
 }

@@ -2,10 +2,20 @@
 
 import { Table, Button, Dropdown, Label, Separator } from "@heroui/react";
 import { useMemo, useState } from "react";
-import { Pencil, Trash, PackageMinus, EllipsisVertical } from "lucide-react";
+import {
+  Pencil,
+  Trash,
+  PackageMinus,
+  PackagePlus,
+  EllipsisVertical,
+} from "lucide-react";
+import { UpdateProductModal } from "@/component/updateProductModal";
+import { DeleteProductModal } from "@/component/deleteProductModal";
 
 export function ProductList({ products }) {
   const [sortDescriptor, setSortDescriptor] = useState(null);
+  const [activeModal, setActiveModal] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   const sortedProducts = useMemo(() => {
     if (!sortDescriptor) {
@@ -33,6 +43,11 @@ export function ProductList({ products }) {
       return cmp;
     });
   }, [products, sortDescriptor]);
+
+  function handleAction(key, product) {
+    setSelectedProduct(product);
+    setActiveModal(key);
+  }
 
   return (
     <main>
@@ -71,7 +86,7 @@ export function ProductList({ products }) {
               <Table.Column allowsSorting id="quantity" className="w-25">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    Jumlah
+                    Stok
                   </Table.SortableColumnHeader>
                 )}
               </Table.Column>
@@ -106,7 +121,9 @@ export function ProductList({ products }) {
                     Rp {product.price.toLocaleString("id-ID")}
                   </Table.Cell>
                   <Table.Cell>
-                    {new Date(product.productIn).toLocaleDateString("id-ID")}
+                    {new Date(product.stockIns[0].createdAt).toLocaleDateString(
+                      "id-ID",
+                    )}
                   </Table.Cell>
                   <Table.Cell>
                     <Dropdown>
@@ -115,34 +132,42 @@ export function ProductList({ products }) {
                       </Button>
                       <Dropdown.Popover>
                         <Dropdown.Menu
-                          onAction={(key) => console.log(`Selected: ${key}`)}
+                          onAction={(key) => handleAction(key, product)}
                           className="gap-5 p-3"
                         >
                           <Dropdown.Item
-                            id="open-file"
+                            id="stock-in"
+                            textValue="Open file"
+                            className="flex items-center"
+                          >
+                            <PackagePlus />
+                            <Label>Produk Masuk</Label>
+                          </Dropdown.Item>
+                          <Dropdown.Item
+                            id="stock-out"
                             textValue="Open file"
                             className="flex items-center"
                           >
                             <PackageMinus />
-                            <Label>Product Keluar</Label>
+                            <Label>Produk Keluar</Label>
                           </Dropdown.Item>
                           <Dropdown.Item
-                            id="new-file"
-                            textValue="New file"
+                            id="edit"
+                            textValue="Edit Product"
                             className="flex items-center"
                           >
                             <Pencil />
-                            <Label>Edit Product</Label>
+                            <Label>Ubah Produk</Label>
                           </Dropdown.Item>
                           <Separator />
                           <Dropdown.Item
-                            id="delete-file"
-                            textValue="Delete file"
+                            id="delete"
+                            textValue="Delete Product"
                             variant="danger"
                             className="flex items-center"
                           >
                             <Trash className="text-danger" />
-                            <Label>Delete Product</Label>
+                            <Label>Hapus Produk</Label>
                           </Dropdown.Item>
                         </Dropdown.Menu>
                       </Dropdown.Popover>
@@ -154,6 +179,17 @@ export function ProductList({ products }) {
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+      <UpdateProductModal
+        key={`edit-${selectedProduct?.id}`}
+        isOpen={activeModal === "edit"}
+        selectedProduct={selectedProduct}
+        onClose={() => setActiveModal(null)}
+      />
+      <DeleteProductModal
+        isOpen={activeModal === "delete"}
+        selectedProduct={selectedProduct}
+        onClose={() => setActiveModal(null)}
+      />
     </main>
   );
 }
