@@ -26,7 +26,11 @@ model User {
   password  String
   phone     String
   role      Role     @default(Staff)
+
   sessions  Session[]
+  stockIns  StockIn[]
+  stockOuts StockOut[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -39,6 +43,12 @@ model Session {
   createdAt DateTime @default(now())
 }
 
+model Outlet {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  products Product[]
+}
+
 model Product {
   id        String        @id @default(cuid())
   name      String
@@ -46,6 +56,9 @@ model Product {
   brand     String
   price     Int
   quantity  Int
+
+  outletId  String
+  outlet    Outlet   @relation(fields: [outletId], references: [id])
 
   stockIns  StockIn[]
   stockOuts StockOut[]
@@ -57,17 +70,21 @@ model Product {
 model StockIn {
   id        String   @id @default(cuid())
   productId String
+  userId    String
   quantity  Int
   createdAt DateTime @default(now())
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model StockOut {
   id        String   @id @default(cuid())
   productId String
+  userId    String
   quantity  Int
   createdAt DateTime @default(now())
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

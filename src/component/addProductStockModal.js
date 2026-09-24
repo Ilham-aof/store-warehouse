@@ -16,78 +16,75 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
   const [state, action, isPending] = useActionState(stockInAction, null);
 
   return (
-    <main>
-      <Modal>
-        <Modal.Backdrop
-          isOpen={isOpen}
-          onOpenChange={(isOpen) => {
-            if (!isOpen) {
-              onClose();
-            }
-          }}
-          isDismissable={false}
-        >
-          <Modal.Container>
-            <Modal.Dialog>
-              <Modal.CloseTrigger />
+    <>
+      <Modal.Backdrop
+        isOpen={isOpen}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            onClose();
+          }
+        }}
+        isDismissable={false}
+      >
+        <Modal.Container>
+          <Modal.Dialog>
+            <Modal.Header>
+              <Modal.Heading className="text-xl">Tambah Stok</Modal.Heading>
+            </Modal.Header>
+            <form action={action}>
+              <Modal.Body className="space-y-5">
+                <p className="text-lg">Produk: {selectedProduct?.name}</p>
+                <input
+                  type="hidden"
+                  name="productId"
+                  aria-label="Product Id"
+                  defaultValue={selectedProduct?.id ?? ""}
+                />
 
-              <Modal.Header>
-                <Modal.Heading className="text-xl">Tambah Stok</Modal.Heading>
-              </Modal.Header>
-              <form action={action}>
-                <Modal.Body className="space-y-5">
-                  <p className="text-lg">Produk: {selectedProduct?.name}</p>
-                  <input
-                    type="hidden"
-                    name="productId"
-                    defaultValue={selectedProduct?.id ?? ""}
-                  />
-
-                  <div className="flex gap-4">
-                    <TextField
-                      name="addQuantity"
-                      aria-label="addQuantity"
-                      type="tel"
-                      value={quantity}
-                      onChange={(value) => {
-                        setQuantity(value.replace(/\D/g, ""));
-                      }}
-                      validate={(value) => {
-                        if (!value) {
-                          return "Quantity produk wajib diisi";
-                        }
-                      }}
-                    >
-                      <Label>Tambahan Stok</Label>
-                      <Input
-                        placeholder="Masukkan Tambahan Stok"
-                        className="hover:bg-gray-200"
-                      />
-                      <div className="min-h-6">
-                        <FieldError />
-                      </div>
-                    </TextField>
+                <div className="gap-4">
+                  <TextField
+                    name="addQuantity"
+                    aria-label="addQuantity"
+                    type="tel"
+                    value={quantity}
+                    onChange={(value) => {
+                      setQuantity(value.replace(/\D/g, ""));
+                    }}
+                    validate={(value) => {
+                      if (!value) {
+                        return "Quantity produk wajib diisi";
+                      }
+                    }}
+                  >
+                    <Label>Tambahan Stok</Label>
+                    <Input
+                      placeholder="Masukkan Tambahan Stok"
+                      className="hover:bg-gray-200"
+                    />
                     <div className="min-h-6">
-                      {state?.error && (
-                        <p className="text-danger text-center">{state.error}</p>
-                      )}
+                      <FieldError />
                     </div>
+                  </TextField>
+                  <div className="min-h-6">
+                    {state?.error && (
+                      <p className="text-danger text-center">{state.error}</p>
+                    )}
                   </div>
-                </Modal.Body>
+                </div>
+              </Modal.Body>
 
-                <Modal.Footer>
-                  <Button type="button" variant="secondary" onPress={onClose}>
-                    Batal
-                  </Button>
-                  <Button type="submit" isDisabled={isPending}>
-                    {isPending ? "menambahkan Stok..." : "Tambahkan Stok"}
-                  </Button>
-                </Modal.Footer>
-              </form>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
-    </main>
+              <Modal.Footer>
+                <Button type="button" variant="secondary" onPress={onClose}>
+                  Batal
+                </Button>
+                <Button type="submit" isDisabled={isPending}>
+                  {isPending ? "menambahkan Stok..." : "Tambahkan Stok"}
+                </Button>
+              </Modal.Footer>
+            </form>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
+    </>
   );
 }

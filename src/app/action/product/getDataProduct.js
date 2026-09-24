@@ -9,6 +9,7 @@ export async function getDataProduct() {
       brand: true,
       quantity: true,
       price: true,
+      outletId: true,
 
       stockIns: {
         orderBy: {

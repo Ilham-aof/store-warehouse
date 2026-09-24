@@ -83,8 +83,6 @@ export async function registerAction(prevState, formData) {
       },
     });
   } catch (error) {
-    console.error("Register error:", error);
-
     if (error?.code === "P2002") {
       return {
         success: false,

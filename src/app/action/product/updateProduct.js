@@ -78,8 +78,6 @@ export async function updateProductAction(prevState, formData) {
       },
     });
   } catch (error) {
-    console.error("Update product error:", error);
-
     return {
       success: false,
       error: "Gagal memperbarui produk.",

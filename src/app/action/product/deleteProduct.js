@@ -40,8 +40,6 @@ export async function deleteProductAction(prevState, formData) {
       },
     });
   } catch (error) {
-    console.error("Delete product error:", error);
-
     return {
       success: false,
       error: "Gagal menghapus produk.",

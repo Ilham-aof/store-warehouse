@@ -90,13 +90,12 @@ export async function stockOutAction(prevState, formData) {
       await tx.stockOut.create({
         data: {
           productId,
+          userId: session.userId,
           quantity: stockQuantity,
         },
       });
     });
   } catch (error) {
-    console.error("Stock out error:", error);
-
     return {
       success: false,
       error: "Gagal mengurangi stok.",

@@ -82,13 +82,12 @@ export async function stockInAction(prevState, formData) {
       await tx.stockIn.create({
         data: {
           productId,
+          userId: session.userId,
           quantity: stockQuantity,
         },
       });
     });
   } catch (error) {
-    console.error("Stock in error:", error);
-
     return {
       success: false,
       error: "Gagal menambahkan stok.",

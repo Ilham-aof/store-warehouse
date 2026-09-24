@@ -35,7 +35,6 @@ export async function loginAction(prevState, formData) {
     });
 
     if (!findUser || !(await bcrypt.compare(password, findUser.password))) {
-      console.log("EMAIL tidak ditemukan!");
       return {
         success: false,
         errors: {
@@ -61,8 +60,6 @@ export async function loginAction(prevState, formData) {
       maxAge: 7 * 24 * 60 * 60,
     });
   } catch (error) {
-    console.error("Login error:", error);
-
     return {
       success: false,
       errors: {

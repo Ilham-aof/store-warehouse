@@ -23,6 +23,32 @@ export async function addProductAction(prevState, formData) {
     redirect("/login");
   }
 
+  const outletId = formData.get("outletId");
+
+  if (!outletId) {
+    return {
+      success: false,
+      errors: {
+        general: "Outlet wajib dipilih.",
+      },
+    };
+  }
+
+  const outlet = await prisma.outlet.findUnique({
+    where: {
+      id: outletId,
+    },
+  });
+
+  if (!outlet) {
+    return {
+      success: false,
+      errors: {
+        general: "Outlet tidak ditemukan.",
+      },
+    };
+  }
+
   const products = [];
   const errors = {};
   let index = 0;
@@ -77,17 +103,32 @@ export async function addProductAction(prevState, formData) {
       errors,
     };
   }
+
   try {
     await prisma.$transaction(async (tx) => {
       for (const productData of products) {
         const product = await tx.product.create({
-          data: productData,
+          data: {
+            ...productData,
+            outletId,
+          },
         });
 
         await tx.stockIn.create({
           data: {
-            productId: product.id,
             quantity: productData.quantity,
+
+            product: {
+              connect: {
+                id: product.id,
+              },
+            },
+
+            user: {
+              connect: {
+                id: session.userId,
+              },
+            },
           },
         });
       }
@@ -102,6 +143,7 @@ export async function addProductAction(prevState, formData) {
       },
     };
   }
+
   revalidatePath("/");
   redirect("/");
 }

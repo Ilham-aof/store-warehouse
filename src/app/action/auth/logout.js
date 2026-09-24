@@ -16,7 +16,6 @@ export async function logoutAction() {
     }
     cookieStore.delete("session");
   } catch (error) {
-    console.error("Logout error:", error);
     return {
       success: false,
       error: "Gagal melakukan logout.",

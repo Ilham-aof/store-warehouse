@@ -52,7 +52,7 @@ export function ProductList({ products }) {
   }
 
   return (
-    <main>
+    <div>
       <Table>
         <Table.ScrollContainer>
           <Table.Content
@@ -204,6 +204,6 @@ export function ProductList({ products }) {
         selectedProduct={selectedProduct}
         onClose={() => setActiveModal(null)}
       />
-    </main>
+    </div>
   );
 }
