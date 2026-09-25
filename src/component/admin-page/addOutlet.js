@@ -37,9 +37,9 @@ export function AddOutlet() {
         <div className="min-h-6">
           {state?.error && <ErrorMessage>{state.error}</ErrorMessage>}
         </div>
-        <Button type="submit">
+        <Button type="submit" isDisabled={isPending}>
           <Plus />
-          Tambah Cabang
+          {isPending ? "Menambahkan..." : "Tambah Cabang"}
         </Button>
       </form>
     </>

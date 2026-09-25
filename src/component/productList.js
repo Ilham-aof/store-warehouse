@@ -123,8 +123,12 @@ export function ProductList({ products }) {
                     Rp {product.price.toLocaleString("id-ID")}
                   </Table.Cell>
                   <Table.Cell>
-                    {new Date(product.stockIns[0].createdAt).toLocaleDateString(
+                    {new Date(product.stockIns[0].createdAt).toLocaleString(
                       "id-ID",
+                      {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      },
                     )}
                   </Table.Cell>
                   <Table.Cell>

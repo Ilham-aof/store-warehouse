@@ -4,13 +4,12 @@ import { ListBox, Select } from "@heroui/react";
 import { useState } from "react";
 
 export function OutletSelection({ outlets, selectedOutletId, onOutletChange }) {
-  const [selectedOutlet, setSelectedOutlet] = useState(outlets[0]?.id ?? null);
-
   return (
     <div className="flex items-center space-x-3">
       <h2>Cabang :</h2>
 
       <Select
+        variant="secondary"
         aria-label="Pilih Outlet"
         className="w-[256px]"
         selectedKey={selectedOutletId}
@@ -37,12 +36,7 @@ export function OutletSelection({ outlets, selectedOutletId, onOutletChange }) {
           </ListBox>
         </Select.Popover>
       </Select>
-      <input
-        type="hidden"
-        name="outletId"
-        value={selectedOutletId ?? ""}
-        readOnly
-      />
+      <input type="" name="outletId" value={selectedOutletId ?? ""} readOnly />
     </div>
   );
 }

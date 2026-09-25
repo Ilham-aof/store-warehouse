@@ -45,7 +45,7 @@ export function OutletList({ outlets }) {
                             className="flex items-center"
                           >
                             <Pencil />
-                            <Label>Ubah Cabang</Label>
+                            <Label>Ubah Outlet</Label>
                           </Dropdown.Item>
                           <Separator />
 

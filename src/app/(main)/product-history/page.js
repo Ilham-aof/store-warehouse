@@ -1,13 +1,14 @@
-import { Navbar } from "@/component/navbar";
+import { getOutlet } from "@/app/action/outlet/getOutlet";
+import { getProductHistory } from "@/app/action/product/getProductHistory";
+import { ProductHistoryList } from "@/component/history-page/productHistoryList";
 
-export default function page() {
+export default async function page() {
+  const outlets = await getOutlet();
+  const history = await getProductHistory();
+
   return (
-    <>
-      <main className="w-full">
-        <h1>Daftar Riwayart barang</h1>
-        <h2>Daftar Riwayart Barang Masuk</h2>
-        <h2>Daftar Riwayart Barang Keluar</h2>
-      </main>
-    </>
+    <main className="w-full">
+      <ProductHistoryList outlets={outlets} history={history} />
+    </main>
   );
 }

@@ -27,7 +27,7 @@ export function StockBarang({ outlets, products }) {
   );
 
   return (
-    <section className="flex-1 space-y-3 rounded-2xl border-2 border-amber-500 p-4">
+    <section className="flex-1 rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 w-100 space-y-3">
       <h1 className="text-2xl font-bold">Stock Barang</h1>
 
       <OutletSelection

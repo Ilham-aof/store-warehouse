@@ -27,7 +27,7 @@ export function AddProductForm({ outlets }) {
   });
 
   return (
-    <div className="flex flex-col items-center border-2 border-amber-400 p-4 space-y-3">
+    <div className="flex flex-col items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-3">
       <h1>Tambah Produk</h1>
 
       <form action={action} className="flex flex-col items-center space-y-3">
@@ -40,7 +40,7 @@ export function AddProductForm({ outlets }) {
         {Array.from({ length: formCount }).map((_, index) => (
           <div
             key={index}
-            className="flex gap-4 rounded-xl border-2 border-black p-3"
+            className="flex gap-4 rounded-xl bg-gray-200 shadow-[4px_4px_4px_rgba(0,0,0,0.2)] shadow-gray-400 p-4"
           >
             <TextField
               name={`products[${index}][name]`}

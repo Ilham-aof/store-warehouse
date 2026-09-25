@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     <main className="flex gap-4 w-full">
-      <section className="border-2 rounded-2xl p-4 w-100 space-y-3">
+      <section className=" rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 w-100 h-fit space-y-3">
         <h1 className="text-2xl font-bold">Informasi Akun</h1>
         <div>
           <p>Nama : {user?.name ?? "None"}</p>
