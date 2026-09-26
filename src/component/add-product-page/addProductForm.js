@@ -9,7 +9,7 @@ import {
   FieldError,
 } from "@heroui/react";
 import { Plus } from "lucide-react";
-import { useState, useActionState } from "react";
+import { useState, useActionState, useEffect } from "react";
 import { addProductAction } from "@/app/action/product/addProduct";
 import { OutletSelection } from "@/component/outletSelection";
 
@@ -21,6 +21,19 @@ export function AddProductForm({ outlets }) {
     outlets[0]?.id ?? null,
   );
 
+  useEffect(() => {
+    const savedOutletId = localStorage.getItem("selectedOutletId");
+
+    if (savedOutletId) {
+      setSelectedOutletId(savedOutletId);
+    }
+  }, []);
+
+  const handleOutletChange = (outletId) => {
+    setSelectedOutletId(outletId);
+    localStorage.setItem("selectedOutletId", outletId);
+  };
+
   const [state, action, isPending] = useActionState(addProductAction, {
     success: false,
     errors: {},
@@ -28,19 +41,19 @@ export function AddProductForm({ outlets }) {
 
   return (
     <div className="flex flex-col items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-3">
-      <h1>Tambah Produk</h1>
+      <h1 className="text-2xl font-bold">Tambah Produk</h1>
 
-      <form action={action} className="flex flex-col items-center space-y-3">
+      <form action={action} className="flex flex-col space-y-3">
         <OutletSelection
           outlets={outlets}
           selectedOutletId={selectedOutletId}
-          onOutletChange={setSelectedOutletId}
+          onOutletChange={handleOutletChange}
         />
 
         {Array.from({ length: formCount }).map((_, index) => (
           <div
             key={index}
-            className="flex gap-4 rounded-xl bg-gray-200 shadow-[4px_4px_4px_rgba(0,0,0,0.2)] shadow-gray-400 p-4"
+            className="flex gap-4 rounded-xl shadow-[4px_4px_4px,inset_0_0_4px_rgba(0,0,0,0.2)] shadow-gray-400 p-4"
           >
             <TextField
               name={`products[${index}][name]`}
@@ -181,7 +194,7 @@ export function AddProductForm({ outlets }) {
           </div>
         ))}
 
-        <div className="self-start">
+        <div>
           <Button
             type="button"
             variant="secondary"
@@ -198,7 +211,7 @@ export function AddProductForm({ outlets }) {
           )}
         </div>
 
-        <Button type="submit" isDisabled={isPending}>
+        <Button type="submit" isDisabled={isPending} className="self-center">
           {isPending ? "Menambahkan Produk..." : "Tambahkan Produk"}
         </Button>
       </form>

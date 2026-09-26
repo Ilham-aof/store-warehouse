@@ -15,6 +15,8 @@ export async function getProductHistory(outletId) {
         product: {
           select: {
             name: true,
+            type: true,
+            brand: true,
             outletId: true,
           },
         },
@@ -39,6 +41,8 @@ export async function getProductHistory(outletId) {
         product: {
           select: {
             name: true,
+            type: true,
+            brand: true,
             outletId: true,
           },
         },
@@ -55,6 +59,8 @@ export async function getProductHistory(outletId) {
     ...stockIns.map((stockIn) => ({
       id: stockIn.id,
       productName: stockIn.product.name,
+      productType: stockIn.product.type,
+      productBrand: stockIn.product.brand,
       outletId: stockIn.product.outletId,
       activity: "Masuk",
       quantity: stockIn.quantity,
@@ -65,6 +71,8 @@ export async function getProductHistory(outletId) {
     ...stockOuts.map((stockOut) => ({
       id: stockOut.id,
       productName: stockOut.product.name,
+      productType: stockOut.product.type,
+      productBrand: stockOut.product.brand,
       outletId: stockOut.product.outletId,
       activity: "Keluar",
       quantity: stockOut.quantity,

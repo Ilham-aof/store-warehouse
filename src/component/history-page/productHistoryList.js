@@ -2,7 +2,7 @@
 import { Table } from "@heroui/react";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
-
+import { ProductPagination } from "@/component/pagination";
 import { useState, useEffect } from "react";
 
 export function ProductHistoryList({ outlets, history }) {
@@ -11,6 +11,10 @@ export function ProductHistoryList({ outlets, history }) {
   );
   const [timeFilter, setTimeFilter] = useState("all");
 
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 20;
+
   useEffect(() => {
     const savedOutletId = localStorage.getItem("selectedOutletId");
 
@@ -18,6 +22,10 @@ export function ProductHistoryList({ outlets, history }) {
       setSelectedOutletId(savedOutletId);
     }
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedOutletId, timeFilter]);
 
   const handleOutletChange = (outletId) => {
     setSelectedOutletId(outletId);
@@ -63,9 +71,16 @@ export function ProductHistoryList({ outlets, history }) {
     return true;
   });
 
+  const totalPages = Math.ceil(filteredHistory.length / itemsPerPage);
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+
+  const paginatedHistory = filteredHistory.slice(startIndex, endIndex);
+
   return (
     <>
-      <h1>Daftar Riwayart barang</h1>
+      <h1 className="text-2xl font-bold">Daftar Riwayart barang</h1>
       <OutletSelection
         outlets={outlets}
         selectedOutletId={selectedOutletId}
@@ -74,9 +89,11 @@ export function ProductHistoryList({ outlets, history }) {
       <TimeFilter timeFilter={timeFilter} setTimeFilter={setTimeFilter} />
       <Table>
         <Table.ScrollContainer>
-          <Table.Content aria-label="Riwayat barang" className="min-w-[600px]">
+          <Table.Content aria-label="Riwayat barang" className="min-w-150">
             <Table.Header>
               <Table.Column isRowHeader>Produk</Table.Column>
+              <Table.Column>Tipe</Table.Column>
+              <Table.Column>Brand</Table.Column>
               <Table.Column>Aktivitas Barang</Table.Column>
               <Table.Column>Jumlah</Table.Column>
               <Table.Column>Nama</Table.Column>
@@ -84,9 +101,11 @@ export function ProductHistoryList({ outlets, history }) {
             </Table.Header>
 
             <Table.Body>
-              {filteredHistory.map((item) => (
+              {paginatedHistory.map((item) => (
                 <Table.Row key={item.id}>
                   <Table.Cell>{item.productName}</Table.Cell>
+                  <Table.Cell>{item.productType}</Table.Cell>
+                  <Table.Cell>{item.productBrand}</Table.Cell>
                   <Table.Cell>{item.activity}</Table.Cell>
                   <Table.Cell>
                     {item.activity === "Keluar"
@@ -106,6 +125,12 @@ export function ProductHistoryList({ outlets, history }) {
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+      <ProductPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        totalItems={filteredHistory.length}
+      />
     </>
   );
 }

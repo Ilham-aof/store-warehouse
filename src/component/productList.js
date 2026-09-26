@@ -61,7 +61,12 @@ export function ProductList({ products }) {
             onSortChange={setSortDescriptor}
           >
             <Table.Header>
-              <Table.Column allowsSorting isRowHeader id="name">
+              <Table.Column
+                allowsSorting
+                isRowHeader
+                id="name"
+                className="w-2/7"
+              >
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Nama
@@ -69,7 +74,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="type" className="w-40">
+              <Table.Column allowsSorting id="type" className="w-1/7">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Tipe
@@ -77,7 +82,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="brand" className="w-35">
+              <Table.Column allowsSorting id="brand" className="w-1/7">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Brand
@@ -85,7 +90,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="quantity" className="w-25">
+              <Table.Column allowsSorting id="quantity" className="w-0.5/7">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Stok
@@ -93,7 +98,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="price" className="w-35">
+              <Table.Column allowsSorting id="price" className="w-1/7">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Harga
@@ -101,7 +106,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="productIn" className="w-35">
+              <Table.Column allowsSorting id="stockIn" className="w-1/7">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Tanggal Masuk
@@ -109,7 +114,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column className="w-10"></Table.Column>
+              <Table.Column className="w-0.5/7"></Table.Column>
             </Table.Header>
 
             <Table.Body>
@@ -131,7 +136,7 @@ export function ProductList({ products }) {
                       },
                     )}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="flex justify-center">
                     <Dropdown>
                       <Button aria-label="Menu" variant="secondary" isIconOnly>
                         <EllipsisVertical />
@@ -139,7 +144,7 @@ export function ProductList({ products }) {
                       <Dropdown.Popover>
                         <Dropdown.Menu
                           onAction={(key) => handleAction(key, product)}
-                          className="gap-5 p-3"
+                          className="space-y-3 p-3"
                         >
                           <Dropdown.Item
                             id="add-stock"

@@ -7,7 +7,7 @@ export default async function page() {
   const history = await getProductHistory();
 
   return (
-    <main className="w-full">
+    <main className="w-full space-y-3">
       <ProductHistoryList outlets={outlets} history={history} />
     </main>
   );
