@@ -5,7 +5,8 @@ import { ListBox, Select } from "@heroui/react";
 export function TimeFilter({ timeFilter, setTimeFilter }) {
   return (
     <div className="flex items-center space-x-3">
-      <h2>Waktu :</h2>
+      <h2 className="w-20">Waktu</h2>
+      <p>:</p>
 
       <Select
         variant="secondary"

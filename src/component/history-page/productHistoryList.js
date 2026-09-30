@@ -4,11 +4,9 @@ import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
 import { ProductPagination } from "@/component/pagination";
 import { useState, useEffect } from "react";
+import { ClipboardClock } from "lucide-react";
 
-export function ProductHistoryList({ outlets, history }) {
-  const [selectedOutletId, setSelectedOutletId] = useState(
-    outlets[0]?.id ?? null,
-  );
+export function ProductHistoryList({ outlets, history, selectedOutletId }) {
   const [timeFilter, setTimeFilter] = useState("all");
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -16,28 +14,10 @@ export function ProductHistoryList({ outlets, history }) {
   const itemsPerPage = 20;
 
   useEffect(() => {
-    const savedOutletId = localStorage.getItem("selectedOutletId");
-
-    if (savedOutletId) {
-      setSelectedOutletId(savedOutletId);
-    }
-  }, []);
-
-  useEffect(() => {
     setCurrentPage(1);
   }, [selectedOutletId, timeFilter]);
 
-  const handleOutletChange = (outletId) => {
-    setSelectedOutletId(outletId);
-    localStorage.setItem("selectedOutletId", outletId);
-  };
-
   const filteredHistory = history.filter((item) => {
-    // Filter outlet
-    if (item.outletId !== selectedOutletId) {
-      return false;
-    }
-
     // Kalau "Semua", tidak perlu filter waktu
     if (timeFilter === "all") {
       return true;
@@ -80,12 +60,12 @@ export function ProductHistoryList({ outlets, history }) {
 
   return (
     <>
-      <h1 className="text-2xl font-bold">Daftar Riwayart barang</h1>
-      <OutletSelection
-        outlets={outlets}
-        selectedOutletId={selectedOutletId}
-        onOutletChange={handleOutletChange}
-      />
+      <div className="flex gap-3 items-center">
+        <ClipboardClock size={30} />
+        <h1 className="text-2xl font-bold">Daftar Riwayat barang</h1>
+      </div>
+
+      <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
       <TimeFilter timeFilter={timeFilter} setTimeFilter={setTimeFilter} />
       <Table>
         <Table.ScrollContainer>

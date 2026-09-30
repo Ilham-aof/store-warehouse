@@ -114,7 +114,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column className="w-0.5/7"></Table.Column>
+              <Table.Column className="w-10"></Table.Column>
             </Table.Header>
 
             <Table.Body>

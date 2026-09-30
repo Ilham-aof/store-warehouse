@@ -29,7 +29,7 @@ export async function addProductAction(prevState, formData) {
     return {
       success: false,
       errors: {
-        general: "Outlet wajib dipilih.",
+        general: "Outlet wajib dipilih",
       },
     };
   }
@@ -63,23 +63,23 @@ export async function addProductAction(prevState, formData) {
     const productErrors = {};
 
     if (!name?.trim()) {
-      productErrors.name = "Nama produk wajib diisi.";
+      productErrors.name = "Nama produk wajib diisi";
     }
 
     if (!type?.trim()) {
-      productErrors.type = "Tipe produk wajib diisi.";
+      productErrors.type = "Tipe produk wajib diisi";
     }
 
     if (!brand?.trim()) {
-      productErrors.brand = "Brand produk wajib diisi.";
+      productErrors.brand = "Brand produk wajib diisi";
     }
 
     if (!quantity) {
-      productErrors.quantity = "Jumlah produk wajib diisi.";
+      productErrors.quantity = "Jumlah produk wajib diisi";
     }
 
     if (!price) {
-      productErrors.price = "Harga produk wajib diisi.";
+      productErrors.price = "Harga produk wajib diisi";
     }
 
     if (Object.keys(productErrors).length > 0) {
@@ -139,11 +139,11 @@ export async function addProductAction(prevState, formData) {
     return {
       success: false,
       errors: {
-        general: "Gagal menambahkan produk.",
+        general: "Gagal menambahkan produk",
       },
     };
   }
 
   revalidatePath("/");
-  redirect("/");
+  redirect(`/?outletId=${outletId}`);
 }

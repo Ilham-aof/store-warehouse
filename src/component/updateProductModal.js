@@ -31,16 +31,23 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-xl">Ubah Produk</Modal.Heading>
+              <Modal.Heading className="text-2xl font-bold">
+                Ubah Produk
+              </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg">Produk: {selectedProduct?.name}</p>
+                <p className="text-lg">Produk : {selectedProduct?.name}</p>
                 <input
                   type="hidden"
                   name="productId"
-                  aria-label="Product Id"
                   defaultValue={selectedProduct?.id ?? ""}
+                />
+
+                <input
+                  type="hidden"
+                  name="outletId"
+                  defaultValue={selectedProduct?.outletId ?? ""}
                 />
 
                 <div className="flex gap-4">

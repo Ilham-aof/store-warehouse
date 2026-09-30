@@ -23,15 +23,21 @@ export function DeleteProductModal({ isOpen, selectedProduct, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-xl">Hapus Produk</Modal.Heading>
+              <Modal.Heading className="text-2xl font-bold">
+                Hapus Produk
+              </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="flex flex-col items-center">
                 <input
                   type="hidden"
                   name="productId"
-                  aria-label="Product Id"
                   defaultValue={selectedProduct?.id ?? ""}
+                />
+                <input
+                  type="hidden"
+                  name="outletId"
+                  defaultValue={selectedProduct?.outletId ?? ""}
                 />
                 <TriangleAlert
                   size={250}

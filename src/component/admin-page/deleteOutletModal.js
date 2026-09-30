@@ -23,7 +23,9 @@ export function DeleteOutletModal({ isOpen, selectedOutlet, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-xl">Hapus Cabang</Modal.Heading>
+              <Modal.Heading className="text-2xl font-bold">
+                Hapus Cabang
+              </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="flex flex-col items-center">

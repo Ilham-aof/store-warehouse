@@ -1,19 +1,26 @@
 "use client";
 
 import { ListBox, Select } from "@heroui/react";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
-export function OutletSelection({ outlets, selectedOutletId, onOutletChange }) {
+export function OutletSelection({ outlets, selectedOutletId }) {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleOutletChange = (outletId) => {
+    router.replace(`${pathname}?outletId=${outletId}`);
+  };
+
   return (
     <div className="flex items-center space-x-3">
-      <h2>Cabang :</h2>
-
+      <h2 className="w-20">Cabang</h2>
+      <p>:</p>
       <Select
         variant="secondary"
         aria-label="Pilih Outlet"
         className="w-[256px]"
         selectedKey={selectedOutletId}
-        onSelectionChange={onOutletChange}
+        onSelectionChange={handleOutletChange}
       >
         <Select.Trigger>
           <Select.Value />
@@ -36,7 +43,6 @@ export function OutletSelection({ outlets, selectedOutletId, onOutletChange }) {
           </ListBox>
         </Select.Popover>
       </Select>
-      <input type="" name="outletId" value={selectedOutletId ?? ""} readOnly />
     </div>
   );
 }

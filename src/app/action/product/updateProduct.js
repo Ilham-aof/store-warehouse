@@ -25,6 +25,7 @@ export async function updateProductAction(prevState, formData) {
   }
 
   const productId = formData.get("productId");
+  const outletId = formData.get("outletId");
   const productName = formData.get("productName");
   const productType = formData.get("productType");
   const productBrand = formData.get("productBrand");
@@ -33,35 +34,41 @@ export async function updateProductAction(prevState, formData) {
   if (!productId) {
     return {
       success: false,
-      error: "ID produk tidak ditemukan.",
+      error: "ID produk tidak ditemukan",
     };
   }
 
+  if (!outletId) {
+    return {
+      success: false,
+      error: "Cabang tidak ditemukan",
+    };
+  }
   if (!productName?.trim()) {
     return {
       success: false,
-      error: "Nama wajib diisi.",
+      error: "Nama wajib diisi",
     };
   }
 
   if (!productType?.trim()) {
     return {
       success: false,
-      error: "Type wajib diisi.",
+      error: "Type wajib diisi",
     };
   }
 
   if (!productBrand?.trim()) {
     return {
       success: false,
-      error: "Brand wajib diisi.",
+      error: "Brand wajib diisi",
     };
   }
 
   if (!productPrice) {
     return {
       success: false,
-      error: "Harga wajib diisi.",
+      error: "Harga wajib diisi",
     };
   }
 
@@ -80,10 +87,10 @@ export async function updateProductAction(prevState, formData) {
   } catch (error) {
     return {
       success: false,
-      error: "Gagal memperbarui produk.",
+      error: "Gagal memperbarui produk",
     };
   }
 
   revalidatePath("/");
-  redirect("/");
+  redirect(`/?outletId=${outletId}`);
 }

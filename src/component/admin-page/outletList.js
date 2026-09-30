@@ -22,14 +22,14 @@ export function OutletList({ outlets }) {
           <Table.Content aria-label="Daftar outlet">
             <Table.Header>
               <Table.Column isRowHeader>Nama Outlet</Table.Column>
-              <Table.Column isRowHeader></Table.Column>
+              <Table.Column className="w-10"></Table.Column>
             </Table.Header>
 
             <Table.Body>
               {outlets.map((outlet) => (
                 <Table.Row key={outlet.id}>
                   <Table.Cell>{outlet.name}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="flex justify-center">
                     <Dropdown>
                       <Button aria-label="Menu" variant="secondary" isIconOnly>
                         <EllipsisVertical />

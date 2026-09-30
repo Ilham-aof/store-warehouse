@@ -1,0 +1,73 @@
+"use client";
+
+import { Table, Button, Dropdown, Label, Separator } from "@heroui/react";
+import { useState } from "react";
+import { UserRoundX, EllipsisVertical } from "lucide-react";
+import { DeleteUserModal } from "@/component/admin-page/deleteUserModal";
+
+export function UserList({ users }) {
+  const [activeModal, setActiveModal] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+
+  function handleAction(key, user) {
+    setSelectedUser(user);
+    setActiveModal(key);
+  }
+
+  return (
+    <div>
+      <Table>
+        <Table.ScrollContainer>
+          <Table.Content aria-label="Daftar User">
+            <Table.Header>
+              <Table.Column isRowHeader>Nama User</Table.Column>
+              <Table.Column>Nomor HP</Table.Column>
+              <Table.Column>E-mail</Table.Column>
+
+              <Table.Column className="w-10"></Table.Column>
+            </Table.Header>
+
+            <Table.Body>
+              {users.map((user) => (
+                <Table.Row key={user.id}>
+                  <Table.Cell>{user.name}</Table.Cell>
+                  <Table.Cell>{user.phone}</Table.Cell>
+                  <Table.Cell>{user.email}</Table.Cell>
+                  <Table.Cell className="flex justify-center">
+                    <Dropdown>
+                      <Button aria-label="Menu" variant="secondary" isIconOnly>
+                        <EllipsisVertical />
+                      </Button>
+                      <Dropdown.Popover>
+                        <Dropdown.Menu
+                          onAction={(key) => handleAction(key, user)}
+                          className="gap-5 p-3"
+                        >
+                          <Dropdown.Item
+                            id="delete"
+                            textValue="Delete User"
+                            variant="danger"
+                            className="flex items-center"
+                          >
+                            <UserRoundX className="text-danger" />
+                            <Label>Hapus Staff</Label>
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown.Popover>
+                    </Dropdown>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Content>
+        </Table.ScrollContainer>
+      </Table>
+
+      <DeleteUserModal
+        isOpen={activeModal === "delete"}
+        selectedUser={selectedUser}
+        onClose={() => setActiveModal(null)}
+      />
+    </div>
+  );
+}

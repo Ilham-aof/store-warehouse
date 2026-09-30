@@ -25,19 +25,27 @@ export async function stockOutAction(prevState, formData) {
   }
 
   const productId = formData.get("productId");
+  const outletId = formData.get("outletId");
   const quantity = formData.get("productQuantity");
 
   if (!productId) {
     return {
       success: false,
-      error: "Produk tidak ditemukan.",
+      error: "Produk tidak ditemukan",
     };
   }
 
   if (!quantity) {
     return {
       success: false,
-      error: "Jumlah stok wajib diisi.",
+      error: "Jumlah stok wajib diisi",
+    };
+  }
+
+  if (!outletId) {
+    return {
+      success: false,
+      error: "Cabang tidak ditemukan",
     };
   }
 
@@ -103,5 +111,5 @@ export async function stockOutAction(prevState, formData) {
   }
 
   revalidatePath("/");
-  redirect("/");
+  redirect(`/?outletId=${outletId}`);
 }

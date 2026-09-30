@@ -29,16 +29,23 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
         <Modal.Container>
           <Modal.Dialog>
             <Modal.Header>
-              <Modal.Heading className="text-xl">Tambah Stok</Modal.Heading>
+              <Modal.Heading className="text-2xl font-bold">
+                Tambah Stok
+              </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg">Produk: {selectedProduct?.name}</p>
+                <p className="text-lg">Produk : {selectedProduct?.name}</p>
                 <input
                   type="hidden"
                   name="productId"
-                  aria-label="Product Id"
                   defaultValue={selectedProduct?.id ?? ""}
+                />
+
+                <input
+                  type="hidden"
+                  name="outletId"
+                  defaultValue={selectedProduct?.outletId ?? ""}
                 />
 
                 <div className="gap-4">

@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getDataProduct() {
+export async function getDataProduct(outletId) {
   return await prisma.product.findMany({
+    where: {
+      outletId,
+    },
     select: {
       id: true,
       name: true,

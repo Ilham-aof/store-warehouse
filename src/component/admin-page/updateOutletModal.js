@@ -25,17 +25,19 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
         isDismissable={false}
       >
         <Modal.Container>
-          <Modal.Dialog className="max-w-5xl max-h-xl">
+          <Modal.Dialog className="w-md max-h-xl">
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-xl">Ubah Cabang</Modal.Heading>
+              <Modal.Heading className="text-2xl font-bold">
+                Ubah Cabang
+              </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
                 <p className="text-lg">Cabang : {selectedOutlet?.name}</p>
                 <input
-                  type=""
+                  type="hidden"
                   name="outletId"
                   aria-label="Outlet Id"
                   defaultValue={selectedOutlet?.id ?? ""}

@@ -31,18 +31,24 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-xl">Ambil Stok</Modal.Heading>
+              <Modal.Heading className="text-2xl font-bold">
+                Ambil Stok
+              </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg">Produk: {selectedProduct?.name}</p>
+                <p className="text-lg">Produk : {selectedProduct?.name}</p>
                 <input
                   type="hidden"
                   name="productId"
                   aria-label="Product Id"
                   defaultValue={selectedProduct?.id ?? ""}
                 />
-
+                <input
+                  type="hidden"
+                  name="outletId"
+                  value={selectedProduct?.outletId ?? ""}
+                />
                 <div className="flex flex-col">
                   <TextField
                     name="productQuantity"

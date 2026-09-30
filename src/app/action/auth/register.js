@@ -46,8 +46,7 @@ export async function registerAction(prevState, formData) {
     !/[A-Z]/.test(password) ||
     !/[0-9]/.test(password)
   ) {
-    errors.password =
-      "Password minimal 8 karakter, terdiri dari huruf besar, huruf kecil, dan angka";
+    errors.password = "Password tidak memenuhi kriteria";
   }
 
   if (Object.keys(errors).length > 0) {

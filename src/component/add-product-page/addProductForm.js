@@ -13,26 +13,10 @@ import { useState, useActionState, useEffect } from "react";
 import { addProductAction } from "@/app/action/product/addProduct";
 import { OutletSelection } from "@/component/outletSelection";
 
-export function AddProductForm({ outlets }) {
+export function AddProductForm({ outlets, selectedOutletId }) {
   const [formCount, setFormCount] = useState(1);
   const [quantity, setQuantity] = useState({});
   const [price, setPrice] = useState({});
-  const [selectedOutletId, setSelectedOutletId] = useState(
-    outlets[0]?.id ?? null,
-  );
-
-  useEffect(() => {
-    const savedOutletId = localStorage.getItem("selectedOutletId");
-
-    if (savedOutletId) {
-      setSelectedOutletId(savedOutletId);
-    }
-  }, []);
-
-  const handleOutletChange = (outletId) => {
-    setSelectedOutletId(outletId);
-    localStorage.setItem("selectedOutletId", outletId);
-  };
 
   const [state, action, isPending] = useActionState(addProductAction, {
     success: false,
@@ -40,16 +24,20 @@ export function AddProductForm({ outlets }) {
   });
 
   return (
-    <div className="flex flex-col items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-3">
+    <div className="flex flex-col items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
       <h1 className="text-2xl font-bold">Tambah Produk</h1>
 
-      <form action={action} className="flex flex-col space-y-3">
+      <form action={action} className="flex flex-col space-y-5">
         <OutletSelection
           outlets={outlets}
           selectedOutletId={selectedOutletId}
-          onOutletChange={handleOutletChange}
         />
-
+        <input
+          type="hidden"
+          name="outletId"
+          value={selectedOutletId ?? ""}
+          readOnly
+        />
         {Array.from({ length: formCount }).map((_, index) => (
           <div
             key={index}

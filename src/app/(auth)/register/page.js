@@ -42,7 +42,7 @@ export default function page() {
   });
 
   return (
-    <main className="flex flex-col justify-center items-center w-xl p-4 space-y-3 border-2 border-amber-600 rounded-2xl">
+    <main className="flex flex-col justify-center items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 w-xl h-fit space-y-5">
       <h1 className="text-3xl font-bold">Register</h1>
       <form
         action={action}
@@ -60,8 +60,7 @@ export default function page() {
           }}
         >
           <Input placeholder="Nama" className="hover:bg-gray-200" />
-          <Description />
-          <div className="min-h-5">
+          <div className="min-h-6">
             {state.errors?.name ? (
               <ErrorMessage>{state.errors.name}</ErrorMessage>
             ) : (
@@ -85,8 +84,7 @@ export default function page() {
           }}
         >
           <Input placeholder="E-mail" className="hover:bg-gray-200" />
-          <Description />
-          <div className="min-h-5">
+          <div className="min-h-6">
             {state.errors?.email ? (
               <ErrorMessage>{state.errors.email}</ErrorMessage>
             ) : (
@@ -118,8 +116,7 @@ export default function page() {
             inputMode="numeric"
             className="hover:bg-gray-200"
           />
-          <Description />
-          <div className="min-h-5">
+          <div className="min-h-6">
             {state.errors?.phone ? (
               <ErrorMessage>{state.errors.phone}</ErrorMessage>
             ) : (
@@ -146,8 +143,10 @@ export default function page() {
             *Gunakan minimal 8 karakter, termasuk huruf besar, huruf kecil, dan
             angka.
           </p>
-          <div className="min-h-7">
-            {!password ? (
+          <div className="min-h-6">
+            {state.errors?.password ? (
+              <ErrorMessage>{state.errors.password}</ErrorMessage>
+            ) : !password ? (
               <FieldError />
             ) : (
               <ErrorMessage className={strength.text}>
@@ -157,13 +156,13 @@ export default function page() {
           </div>
         </TextField>
 
-        <div className="min-h-5">
+        <div className="min-h-6">
           {state.errors?.general && (
             <ErrorMessage>{state.errors.general}</ErrorMessage>
           )}
         </div>
 
-        <Button type="submit" className="w-64 mt-2" isDisabled={isPending}>
+        <Button type="submit" className="w-80 mt-2" isDisabled={isPending}>
           {isPending ? "Mendaftar..." : "Daftar"}
         </Button>
       </form>
