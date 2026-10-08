@@ -45,7 +45,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
           >
             <TextField
               name={`products[${index}][name]`}
-              aria-label="productName"
+              aria-label="product Name"
               type="text"
               className="w-full max-w-64"
               validate={(value) => {
@@ -69,7 +69,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
 
             <TextField
               name={`products[${index}][type]`}
-              aria-label="productType"
+              aria-label="product Type"
               type="text"
               className="w-full max-w-64"
               validate={(value) => {
@@ -93,7 +93,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
 
             <TextField
               name={`products[${index}][brand]`}
-              aria-label="productBrand"
+              aria-label="product Brand"
               type="text"
               className="w-full max-w-64"
               validate={(value) => {
@@ -117,7 +117,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
 
             <TextField
               name={`products[${index}][quantity]`}
-              aria-label="productQuantity"
+              aria-label="product Quantity"
               type="tel"
               className="w-full max-w-64"
               value={quantity[index] ?? ""}
@@ -151,7 +151,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
 
             <TextField
               name={`products[${index}][price]`}
-              aria-label="productPrice"
+              aria-label="product Price"
               type="tel"
               className="w-full max-w-64"
               value={price[index] ?? ""}

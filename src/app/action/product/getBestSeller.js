@@ -3,6 +3,10 @@
 import { prisma } from "@/lib/prisma";
 
 export async function getBestSeller(outletId) {
+  if (!outletId) {
+    return [];
+  }
+
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 

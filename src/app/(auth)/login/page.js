@@ -71,6 +71,13 @@ export default function page() {
           </div>
         </TextField>
 
+        <Link
+          href="/forget-password"
+          className="self-start text-blue-500 hover:underline"
+        >
+          Lupa password ?
+        </Link>
+
         <div className="min-h-6">
           {state.errors?.general && (
             <ErrorMessage>{state.errors.general}</ErrorMessage>

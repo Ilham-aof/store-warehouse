@@ -52,7 +52,7 @@ export function ProductList({ products }) {
   }
 
   return (
-    <div>
+    <section>
       <Table>
         <Table.ScrollContainer>
           <Table.Content
@@ -65,16 +65,16 @@ export function ProductList({ products }) {
                 allowsSorting
                 isRowHeader
                 id="name"
-                className="w-2/7"
+                className="w-[35%]"
               >
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    Nama
+                    Nama Produk
                   </Table.SortableColumnHeader>
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="type" className="w-1/7">
+              <Table.Column allowsSorting id="type" className="w-[10%]">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Tipe
@@ -82,7 +82,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="brand" className="w-1/7">
+              <Table.Column allowsSorting id="brand" className="w-[10%]">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Brand
@@ -90,7 +90,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="quantity" className="w-0.5/7">
+              <Table.Column allowsSorting id="quantity" className="w-[8%]">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Stok
@@ -98,7 +98,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="price" className="w-1/7">
+              <Table.Column allowsSorting id="price" className="w-[14%]">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Harga
@@ -106,7 +106,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column allowsSorting id="stockIn" className="w-1/7">
+              <Table.Column allowsSorting id="stockIn" className="w-[15%]">
                 {({ sortDirection }) => (
                   <Table.SortableColumnHeader sortDirection={sortDirection}>
                     Tanggal Masuk
@@ -114,7 +114,7 @@ export function ProductList({ products }) {
                 )}
               </Table.Column>
 
-              <Table.Column className="w-10"></Table.Column>
+              <Table.Column className="w-[8%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
@@ -141,10 +141,10 @@ export function ProductList({ products }) {
                       <Button aria-label="Menu" variant="secondary" isIconOnly>
                         <EllipsisVertical />
                       </Button>
-                      <Dropdown.Popover>
+                      <Dropdown.Popover className="p-1">
                         <Dropdown.Menu
                           onAction={(key) => handleAction(key, product)}
-                          className="space-y-3 p-3"
+                          className="space-y-3"
                         >
                           <Dropdown.Item
                             id="add-stock"
@@ -213,6 +213,6 @@ export function ProductList({ products }) {
         selectedProduct={selectedProduct}
         onClose={() => setActiveModal(null)}
       />
-    </div>
+    </section>
   );
 }

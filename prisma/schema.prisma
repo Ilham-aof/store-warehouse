@@ -20,16 +20,16 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  email     String   @unique
-  password  String
-  phone     String
-  role      Role     @default(Staff)
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password      String
+  phone         String
+  role          Role     @default(Staff)
 
-  sessions  Session[]
-  stockIns  StockIn[]
-  stockOuts StockOut[]
+  sessions      Session[]
+  stockIns      StockIn[]
+  stockOuts     StockOut[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -46,7 +46,10 @@ model Session {
 model Outlet {
   id       String    @id @default(cuid())
   name     String    @unique
+  code     String    @unique
+
   products Product[]
+  receipts ServiceReceipt[]
 }
 
 model Product {
@@ -87,4 +90,37 @@ model StockOut {
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model ServiceReceipt {
+  id            String        @id @default(cuid())
+  invoiceNumber String        @unique
+
+  customerName  String
+  customerPhone String
+  device        String
+
+  warrantyDays  Int
+  warrantyUntil DateTime?
+
+  processStatus Boolean       @default(false)
+  pickupStatus  Boolean       @default(false)
+
+  outletId String
+  outlet   Outlet @relation(fields: [outletId], references: [id])
+
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  serviceItems  ServiceItem[]
+}
+
+model ServiceItem {
+  id          String         @id @default(cuid())
+  receiptId   String
+
+  description String
+  price       Int
+
+  receipt     ServiceReceipt @relation(fields: [receiptId], references: [id], onDelete: Cascade)
 }

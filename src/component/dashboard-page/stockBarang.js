@@ -5,7 +5,7 @@ import { AddProductButton } from "@/component/addProductButton";
 import { OutletSelection } from "@/component/outletSelection";
 import { ProductList } from "@/component/productList";
 import { SearchBar } from "@/component/searchBar";
-import { ProductPagination } from "@/component/pagination";
+import { PaginationUi } from "@/component/pagination";
 import { BestSellerList } from "@/component/bestSellerList";
 import { Box } from "lucide-react";
 
@@ -55,6 +55,7 @@ export function StockBarang({
           <SearchBar
             keyword={searchKeyword}
             onKeywordChange={setSearchKeyword}
+            placeholder="Cari nama produk..."
           />
           <Separator orientation="vertical" />
           <AddProductButton selectedOutletId={selectedOutletId} />
@@ -62,7 +63,7 @@ export function StockBarang({
 
         <ProductList products={paginatedProducts} />
 
-        <ProductPagination
+        <PaginationUi
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={setCurrentPage}

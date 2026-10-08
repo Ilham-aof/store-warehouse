@@ -2,7 +2,7 @@
 import { Table } from "@heroui/react";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
-import { ProductPagination } from "@/component/pagination";
+import { PaginationUi } from "@/component/pagination";
 import { useState, useEffect } from "react";
 import { ClipboardClock } from "lucide-react";
 
@@ -71,13 +71,15 @@ export function ProductHistoryList({ outlets, history, selectedOutletId }) {
         <Table.ScrollContainer>
           <Table.Content aria-label="Riwayat barang" className="min-w-150">
             <Table.Header>
-              <Table.Column isRowHeader>Produk</Table.Column>
-              <Table.Column>Tipe</Table.Column>
-              <Table.Column>Brand</Table.Column>
-              <Table.Column>Aktivitas Barang</Table.Column>
-              <Table.Column>Jumlah</Table.Column>
-              <Table.Column>Nama</Table.Column>
-              <Table.Column>Tanggal</Table.Column>
+              <Table.Column isRowHeader className="w-[30%]">
+                Nama Produk
+              </Table.Column>
+              <Table.Column className="w-[13%]">Tipe</Table.Column>
+              <Table.Column className="w-[12%]">Brand</Table.Column>
+              <Table.Column className="w-[12%]">Aktivitas Barang</Table.Column>
+              <Table.Column className="w-[8%]">Jumlah</Table.Column>
+              <Table.Column className="w-[10%]">Nama Staff</Table.Column>
+              <Table.Column className="w-[15%]">Tanggal</Table.Column>
             </Table.Header>
 
             <Table.Body>
@@ -105,7 +107,7 @@ export function ProductHistoryList({ outlets, history, selectedOutletId }) {
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
-      <ProductPagination
+      <PaginationUi
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}

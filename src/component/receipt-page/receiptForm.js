@@ -1,0 +1,243 @@
+"use client";
+
+import {
+  Button,
+  Input,
+  TextField,
+  ErrorMessage,
+  FieldError,
+} from "@heroui/react";
+import { Plus, Trash } from "lucide-react";
+import { useState, useActionState } from "react";
+import { createServiceReceipt } from "@/app/action/serviceReceipt/createServiceReceipt";
+import { OutletSelection } from "@/component/outletSelection";
+
+export function ReceiptForm({ outlets, selectedOutletId }) {
+  const [services, setServices] = useState([
+    {
+      description: "",
+      price: "",
+    },
+  ]);
+
+  const addService = () => {
+    setServices((prev) => [
+      ...prev,
+      {
+        description: "",
+        price: "",
+      },
+    ]);
+  };
+
+  const removeService = (index) => {
+    setServices((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const [state, action, isPending] = useActionState(createServiceReceipt, {
+    success: false,
+    errors: {},
+  });
+
+  return (
+    <div className="flex flex-col items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
+      <h1 className="text-2xl font-bold">Buat Nota</h1>
+
+      <form action={action} className="flex flex-col space-y-5">
+        <OutletSelection
+          outlets={outlets}
+          selectedOutletId={selectedOutletId}
+        />
+        <input
+          type=""
+          name="outletId"
+          aria-label="Outlet Id"
+          value={selectedOutletId ?? ""}
+          readOnly
+        />
+
+        <div className="space-y-2">
+          <h2 className="text-xl font-bold">Data Customer</h2>
+          <div className="flex space-x-5">
+            <TextField
+              name="customerName"
+              aria-label="Customer Name"
+              type="text"
+              className="w-64"
+              validate={(value) => {
+                if (!value) {
+                  return "Nama customer wajib diisi";
+                }
+              }}
+            >
+              <Input
+                placeholder="Nama Customer"
+                className="hover:bg-gray-200"
+              />
+
+              <div className="min-h-6">
+                {state.errors?.cusname ? (
+                  <ErrorMessage>{state.errors.cusname}</ErrorMessage>
+                ) : (
+                  <FieldError />
+                )}
+              </div>
+            </TextField>
+            <TextField
+              name="customerPhone"
+              aria-label="Cutomer Phone"
+              type="text"
+              className="w-64"
+              validate={(value) => {
+                if (!value) {
+                  return "Nomor customer wajib diisi";
+                }
+              }}
+            >
+              <Input
+                placeholder="Nomor Customer"
+                className="hover:bg-gray-200"
+              />
+
+              <div className="min-h-6">
+                {state.errors?.cusphone ? (
+                  <ErrorMessage>{state.errors.cusphone}</ErrorMessage>
+                ) : (
+                  <FieldError />
+                )}
+              </div>
+            </TextField>
+            <TextField
+              name="device"
+              aria-label="Customer Device"
+              type="text"
+              className="w-64"
+              validate={(value) => {
+                if (!value) {
+                  return "Device Custome wajib diisi";
+                }
+              }}
+            >
+              <Input
+                placeholder="Device Customer"
+                className="hover:bg-gray-200"
+              />
+
+              <div className="min-h-6">
+                {state.errors?.cusitem ? (
+                  <ErrorMessage>{state.errors.cusitem}</ErrorMessage>
+                ) : (
+                  <FieldError />
+                )}
+              </div>
+            </TextField>
+          </div>
+          <TextField
+            name="serviceWarranty"
+            aria-label="Service Warranty"
+            type="text"
+            className="w-64"
+            validate={(value) => {
+              if (!value) {
+                return "Garansi wajib diisi";
+              }
+            }}
+          >
+            <Input placeholder="Garansi" className="hover:bg-gray-200" />
+
+            <div className="min-h-6">
+              {state.errors?.service ? (
+                <ErrorMessage>{state.errors.serviceWarranty}</ErrorMessage>
+              ) : (
+                <FieldError />
+              )}
+            </div>
+          </TextField>
+        </div>
+
+        <h2 className="text-xl font-bold">Data Servis</h2>
+        <div className="space-y-4">
+          {services.map((item, index) => (
+            <div key={index} className="flex items-start space-x-5">
+              <TextField
+                name={`phoneDamageType[${index}][description]`}
+                aria-label="Jenis Kerusakan"
+                type="text"
+                className="w-64"
+                validate={(value) => {
+                  if (!value) {
+                    return "Jenis kerusakan wajib diisi";
+                  }
+                }}
+              >
+                <Input
+                  placeholder="Jenis Kerusakan"
+                  className="hover:bg-gray-200"
+                />
+
+                <div className="min-h-6">
+                  {state.errors?.service?.[index] ? (
+                    <ErrorMessage>{state.errors.service[index]}</ErrorMessage>
+                  ) : (
+                    <FieldError />
+                  )}
+                </div>
+              </TextField>
+
+              <TextField
+                name={`servicePrice[${index}][price]`}
+                aria-label="Service Price"
+                type="text"
+                className="w-64"
+                validate={(value) => {
+                  if (!value) {
+                    return "Biaya wajib diisi";
+                  }
+                }}
+              >
+                <Input
+                  placeholder="Biaya Servis"
+                  className="hover:bg-gray-200"
+                />
+
+                <div className="min-h-6">
+                  {state.errors?.servicePrice?.[index] ? (
+                    <ErrorMessage>
+                      {state.errors.servicePrice[index]}
+                    </ErrorMessage>
+                  ) : (
+                    <FieldError />
+                  )}
+                </div>
+              </TextField>
+
+              {services.length > 1 && (
+                <Button
+                  type="button"
+                  onPress={() => removeService(index)}
+                  variant="danger"
+                >
+                  <Trash />
+                  Hapus
+                </Button>
+              )}
+            </div>
+          ))}
+          <Button type="button" onPress={addService} variant="secondary">
+            <Plus />
+            Tambah Kerusakan
+          </Button>
+        </div>
+        <div className="min-h-6">
+          {state.errors?.general && (
+            <ErrorMessage>{state.errors.general}</ErrorMessage>
+          )}
+        </div>
+
+        <Button type="submit" isDisabled={isPending} className="self-center">
+          {isPending ? "Memproses..." : "Buat Nota"}
+        </Button>
+      </form>
+    </div>
+  );
+}

@@ -36,6 +36,7 @@ export async function addOutletAction(prevState, formData) {
     }
 
     const name = formData.get("outletName")?.trim();
+    const code = formData.get("outletCode")?.trim();
 
     if (!name) {
       return {
@@ -44,9 +45,17 @@ export async function addOutletAction(prevState, formData) {
       };
     }
 
+    if (!code) {
+      return {
+        success: false,
+        error: "Kode outlet wajib diisi.",
+      };
+    }
+
     const existingOutlet = await prisma.outlet.findUnique({
       where: {
         name,
+        code,
       },
     });
 
@@ -60,6 +69,7 @@ export async function addOutletAction(prevState, formData) {
     await prisma.outlet.create({
       data: {
         name,
+        code,
       },
     });
   } catch (error) {

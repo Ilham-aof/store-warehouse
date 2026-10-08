@@ -19,8 +19,8 @@ export function TimeFilter({ timeFilter, setTimeFilter }) {
           <Select.Value />
           <Select.Indicator />
         </Select.Trigger>
-        <Select.Popover>
-          <ListBox>
+        <Select.Popover className="p-1">
+          <ListBox className="space-y-3">
             <ListBox.Item id="all" textValue="Semua">
               Semua
               <ListBox.ItemIndicator />

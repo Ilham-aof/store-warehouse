@@ -2,7 +2,7 @@
 
 import { Pagination } from "@heroui/react";
 
-export function ProductPagination({
+export function PaginationUi({
   currentPage,
   totalPages,
   onPageChange,

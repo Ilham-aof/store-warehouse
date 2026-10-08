@@ -1,6 +1,6 @@
 import { SearchField } from "@heroui/react";
 
-export function SearchBar({ keyword, onKeywordChange }) {
+export function SearchBar({ keyword, onKeywordChange, placeholder }) {
   return (
     <div className="flex-1">
       <SearchField
@@ -11,7 +11,7 @@ export function SearchBar({ keyword, onKeywordChange }) {
         <SearchField.Group className="rounded-3xl">
           <SearchField.SearchIcon />
           <SearchField.Input
-            placeholder="Cari Produk..."
+            placeholder={placeholder}
             value={keyword}
             onChange={(event) => onKeywordChange(event.target.value)}
           />

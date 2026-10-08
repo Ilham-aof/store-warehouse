@@ -17,23 +17,42 @@ export function AddOutlet() {
   return (
     <>
       <form action={action}>
-        <TextField
-          name="outletName"
-          aria-label="outletName"
-          type="text"
-          className="w-80"
-          validate={(value) => {
-            if (!value) {
-              return "Nama wajib diisi";
-            }
-          }}
-        >
-          <Label>Tambahkan Cabang</Label>
-          <Input placeholder="Nama Cabang" className="hover:bg-gray-200" />
-          <div className="min-h-6">
-            <FieldError />
-          </div>
-        </TextField>
+        <div className="flex gap-5">
+          <TextField
+            name="outletName"
+            aria-label="Outlet Name"
+            type="text"
+            className="w-64"
+            validate={(value) => {
+              if (!value) {
+                return "Nama cabang wajib diisi";
+              }
+            }}
+          >
+            <Label>Tambahkan Cabang</Label>
+            <Input placeholder="Nama Cabang" className="hover:bg-gray-200" />
+            <div className="min-h-6">
+              <FieldError />
+            </div>
+          </TextField>
+          <TextField
+            name="outletCode"
+            aria-label="Outlet Code"
+            type="text"
+            className="w-48"
+            validate={(value) => {
+              if (!value) {
+                return "Kode cabang wajib diisi";
+              }
+            }}
+          >
+            <Label>Kode Cabang</Label>
+            <Input placeholder="Kode Cabang" className="hover:bg-gray-200" />
+            <div className="min-h-6">
+              <FieldError />
+            </div>
+          </TextField>
+        </div>
         <div className="min-h-6">
           {state?.error && <ErrorMessage>{state.error}</ErrorMessage>}
         </div>

@@ -38,10 +38,10 @@ export function UserList({ users }) {
                       <Button aria-label="Menu" variant="secondary" isIconOnly>
                         <EllipsisVertical />
                       </Button>
-                      <Dropdown.Popover>
+                      <Dropdown.Popover className="p-1">
                         <Dropdown.Menu
                           onAction={(key) => handleAction(key, user)}
-                          className="gap-5 p-3"
+                          className="space-y-3"
                         >
                           <Dropdown.Item
                             id="delete"

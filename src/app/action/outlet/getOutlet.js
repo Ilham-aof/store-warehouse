@@ -5,6 +5,7 @@ export async function getOutlet() {
     select: {
       id: true,
       name: true,
+      code: true,
     },
     orderBy: {
       name: "desc",

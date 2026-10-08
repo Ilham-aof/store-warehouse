@@ -22,6 +22,7 @@ export function OutletList({ outlets }) {
           <Table.Content aria-label="Daftar outlet">
             <Table.Header>
               <Table.Column isRowHeader>Nama Outlet</Table.Column>
+              <Table.Column> Kode Outlet</Table.Column>
               <Table.Column className="w-10"></Table.Column>
             </Table.Header>
 
@@ -29,15 +30,16 @@ export function OutletList({ outlets }) {
               {outlets.map((outlet) => (
                 <Table.Row key={outlet.id}>
                   <Table.Cell>{outlet.name}</Table.Cell>
+                  <Table.Cell>{outlet.code}</Table.Cell>
                   <Table.Cell className="flex justify-center">
                     <Dropdown>
                       <Button aria-label="Menu" variant="secondary" isIconOnly>
                         <EllipsisVertical />
                       </Button>
-                      <Dropdown.Popover>
+                      <Dropdown.Popover className="p-1">
                         <Dropdown.Menu
                           onAction={(key) => handleAction(key, outlet)}
-                          className="gap-5 p-3"
+                          className="space-y-3"
                         >
                           <Dropdown.Item
                             id="edit"

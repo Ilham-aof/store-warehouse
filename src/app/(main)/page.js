@@ -1,4 +1,3 @@
-import { getCurrentUser } from "@/app/action/user/getCurrentUser";
 import { getDataProduct } from "@/app/action//product/getDataProduct";
 import { getBestSeller } from "@/app/action//product/getBestSeller";
 

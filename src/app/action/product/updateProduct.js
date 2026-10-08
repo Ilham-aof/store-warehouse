@@ -34,7 +34,7 @@ export async function updateProductAction(prevState, formData) {
   if (!productId) {
     return {
       success: false,
-      error: "ID produk tidak ditemukan",
+      error: "Produk tidak ditemukan",
     };
   }
 

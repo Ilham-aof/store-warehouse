@@ -32,7 +32,7 @@ export function BestSellerList({ bestSellers }) {
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-semibold">{product.name}</p>
 
-                  <div className="flex items-center gap-1 text-sm text-gray-500">
+                  <div className="flex items-center gap-1 text-sm text-muted">
                     <Package size={15} />
                     <span>Stok: {product.quantity}</span>
                   </div>
@@ -41,12 +41,12 @@ export function BestSellerList({ bestSellers }) {
                 <div className="text-right">
                   <p className="font-bold">{product.soldQuantity}</p>
 
-                  <p className="text-xs text-gray-500">terjual</p>
+                  <p className="text-xs text-muted">Terjual</p>
                 </div>
               </div>
             ))
           ) : (
-            <p className="py-6 text-center text-gray-500">
+            <p className="py-6 text-center text-muted">
               Belum ada data penjualan.
             </p>
           )}

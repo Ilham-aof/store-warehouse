@@ -27,7 +27,7 @@ export function OutletSelection({ outlets, selectedOutletId }) {
           <Select.Indicator />
         </Select.Trigger>
 
-        <Select.Popover className="p-3">
+        <Select.Popover className="p-1">
           <ListBox className="space-y-3">
             {outlets.map((outlet) => (
               <ListBox.Item

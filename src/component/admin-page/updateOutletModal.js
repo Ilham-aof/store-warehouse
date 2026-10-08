@@ -46,7 +46,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                 <div className="flex gap-4">
                   <TextField
                     name="outletName"
-                    aria-label="outletName"
+                    aria-label="outlet Name"
                     type="text"
                     defaultValue={selectedOutlet?.name ?? ""}
                     className="w-full max-w-64"

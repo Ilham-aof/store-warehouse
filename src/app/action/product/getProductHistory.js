@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
 
 export async function getProductHistory(outletId) {
+  if (!outletId) {
+    return [];
+  }
+
   const [stockIns, stockOuts] = await Promise.all([
     prisma.stockIn.findMany({
       where: {
