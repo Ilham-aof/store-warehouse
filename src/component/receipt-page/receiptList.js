@@ -35,6 +35,7 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
 
   const [currentPage, setCurrentPage] = useState(1);
 
+  const today = new Date();
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -66,13 +67,13 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
 
   return (
     <section className="space-y-5">
-      <div className="flex gap-3 items-center">
+      <div className="flex space-x-3 items-center">
         <Files size={30} />
         <h1 className="text-2xl font-bold">Daftar Nota Servis</h1>
       </div>
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
-      <div className="flex gap-3">
+      <div className="flex space-x-5">
         <SearchBar
           keyword={searchKeyword}
           onKeywordChange={setSearchKeyword}
@@ -123,24 +124,7 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
                   <Table.Cell>
                     {receipt.warrantyUntil ? (
                       <>
-                        <p
-                          className={
-                            new Date() <= receipt.warrantyUntil
-                              ? "text-success"
-                              : "text-danger"
-                          }
-                        >
-                          {new Date() <= receipt.warrantyUntil
-                            ? "Aktif hingga :"
-                            : "Expired"}
-                        </p>
-                        <p
-                          className={
-                            new Date() <= receipt.warrantyUntil
-                              ? "text-success"
-                              : "text-danger"
-                          }
-                        >
+                        <p>
                           {receipt.warrantyUntil.toLocaleDateString("id-ID")}
                         </p>
                       </>

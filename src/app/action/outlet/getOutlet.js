@@ -6,6 +6,8 @@ export async function getOutlet() {
       id: true,
       name: true,
       code: true,
+      address: true,
+      phone: true,
     },
     orderBy: {
       name: "desc",

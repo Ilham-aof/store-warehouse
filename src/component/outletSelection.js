@@ -13,12 +13,11 @@ export function OutletSelection({ outlets, selectedOutletId }) {
 
   return (
     <div className="flex items-center space-x-3">
-      <h2 className="w-20">Cabang</h2>
-      <p>:</p>
+      <p>Cabang</p>
       <Select
         variant="secondary"
         aria-label="Pilih Outlet"
-        className="w-[256px]"
+        className="w-56"
         selectedKey={selectedOutletId}
         onSelectionChange={handleOutletChange}
       >

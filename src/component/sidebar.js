@@ -1,26 +1,31 @@
 "use client";
 import { Link, Separator, Avatar } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
-import { LogoutButton } from "@/component/logoutButton";
+import { LogoutButton } from "@/component/dashboard-page/logoutButton";
 import {
   CircleUserRound,
   Boxes,
   ChartLine,
   Wrench,
   ReceiptText,
+  ClipboardClock,
 } from "lucide-react";
 
 export function Sidebar({ user }) {
   const searchParams = useSearchParams();
   const outletId = searchParams.get("outletId");
 
-  const historyHref = outletId
+  const productHistoryHref = outletId
     ? `/product-history?outletId=${outletId}`
     : "/product-history";
 
   const stockHref = outletId ? `/?outletId=${outletId}` : "/";
 
-  const receiptHref = outletId ? `/receipt?outletId=${outletId}` : "/receipt";
+  const receiptHref = outletId ? `/order?outletId=${outletId}` : "/order";
+
+  const receiptHistoryHref = outletId
+    ? `/receipt-history?outletId=${outletId}`
+    : "/receipt-history";
 
   return (
     <aside>
@@ -41,7 +46,7 @@ export function Sidebar({ user }) {
           </Link>
           <Link
             className="no-underline font-bold w-full px-4 py-1 rounded-full hover:bg-gray-400 gap-3"
-            href={historyHref}
+            href={productHistoryHref}
           >
             <ChartLine />
             Laporan Penjualan
@@ -57,9 +62,10 @@ export function Sidebar({ user }) {
             Cetak Nota
           </Link>
           <Link
-            className="no-underline font-bold w-full px-4 py-1 rounded-full hover:bg-gray-400"
-            href="/riwayat-nota"
+            className="no-underline font-bold w-full px-4 py-1 rounded-full hover:bg-gray-400 gap-3"
+            href={receiptHistoryHref}
           >
+            <ClipboardClock />
             Riwayat Nota
           </Link>
           {user?.role === "Admin" && (

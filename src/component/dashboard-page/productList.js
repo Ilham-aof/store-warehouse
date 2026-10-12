@@ -9,10 +9,10 @@ import {
   PackagePlus,
   EllipsisVertical,
 } from "lucide-react";
-import { UpdateProductModal } from "@/component/updateProductModal";
-import { DeleteProductModal } from "@/component/deleteProductModal";
-import { AddProductStockModal } from "@/component/addProductStockModal";
-import { TakeProductStockModal } from "@/component/takeProductStockModal";
+import { UpdateProductModal } from "@/component/dashboard-page/updateProductModal";
+import { DeleteProductModal } from "@/component/dashboard-page/deleteProductModal";
+import { AddProductStockModal } from "@/component/dashboard-page/addProductStockModal";
+import { TakeProductStockModal } from "@/component/dashboard-page/takeProductStockModal";
 
 export function ProductList({ products }) {
   const [sortDescriptor, setSortDescriptor] = useState(null);
@@ -131,8 +131,11 @@ export function ProductList({ products }) {
                     {new Date(product.stockIns[0].createdAt).toLocaleString(
                       "id-ID",
                       {
-                        dateStyle: "short",
-                        timeStyle: "short",
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
                       },
                     )}
                   </Table.Cell>

@@ -44,9 +44,12 @@ model Session {
 }
 
 model Outlet {
-  id       String    @id @default(cuid())
-  name     String    @unique
-  code     String    @unique
+  id          String    @id @default(cuid())
+  name        String    @unique
+  code        String    @unique
+  address     String    
+  phone       String    
+
 
   products Product[]
   receipts ServiceReceipt[]

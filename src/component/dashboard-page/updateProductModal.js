@@ -27,7 +27,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
         isDismissable={false}
       >
         <Modal.Container>
-          <Modal.Dialog className="max-w-5xl max-h-xl">
+          <Modal.Dialog className="max-w-5xl max-h-xl space-y-5">
             <Modal.CloseTrigger />
 
             <Modal.Header>
@@ -37,7 +37,9 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg">Produk : {selectedProduct?.name}</p>
+                <p className="text-lg text-muted">
+                  Produk : {selectedProduct?.name}
+                </p>
                 <input
                   type="hidden"
                   name="productId"

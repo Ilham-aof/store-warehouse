@@ -33,7 +33,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
         isDismissable={false}
       >
         <Modal.Container>
-          <Modal.Dialog className="max-w-5xl max-h-xl">
+          <Modal.Dialog className="max-w-5xl max-h-xl space-y-5">
             <Modal.CloseTrigger />
 
             <Modal.Header>
@@ -43,17 +43,17 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg">
+                <p className="text-lg text-muted">
                   Kode Nota : {selectedReceipt?.invoiceNumber}
                 </p>
                 <input
-                  type=""
+                  type="hidden"
                   name="receiptId"
                   defaultValue={selectedReceipt?.id ?? ""}
                 />
 
                 <input
-                  type=""
+                  type="hidden"
                   name="outletId"
                   defaultValue={selectedReceipt?.outletId ?? ""}
                 />

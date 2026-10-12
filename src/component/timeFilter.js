@@ -1,16 +1,14 @@
 "use client";
 
-import { ListBox, Select } from "@heroui/react";
+import { ListBox, Select, Header } from "@heroui/react";
 
 export function TimeFilter({ timeFilter, setTimeFilter }) {
   return (
     <div className="flex items-center space-x-3">
-      <h2 className="w-20">Waktu</h2>
-      <p>:</p>
-
+      <p>Waktu</p>
       <Select
         variant="secondary"
-        className="w-[256px]"
+        className="w-32"
         aria-label="Filter waktu"
         selectedKey={timeFilter}
         onSelectionChange={setTimeFilter}
@@ -21,6 +19,7 @@ export function TimeFilter({ timeFilter, setTimeFilter }) {
         </Select.Trigger>
         <Select.Popover className="p-1">
           <ListBox className="space-y-3">
+            <Header>Filter Waktu</Header>
             <ListBox.Item id="all" textValue="Semua">
               Semua
               <ListBox.ItemIndicator />

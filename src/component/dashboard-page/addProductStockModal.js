@@ -27,7 +27,7 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
         isDismissable={false}
       >
         <Modal.Container>
-          <Modal.Dialog>
+          <Modal.Dialog className="space-y-5">
             <Modal.Header>
               <Modal.Heading className="text-2xl font-bold">
                 Tambah Stok
@@ -35,7 +35,9 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg">Produk : {selectedProduct?.name}</p>
+                <p className="text-lg text-muted">
+                  Produk : {selectedProduct?.name}
+                </p>
                 <input
                   type="hidden"
                   name="productId"

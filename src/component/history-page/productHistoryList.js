@@ -18,7 +18,6 @@ export function ProductHistoryList({ outlets, history, selectedOutletId }) {
   }, [selectedOutletId, timeFilter]);
 
   const filteredHistory = history.filter((item) => {
-    // Kalau "Semua", tidak perlu filter waktu
     if (timeFilter === "all") {
       return true;
     }
@@ -97,8 +96,11 @@ export function ProductHistoryList({ outlets, history, selectedOutletId }) {
                   <Table.Cell>{item.userName}</Table.Cell>
                   <Table.Cell>
                     {new Date(item.createdAt).toLocaleString("id-ID", {
-                      dateStyle: "short",
-                      timeStyle: "short",
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
                     })}
                   </Table.Cell>
                 </Table.Row>

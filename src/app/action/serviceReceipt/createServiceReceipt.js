@@ -41,6 +41,8 @@ export async function createServiceReceipt(prevState, formData) {
 
   if (!customerPhone) {
     errors.cusphone = "Nomor customer wajib diisi";
+  } else if (!/^08\d{8,11}$/.test(customerPhone)) {
+    errors.cusphone = "Nomor customer tidak valid";
   }
 
   if (!device) {
@@ -145,10 +147,6 @@ export async function createServiceReceipt(prevState, formData) {
     };
   }
 
-  // =========================================
-  // 8. GENERATE NOMOR NOTA
-  // =========================================
-
   const now = new Date();
 
   const year = now.getFullYear();
@@ -175,17 +173,6 @@ export async function createServiceReceipt(prevState, formData) {
 
   const invoiceNumber = `SRV-${outlet.code}-${dateString}-${sequence}`;
 
-  console.log("=== DATA CUSTOMER ===");
-  console.log("outletId :", outletId);
-  console.log("Kode Nota :", invoiceNumber);
-  console.log("customerName :", customerName);
-  console.log("customerPhone :", customerPhone);
-  console.log("device :", device);
-  console.log(`garansi : ${serviceWarranty} hari`);
-
-  console.log("=== DATA SERVICE ===");
-  console.log(serviceItems);
-
   await prisma.serviceReceipt.create({
     data: {
       invoiceNumber,
@@ -211,7 +198,7 @@ export async function createServiceReceipt(prevState, formData) {
     },
   });
 
-  revalidatePath("/receipt");
+  revalidatePath("/order");
 
-  redirect(`/receipt?outletId=${outletId}`);
+  redirect(`/order?outletId=${outletId}`);
 }

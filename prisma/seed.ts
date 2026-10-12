@@ -28,3 +28,5 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
+
+//npx tsx prisma/seed.ts

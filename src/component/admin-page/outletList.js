@@ -21,8 +21,10 @@ export function OutletList({ outlets }) {
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar outlet">
             <Table.Header>
-              <Table.Column isRowHeader>Nama Outlet</Table.Column>
-              <Table.Column> Kode Outlet</Table.Column>
+              <Table.Column isRowHeader>Nama Cabang</Table.Column>
+              <Table.Column> Kode Cabang</Table.Column>
+              <Table.Column> Alamat Cabang</Table.Column>
+              <Table.Column> Nomor Telepon Cabang</Table.Column>
               <Table.Column className="w-10"></Table.Column>
             </Table.Header>
 
@@ -31,6 +33,8 @@ export function OutletList({ outlets }) {
                 <Table.Row key={outlet.id}>
                   <Table.Cell>{outlet.name}</Table.Cell>
                   <Table.Cell>{outlet.code}</Table.Cell>
+                  <Table.Cell>{outlet.address}</Table.Cell>
+                  <Table.Cell>{outlet.phone}</Table.Cell>
                   <Table.Cell className="flex justify-center">
                     <Dropdown>
                       <Button aria-label="Menu" variant="secondary" isIconOnly>

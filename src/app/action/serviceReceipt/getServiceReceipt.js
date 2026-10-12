@@ -8,6 +8,10 @@ export async function getDataServiceReceipt(outletId) {
   return await prisma.serviceReceipt.findMany({
     where: {
       outletId,
+      NOT: {
+        processStatus: true,
+        pickupStatus: true,
+      },
     },
     select: {
       id: true,

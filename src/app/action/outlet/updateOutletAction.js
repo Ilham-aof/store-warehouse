@@ -37,18 +37,47 @@ export async function updateOutletAction(prevState, formData) {
 
     const outletId = formData.get("outletId");
     const name = formData.get("outletName")?.trim();
+    const code = formData.get("outletCode")?.trim();
+    const address = formData.get("outletAddress")?.trim();
+    const phone = formData.get("outletPhone")?.trim();
 
     if (!outletId) {
       return {
         success: false,
-        error: "Outlet tidak ditemukan.",
+        error: "Cabang tidak ditemukan.",
       };
     }
 
     if (!name) {
       return {
         success: false,
-        error: "Nama outlet wajib diisi.",
+        error: "Nama cabang wajib diisi.",
+      };
+    }
+
+    if (!code) {
+      return {
+        success: false,
+        error: "Kode cabang wajib diisi.",
+      };
+    }
+
+    if (!address) {
+      return {
+        success: false,
+        error: "Alamat cabang wajib diisi.",
+      };
+    }
+
+    if (!phone) {
+      return {
+        success: false,
+        error: "Nomor telepon cabang wajib diisi",
+      };
+    } else if (!/^08\d{8,11}$/.test(phone)) {
+      return {
+        success: false,
+        error: "Nomor telepon cabang tidak valid",
       };
     }
 
@@ -61,7 +90,7 @@ export async function updateOutletAction(prevState, formData) {
     if (!outlet) {
       return {
         success: false,
-        error: "Outlet tidak ditemukan.",
+        error: "Cabang tidak ditemukan.",
       };
     }
 
@@ -77,7 +106,7 @@ export async function updateOutletAction(prevState, formData) {
     if (existingOutlet) {
       return {
         success: false,
-        error: "Nama outlet sudah digunakan.",
+        error: "Nama cabang sudah digunakan.",
       };
     }
 
@@ -87,14 +116,15 @@ export async function updateOutletAction(prevState, formData) {
       },
       data: {
         name,
+        code,
+        address,
+        phone,
       },
     });
   } catch (error) {
-    console.error("Update outlet error:", error);
-
     return {
       success: false,
-      error: "Gagal mengubah nama outlet.",
+      error: "Gagal mengubah nama cabang",
     };
   }
   revalidatePath("/admin");
