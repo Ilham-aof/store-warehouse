@@ -21,11 +21,16 @@ export function OutletList({ outlets }) {
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar outlet">
             <Table.Header>
-              <Table.Column isRowHeader>Nama Cabang</Table.Column>
-              <Table.Column> Kode Cabang</Table.Column>
-              <Table.Column> Alamat Cabang</Table.Column>
-              <Table.Column> Nomor Telepon Cabang</Table.Column>
-              <Table.Column className="w-10"></Table.Column>
+              <Table.Column isRowHeader className="w-[20%]">
+                Nama Cabang
+              </Table.Column>
+              <Table.Column className="w-[15%]"> Kode Cabang</Table.Column>
+              <Table.Column className="w-[40%]"> Alamat Cabang</Table.Column>
+              <Table.Column className="w-[15%]">
+                {" "}
+                Nomor Telepon Cabang
+              </Table.Column>
+              <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
@@ -35,38 +40,44 @@ export function OutletList({ outlets }) {
                   <Table.Cell>{outlet.code}</Table.Cell>
                   <Table.Cell>{outlet.address}</Table.Cell>
                   <Table.Cell>{outlet.phone}</Table.Cell>
-                  <Table.Cell className="flex justify-center">
-                    <Dropdown>
-                      <Button aria-label="Menu" variant="secondary" isIconOnly>
-                        <EllipsisVertical />
-                      </Button>
-                      <Dropdown.Popover className="p-1">
-                        <Dropdown.Menu
-                          onAction={(key) => handleAction(key, outlet)}
-                          className="space-y-3"
+                  <Table.Cell>
+                    <div className="flex justify-center">
+                      <Dropdown>
+                        <Button
+                          aria-label="Menu"
+                          variant="secondary"
+                          isIconOnly
                         >
-                          <Dropdown.Item
-                            id="edit"
-                            textValue="Edit Outlet"
-                            className="flex items-center"
+                          <EllipsisVertical />
+                        </Button>
+                        <Dropdown.Popover className="p-1">
+                          <Dropdown.Menu
+                            onAction={(key) => handleAction(key, outlet)}
+                            className="space-y-3"
                           >
-                            <Pencil />
-                            <Label>Ubah Outlet</Label>
-                          </Dropdown.Item>
-                          <Separator />
+                            <Dropdown.Item
+                              id="edit"
+                              textValue="Edit Outlet"
+                              className="flex items-center"
+                            >
+                              <Pencil />
+                              <Label>Ubah Outlet</Label>
+                            </Dropdown.Item>
+                            <Separator />
 
-                          <Dropdown.Item
-                            id="delete"
-                            textValue="Delete Product"
-                            variant="danger"
-                            className="flex items-center"
-                          >
-                            <Trash className="text-danger" />
-                            <Label>Hapus Outlet</Label>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown.Popover>
-                    </Dropdown>
+                            <Dropdown.Item
+                              id="delete"
+                              textValue="Delete Product"
+                              variant="danger"
+                              className="flex items-center"
+                            >
+                              <Trash className="text-danger" />
+                              <Label>Hapus Outlet</Label>
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown.Popover>
+                      </Dropdown>
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               ))}

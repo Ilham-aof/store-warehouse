@@ -1,5 +1,5 @@
 "use client";
-import { Table } from "@heroui/react";
+import { Table, Label } from "@heroui/react";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
 import { PaginationUi } from "@/component/pagination";
@@ -87,8 +87,24 @@ export function ProductHistoryList({ outlets, history, selectedOutletId }) {
                   <Table.Cell>{item.productName}</Table.Cell>
                   <Table.Cell>{item.productType}</Table.Cell>
                   <Table.Cell>{item.productBrand}</Table.Cell>
-                  <Table.Cell>{item.activity}</Table.Cell>
                   <Table.Cell>
+                    <Label
+                      className={
+                        item.activity === "Keluar"
+                          ? "rounded-2xl px-4 py-2 bg-danger/20 text-danger font-bold"
+                          : "rounded-2xl px-4 py-2 bg-success/20 text-success font-bold"
+                      }
+                    >
+                      {item.activity}
+                    </Label>
+                  </Table.Cell>
+                  <Table.Cell
+                    className={
+                      item.activity === "Keluar"
+                        ? "text-danger font-bold"
+                        : "text-success font-bold"
+                    }
+                  >
                     {item.activity === "Keluar"
                       ? `- ${item.quantity}`
                       : `+ ${item.quantity}`}

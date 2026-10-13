@@ -20,11 +20,13 @@ export function UserList({ users }) {
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar User">
             <Table.Header>
-              <Table.Column isRowHeader>Nama User</Table.Column>
-              <Table.Column>Nomor HP</Table.Column>
-              <Table.Column>E-mail</Table.Column>
+              <Table.Column isRowHeader className="w-[30%]">
+                Nama User
+              </Table.Column>
+              <Table.Column className="w-[30%]">Nomor HP</Table.Column>
+              <Table.Column className="w-[30%]">E-mail</Table.Column>
 
-              <Table.Column className="w-10"></Table.Column>
+              <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
@@ -33,28 +35,34 @@ export function UserList({ users }) {
                   <Table.Cell>{user.name}</Table.Cell>
                   <Table.Cell>{user.phone}</Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
-                  <Table.Cell className="flex justify-center">
-                    <Dropdown>
-                      <Button aria-label="Menu" variant="secondary" isIconOnly>
-                        <EllipsisVertical />
-                      </Button>
-                      <Dropdown.Popover className="p-1">
-                        <Dropdown.Menu
-                          onAction={(key) => handleAction(key, user)}
-                          className="space-y-3"
+                  <Table.Cell>
+                    <div className="flex justify-center">
+                      <Dropdown>
+                        <Button
+                          aria-label="Menu"
+                          variant="secondary"
+                          isIconOnly
                         >
-                          <Dropdown.Item
-                            id="delete"
-                            textValue="Delete User"
-                            variant="danger"
-                            className="flex items-center"
+                          <EllipsisVertical />
+                        </Button>
+                        <Dropdown.Popover className="p-1">
+                          <Dropdown.Menu
+                            onAction={(key) => handleAction(key, user)}
+                            className="space-y-3"
                           >
-                            <UserRoundX className="text-danger" />
-                            <Label>Hapus Staff</Label>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown.Popover>
-                    </Dropdown>
+                            <Dropdown.Item
+                              id="delete"
+                              textValue="Delete User"
+                              variant="danger"
+                              className="flex items-center"
+                            >
+                              <UserRoundX className="text-danger" />
+                              <Label>Hapus Staff</Label>
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown.Popover>
+                      </Dropdown>
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               ))}

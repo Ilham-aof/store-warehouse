@@ -7,7 +7,7 @@ import {
   Separator,
   Button,
 } from "@heroui/react";
-import { Pencil, EllipsisVertical, Files, ReceiptText } from "lucide-react";
+import { Pencil, EllipsisVertical, Files, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
@@ -20,22 +20,8 @@ import { UpdateReceiptModal } from "@/component/receipt-page/updateReceiptModal"
 
 export function ReceiptList({ outlets, receipts, selectedOutletId }) {
   const router = useRouter();
-  async function handleStatusChange(receiptId, status, value) {
-    const result = await updateServiceReceiptStatus(receiptId, status, value);
-
-    if (!result.success) {
-      console.error(result.error);
-      return;
-    }
-
-    router.refresh();
-  }
-
   const [searchKeyword, setSearchKeyword] = useState("");
-
   const [currentPage, setCurrentPage] = useState(1);
-
-  const today = new Date();
   const itemsPerPage = 10;
 
   useEffect(() => {
@@ -51,14 +37,23 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
   });
 
   const totalPages = Math.ceil(filteredReceipts.length / itemsPerPage);
-
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-
   const paginatedReceipts = filteredReceipts.slice(startIndex, endIndex);
 
   const [activeModal, setActiveModal] = useState(null);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+
+  async function handleStatusChange(receiptId, status, value) {
+    const result = await updateServiceReceiptStatus(receiptId, status, value);
+
+    if (!result.success) {
+      console.error(result.error);
+      return;
+    }
+
+    router.refresh();
+  }
 
   function handleAction(key, receipt) {
     setSelectedReceipt(receipt);
@@ -119,10 +114,16 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
                     {receipt.createdAt.toLocaleDateString("id-ID")}
                   </Table.Cell>
 
-                  <Table.Cell>{receipt.warrantyDays} hari</Table.Cell>
+                  <Table.Cell>
+                    {receipt.warrantyDays === 0
+                      ? "Tidak Bergaransi"
+                      : `${receipt.warrantyDays} hari`}
+                  </Table.Cell>
 
                   <Table.Cell>
-                    {receipt.warrantyUntil ? (
+                    {receipt.warrantyDays === 0 ? (
+                      "Tidak Bergaransi"
+                    ) : receipt.warrantyUntil ? (
                       <>
                         <p>
                           {receipt.warrantyUntil.toLocaleDateString("id-ID")}
@@ -184,37 +185,43 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
                   </Table.Cell>
 
                   <Table.Cell>
-                    <Dropdown>
-                      <Button aria-label="Menu" variant="secondary" isIconOnly>
-                        <EllipsisVertical />
-                      </Button>
-                      <Dropdown.Popover className="p-1">
-                        <Dropdown.Menu
-                          onAction={(key) => handleAction(key, receipt)}
-                          className="space-y-3"
+                    <div className="flex items-center justify-center">
+                      <Dropdown>
+                        <Button
+                          aria-label="Menu"
+                          variant="secondary"
+                          isIconOnly
                         >
-                          <Dropdown.Item
-                            id="cetak"
-                            textValue="Cetak Nota"
-                            className="flex items-center"
-                            onAction={() =>
-                              router.push(`/receipt/${receipt.id}`)
-                            }
+                          <EllipsisVertical />
+                        </Button>
+                        <Dropdown.Popover className="p-1">
+                          <Dropdown.Menu
+                            onAction={(key) => handleAction(key, receipt)}
+                            className="space-y-3"
                           >
-                            <ReceiptText />
-                            <Label>Cetak Nota</Label>
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            id="edit"
-                            textValue="Edit Nota"
-                            className="flex items-center"
-                          >
-                            <Pencil />
-                            <Label>Ubah Nota</Label>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown.Popover>
-                    </Dropdown>
+                            <Dropdown.Item
+                              id="cetak"
+                              textValue="Cetak Nota"
+                              className="flex items-center"
+                              onAction={() =>
+                                router.push(`/receipt/${receipt.id}`)
+                              }
+                            >
+                              <Printer />
+                              <Label>Cetak Nota</Label>
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              id="edit"
+                              textValue="Edit Nota"
+                              className="flex items-center"
+                            >
+                              <Pencil />
+                              <Label>Ubah Nota</Label>
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown.Popover>
+                      </Dropdown>
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               ))}

@@ -122,6 +122,6 @@ export async function updateReceiptData(prevState, formData) {
     };
   }
 
-  revalidatePath("/receipt");
-  redirect(`/receipt?outletId=${outletId}`);
+  revalidatePath("/order");
+  redirect(`/order?outletId=${outletId}`);
 }

@@ -8,7 +8,7 @@ import {
   FieldError,
   Label,
 } from "@heroui/react";
-import { Plus, Trash } from "lucide-react";
+import { Plus, Trash, ReceiptText } from "lucide-react";
 import { useState, useActionState } from "react";
 import { createServiceReceipt } from "@/app/action/serviceReceipt/createServiceReceipt";
 import { OutletSelection } from "@/component/outletSelection";
@@ -46,7 +46,10 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
 
   return (
     <div className="flex flex-col items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
-      <h1 className="text-2xl font-bold">Buat Nota</h1>
+      <div className="flex space-x-3 items-center">
+        <ReceiptText size={30} />
+        <h1 className="text-2xl font-bold">Buat Nota</h1>
+      </div>
 
       <form action={action} className="flex flex-col space-y-5">
         <OutletSelection
@@ -54,7 +57,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
           selectedOutletId={selectedOutletId}
         />
         <input
-          type=""
+          type="hidden"
           name="outletId"
           aria-label="Outlet Id"
           value={selectedOutletId ?? ""}
@@ -274,15 +277,17 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
             </Button>
           </div>
         </div>
-        <div className="min-h-6">
-          {state.errors?.general && (
-            <ErrorMessage>{state.errors.general}</ErrorMessage>
-          )}
-        </div>
+        <div className="self-center">
+          <div className="min-h-6">
+            {state.errors?.general && (
+              <ErrorMessage>{state.errors.general}</ErrorMessage>
+            )}
+          </div>
 
-        <Button type="submit" isDisabled={isPending} className="self-center">
-          {isPending ? "Memproses..." : "Buat Nota"}
-        </Button>
+          <Button type="submit" isDisabled={isPending}>
+            {isPending ? "Memproses..." : "Buat Nota"}
+          </Button>
+        </div>
       </form>
     </div>
   );

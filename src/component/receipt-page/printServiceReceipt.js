@@ -2,6 +2,7 @@
 
 import { Button } from "@heroui/react";
 import { useRef } from "react";
+import { FileDown } from "lucide-react";
 
 export function PrintServiceReceipt({ receipt, user }) {
   const receiptRef = useRef(null);
@@ -116,12 +117,19 @@ export function PrintServiceReceipt({ receipt, user }) {
 
           <div>
             <h2 className="font-bold">Informasi Garansi</h2>
-            <p>Waktu Garansi: {receipt.warrantyDays} hari</p>
             <p>
-              Berlaku Hingga:{" "}
-              {receipt.warrantyUntil
-                ? formatDate(receipt.warrantyUntil)
-                : "Belum ditentukan"}
+              {receipt.warrantyDays === 0
+                ? "Garansi: Tidak Bergaransi"
+                : receipt.warrantyDays > 0 && !receipt.warrantyUntil
+                  ? "Garansi: -"
+                  : `Garansi: ${receipt.warrantyDays} hari`}
+            </p>
+            <p>
+              {receipt.warrantyDays === 0
+                ? ""
+                : receipt.warrantyDays > 0 && !receipt.warrantyUntil
+                  ? "Berlaku Hingga: Belum ditentukan"
+                  : `Berlaku Hingga: ${formatDate(receipt.warrantyUntil)}`}
             </p>
           </div>
         </section>
@@ -168,6 +176,7 @@ export function PrintServiceReceipt({ receipt, user }) {
       </div>
 
       <Button type="button" onClick={downloadPDF}>
+        <FileDown />
         Download PDF
       </Button>
     </div>

@@ -74,9 +74,13 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
   let warrantyUntil = null;
 
   if (newProcessStatus && newPickupStatus) {
-    warrantyUntil = new Date(receipt.createdAt);
+    if (receipt.warrantyDays > 0) {
+      warrantyUntil = new Date();
 
-    warrantyUntil.setDate(warrantyUntil.getDate() + receipt.warrantyDays);
+      warrantyUntil.setDate(warrantyUntil.getDate() + receipt.warrantyDays);
+    } else {
+      warrantyUntil = null;
+    }
   }
 
   await prisma.serviceReceipt.update({

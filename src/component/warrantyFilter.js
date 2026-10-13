@@ -8,7 +8,7 @@ export function WarrantyFilter({ warrantyFilter, setWarrantyFilter }) {
       <p>Garansi</p>
       <Select
         variant="secondary"
-        className="w-32"
+        className="w-40"
         aria-label="Filter garansi"
         selectedKey={warrantyFilter}
         onSelectionChange={setWarrantyFilter}
@@ -27,6 +27,11 @@ export function WarrantyFilter({ warrantyFilter, setWarrantyFilter }) {
 
             <ListBox.Item id="active" textValue="Active">
               Active
+              <ListBox.ItemIndicator />
+            </ListBox.Item>
+
+            <ListBox.Item id="noWarranty" textValue="NoWarranty">
+              Tidak Bergaransi
               <ListBox.ItemIndicator />
             </ListBox.Item>
 

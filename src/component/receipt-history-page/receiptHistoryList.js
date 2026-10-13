@@ -7,7 +7,7 @@ import {
   Separator,
   Button,
 } from "@heroui/react";
-import { Pencil, EllipsisVertical, Files, ReceiptText } from "lucide-react";
+import { EllipsisVertical, Files, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
@@ -15,7 +15,6 @@ import { updateServiceReceiptStatus } from "@/app/action/serviceReceipt/updateSe
 import { useRouter } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
-import { UpdateReceiptModal } from "@/component/receipt-page/updateReceiptModal";
 import { TimeFilter } from "@/component/timeFilter";
 import { WarrantyFilter } from "@/component/warrantyFilter";
 
@@ -79,9 +78,17 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
     let matchesWarranty = true;
 
     if (warrantyFilter === "active") {
-      matchesWarranty = warrantyUntil !== null && warrantyUntil > now;
+      matchesWarranty =
+        receipt.warrantyDays > 0 &&
+        warrantyUntil !== null &&
+        warrantyUntil >= now;
     } else if (warrantyFilter === "expired") {
-      matchesWarranty = warrantyUntil !== null && warrantyUntil <= now;
+      matchesWarranty =
+        receipt.warrantyDays > 0 &&
+        warrantyUntil !== null &&
+        warrantyUntil < now;
+    } else if (warrantyFilter === "noWarranty") {
+      matchesWarranty = receipt.warrantyDays === 0;
     }
 
     return matchesSearch && matchesTime && matchesWarranty;
@@ -93,14 +100,6 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
   const endIndex = startIndex + itemsPerPage;
 
   const paginatedReceipts = filteredReceipts.slice(startIndex, endIndex);
-
-  const [activeModal, setActiveModal] = useState(null);
-  const [selectedReceipt, setSelectedReceipt] = useState(null);
-
-  function handleAction(key, receipt) {
-    setSelectedReceipt(receipt);
-    setActiveModal(key);
-  }
 
   return (
     <section className="space-y-5">
@@ -160,34 +159,29 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
                     {receipt.createdAt.toLocaleDateString("id-ID")}
                   </Table.Cell>
 
-                  <Table.Cell>{receipt.warrantyDays} hari</Table.Cell>
+                  <Table.Cell>
+                    {receipt.warrantyDays === 0
+                      ? "Tidak Bergaransi"
+                      : `${receipt.warrantyDays} hari`}
+                  </Table.Cell>
 
                   <Table.Cell>
-                    {receipt.warrantyUntil ? (
-                      <>
-                        <p
-                          className={
-                            today <= receipt.warrantyUntil
-                              ? "text-success"
-                              : "text-danger"
-                          }
-                        >
-                          {today <= receipt.warrantyUntil
-                            ? "Aktif hingga :"
-                            : "Expired"}
-                        </p>
-                        <p
-                          className={
-                            today <= receipt.warrantyUntil
-                              ? "text-success"
-                              : "text-danger"
-                          }
-                        >
-                          {receipt.warrantyUntil.toLocaleDateString("id-ID")}
-                        </p>
-                      </>
-                    ) : (
+                    {receipt.warrantyDays === 0 ? (
+                      "Tidak Bergaransi"
+                    ) : !receipt.warrantyUntil ? (
                       "-"
+                    ) : (
+                      <p
+                        className={
+                          today <= new Date(receipt.warrantyUntil)
+                            ? "text-success"
+                            : "text-danger"
+                        }
+                      >
+                        {today <= new Date(receipt.warrantyUntil)
+                          ? `Aktif hingga : ${new Date(receipt.warrantyUntil).toLocaleDateString("id-ID")}`
+                          : `Expired : ${new Date(receipt.warrantyUntil).toLocaleDateString("id-ID")}`}
+                      </p>
                     )}
                   </Table.Cell>
 
@@ -242,37 +236,32 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
                   </Table.Cell>
 
                   <Table.Cell>
-                    <Dropdown>
-                      <Button aria-label="Menu" variant="secondary" isIconOnly>
-                        <EllipsisVertical />
-                      </Button>
-                      <Dropdown.Popover className="p-1">
-                        <Dropdown.Menu
-                          onAction={(key) => handleAction(key, receipt)}
-                          className="space-y-3"
+                    <div className="flex justify-center">
+                      <Dropdown>
+                        <Button
+                          aria-label="Menu"
+                          variant="secondary"
+                          isIconOnly
                         >
-                          <Dropdown.Item
-                            id="cetak"
-                            textValue="Cetak Nota"
-                            className="flex items-center"
-                            onAction={() =>
-                              router.push(`/receipt/${receipt.id}`)
-                            }
-                          >
-                            <ReceiptText />
-                            <Label>Cetak Nota</Label>
-                          </Dropdown.Item>
-                          <Dropdown.Item
-                            id="edit"
-                            textValue="Edit Nota"
-                            className="flex items-center"
-                          >
-                            <Pencil />
-                            <Label>Ubah Nota</Label>
-                          </Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown.Popover>
-                    </Dropdown>
+                          <EllipsisVertical />
+                        </Button>
+                        <Dropdown.Popover className="p-1">
+                          <Dropdown.Menu className="space-y-3">
+                            <Dropdown.Item
+                              id="cetak"
+                              textValue="Cetak Nota"
+                              className="flex items-center"
+                              onAction={() =>
+                                router.push(`/receipt/${receipt.id}`)
+                              }
+                            >
+                              <Printer />
+                              <Label>Cetak Nota</Label>
+                            </Dropdown.Item>
+                          </Dropdown.Menu>
+                        </Dropdown.Popover>
+                      </Dropdown>
+                    </div>
                   </Table.Cell>
                 </Table.Row>
               ))}
@@ -285,13 +274,6 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
         totalPages={totalPages}
         onPageChange={setCurrentPage}
         totalItems={filteredReceipts.length}
-      />
-
-      <UpdateReceiptModal
-        key={`edit-${selectedReceipt?.id}`}
-        isOpen={activeModal === "edit"}
-        selectedReceipt={selectedReceipt}
-        onClose={() => setActiveModal(null)}
       />
     </section>
   );
