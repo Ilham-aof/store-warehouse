@@ -1,17 +1,38 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getProductHistory(outletId) {
+export async function getProductHistory(outletId, timeFilter, page, pageSize) {
   if (!outletId) {
-    return [];
+    return { history: [], totalItems: 0, totalPages: 0, currentPage: 1 };
   }
 
+  const safePage = Math.max(1, Number(page) || 1);
+  const safePageSize = Math.max(1, Number(pageSize) || 20);
+
+  const now = new Date();
+  let startDate = null;
+
+  if (timeFilter === "today") {
+    startDate = new Date(now);
+    startDate.setHours(0, 0, 0, 0);
+  } else if (timeFilter === "week") {
+    startDate = new Date(now);
+    startDate.setDate(startDate.getDate() - 7);
+    startDate.setHours(0, 0, 0, 0);
+  } else if (timeFilter === "month") {
+    startDate = new Date(now);
+    startDate.setMonth(startDate.getMonth() - 1);
+    startDate.setHours(0, 0, 0, 0);
+  }
+
+  const where = {
+    product: { outletId },
+    ...(startDate && {
+      createdAt: { gte: startDate },
+    }),
+  };
   const [stockIns, stockOuts] = await Promise.all([
     prisma.stockIn.findMany({
-      where: {
-        product: {
-          outletId,
-        },
-      },
+      where,
       select: {
         id: true,
         quantity: true,
@@ -24,20 +45,11 @@ export async function getProductHistory(outletId) {
             outletId: true,
           },
         },
-        user: {
-          select: {
-            name: true,
-          },
-        },
+        user: { select: { name: true } },
       },
     }),
-
     prisma.stockOut.findMany({
-      where: {
-        product: {
-          outletId,
-        },
-      },
+      where,
       select: {
         id: true,
         quantity: true,
@@ -50,42 +62,47 @@ export async function getProductHistory(outletId) {
             outletId: true,
           },
         },
-        user: {
-          select: {
-            name: true,
-          },
-        },
+        user: { select: { name: true } },
       },
     }),
   ]);
 
   const history = [
-    ...stockIns.map((stockIn) => ({
-      id: stockIn.id,
-      productName: stockIn.product.name,
-      productType: stockIn.product.type,
-      productBrand: stockIn.product.brand,
-      outletId: stockIn.product.outletId,
+    ...stockIns.map((item) => ({
+      id: item.id,
+      productName: item.product.name,
+      productType: item.product.type,
+      productBrand: item.product.brand,
+      outletId: item.product.outletId,
       activity: "Masuk",
-      quantity: stockIn.quantity,
-      userName: stockIn.user.name,
-      createdAt: stockIn.createdAt,
+      quantity: item.quantity,
+      userName: item.user.name,
+      createdAt: item.createdAt,
     })),
-
-    ...stockOuts.map((stockOut) => ({
-      id: stockOut.id,
-      productName: stockOut.product.name,
-      productType: stockOut.product.type,
-      productBrand: stockOut.product.brand,
-      outletId: stockOut.product.outletId,
+    ...stockOuts.map((item) => ({
+      id: item.id,
+      productName: item.product.name,
+      productType: item.product.type,
+      productBrand: item.product.brand,
+      outletId: item.product.outletId,
       activity: "Keluar",
-      quantity: stockOut.quantity,
-      userName: stockOut.user.name,
-      createdAt: stockOut.createdAt,
+      quantity: item.quantity,
+      userName: item.user.name,
+      createdAt: item.createdAt,
     })),
   ];
 
   history.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-  return history;
+  const totalItems = history.length;
+  const totalPages = Math.ceil(totalItems / safePageSize);
+  const currentPage = Math.min(safePage, Math.max(1, totalPages));
+  const startIndex = (currentPage - 1) * safePageSize;
+
+  return {
+    history: history.slice(startIndex, startIndex + safePageSize),
+    totalItems,
+    totalPages,
+    currentPage,
+  };
 }

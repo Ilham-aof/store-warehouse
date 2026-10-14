@@ -1,33 +1,65 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getDataServiceReceipt(outletId) {
+export async function getDataServiceReceipt(outletId, search, page, pageSize) {
   if (!outletId) {
-    return [];
+    return {
+      receipts: [],
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 1,
+    };
   }
 
-  return await prisma.serviceReceipt.findMany({
-    where: {
-      outletId,
-      NOT: {
-        processStatus: true,
-        pickupStatus: true,
-      },
-    },
-    select: {
-      id: true,
-      invoiceNumber: true,
-      customerName: true,
-      customerPhone: true,
-      device: true,
-      warrantyDays: true,
-      warrantyUntil: true,
+  const keyword = search.trim();
+  const safePage = Math.max(1, Number(page) || 1);
+  const safePageSize = Math.max(1, Number(pageSize) || 20);
+
+  const where = {
+    outletId,
+    NOT: {
       processStatus: true,
       pickupStatus: true,
-      outletId: true,
-      createdAt: true,
     },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+    ...(keyword.length > 0 && {
+      customerName: {
+        contains: keyword,
+        mode: "insensitive",
+      },
+    }),
+  };
+
+  const [receipts, totalItems] = await Promise.all([
+    prisma.serviceReceipt.findMany({
+      where,
+      select: {
+        id: true,
+        invoiceNumber: true,
+        customerName: true,
+        customerPhone: true,
+        device: true,
+        warrantyDays: true,
+        warrantyUntil: true,
+        processStatus: true,
+        pickupStatus: true,
+        outletId: true,
+        createdAt: true,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      skip: (safePage - 1) * safePageSize,
+      take: safePageSize,
+    }),
+
+    prisma.serviceReceipt.count({
+      where,
+    }),
+  ]);
+
+  return {
+    receipts,
+    totalItems,
+    totalPages: Math.ceil(totalItems / safePageSize),
+    currentPage: safePage,
+  };
 }

@@ -3,60 +3,45 @@ import { Table, Label } from "@heroui/react";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
 import { PaginationUi } from "@/component/pagination";
-import { useState, useEffect } from "react";
 import { ClipboardClock } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export function ProductHistoryList({ outlets, history, selectedOutletId }) {
-  const [timeFilter, setTimeFilter] = useState("all");
+export function ProductHistoryList({
+  outlets,
+  history,
+  selectedOutletId,
+  timeFilter,
+  currentPage,
+  totalPages,
+  totalItems,
+}) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  function updateQuery(params) {
+    const query = new URLSearchParams(searchParams.toString());
 
-  const [currentPage, setCurrentPage] = useState(1);
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === "" || value == null) {
+        query.delete(key);
+      } else {
+        query.set(key, String(value));
+      }
+    });
 
-  const itemsPerPage = 20;
+    const queryString = query.toString();
+    router.push(queryString ? `?${queryString}` : "?");
+  }
 
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedOutletId, timeFilter]);
+  function handleTimeFilterChange(value) {
+    updateQuery({
+      timeFilter: value === "all" ? null : value,
+      page: 1,
+    });
+  }
 
-  const filteredHistory = history.filter((item) => {
-    if (timeFilter === "all") {
-      return true;
-    }
-
-    const createdAt = new Date(item.createdAt);
-    const now = new Date();
-
-    if (timeFilter === "today") {
-      return (
-        createdAt.getDate() === now.getDate() &&
-        createdAt.getMonth() === now.getMonth() &&
-        createdAt.getFullYear() === now.getFullYear()
-      );
-    }
-
-    if (timeFilter === "week") {
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(now.getDate() - 7);
-
-      return createdAt >= oneWeekAgo;
-    }
-
-    if (timeFilter === "month") {
-      const oneMonthAgo = new Date();
-      oneMonthAgo.setMonth(now.getMonth() - 1);
-
-      return createdAt >= oneMonthAgo;
-    }
-
-    return true;
-  });
-
-  const totalPages = Math.ceil(filteredHistory.length / itemsPerPage);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const paginatedHistory = filteredHistory.slice(startIndex, endIndex);
-
+  function handlePageChange(page) {
+    updateQuery({ page });
+  }
   return (
     <>
       <div className="flex gap-3 items-center">
@@ -65,7 +50,10 @@ export function ProductHistoryList({ outlets, history, selectedOutletId }) {
       </div>
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
-      <TimeFilter timeFilter={timeFilter} setTimeFilter={setTimeFilter} />
+      <TimeFilter
+        timeFilter={timeFilter}
+        setTimeFilter={handleTimeFilterChange}
+      />
       <Table>
         <Table.ScrollContainer>
           <Table.Content aria-label="Riwayat barang" className="min-w-150">
@@ -82,7 +70,7 @@ export function ProductHistoryList({ outlets, history, selectedOutletId }) {
             </Table.Header>
 
             <Table.Body>
-              {paginatedHistory.map((item) => (
+              {history.map((item) => (
                 <Table.Row key={item.id}>
                   <Table.Cell>{item.productName}</Table.Cell>
                   <Table.Cell>{item.productType}</Table.Cell>
@@ -128,8 +116,8 @@ export function ProductHistoryList({ outlets, history, selectedOutletId }) {
       <PaginationUi
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
-        totalItems={filteredHistory.length}
+        onPageChange={handlePageChange}
+        totalItems={totalItems}
       />
     </>
   );

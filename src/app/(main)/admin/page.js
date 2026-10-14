@@ -6,9 +6,13 @@ import { getOutlet } from "@/app/action/outlet/getOutlet";
 import { getUser } from "@/app/action/user/getUser";
 import { BuildingComplex, UserRoundGroup } from "lucide-react";
 
-export default async function page() {
+export default async function page({ searchParams }) {
+  const params = await searchParams;
+
+  const pageNumber = Math.max(1, Number(params.page) || 1);
+  const pageSize = 10;
   const outlets = await getOutlet();
-  const users = await getUser();
+  const userList = await getUser(pageNumber, pageSize);
 
   return (
     <main className="space-y-5">
@@ -17,16 +21,26 @@ export default async function page() {
           <UserRoundGroup size={30} />
           <h1 className="font-bold text-2xl">Daftar Staff</h1>
         </div>
-        <UserList users={users} />
+        <UserList
+          users={userList.users}
+          currentPage={userList.currentPage}
+          totalPages={userList.totalPages}
+          totalItems={userList.totalItems}
+        />
       </section>
 
       <section className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 w-full h-fit space-y-5">
-        <div className="flex gap-3 items-center">
-          <BuildingComplex size={30} />
-          <h1 className="font-bold text-2xl">Daftar Cabang</h1>
+        <div className="flex justify-between">
+          <div className="flex gap-3 items-center">
+            <BuildingComplex size={30} />
+            <h1 className="font-bold text-2xl">Daftar Cabang</h1>
+          </div>
+          <div>
+            <AddOutlet />
+          </div>
         </div>
+
         <OutletList outlets={outlets} />
-        <AddOutlet />
       </section>
     </main>
   );

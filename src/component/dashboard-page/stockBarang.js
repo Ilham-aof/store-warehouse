@@ -8,36 +8,53 @@ import { SearchBar } from "@/component/searchBar";
 import { PaginationUi } from "@/component/pagination";
 import { BestSellerList } from "@/component/dashboard-page/bestSellerList";
 import { Box, Boxes } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function StockBarang({
   outlets,
   products,
   selectedOutletId,
   bestSellers,
+  totalItems,
+  totalPages,
 }) {
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchKeyword, setSearchKeyword] = useState(
+    searchParams.get("search") ?? "",
+  );
 
-  const itemsPerPage = 10;
+  const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedOutletId, searchKeyword]);
+    setSearchKeyword(searchParams.get("search") ?? "");
+  }, [searchParams]);
 
-  const filteredProducts = products.filter((product) => {
-    const keyword = searchKeyword.trim().toLowerCase();
+  function updateQuery(params) {
+    const query = new URLSearchParams(searchParams.toString());
 
-    return keyword.length < 2 || product.name.toLowerCase().includes(keyword);
-  });
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === "" || value == null) {
+        query.delete(key);
+      } else {
+        query.set(key, String(value));
+      }
+    });
 
-  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    router.push(`?${query.toString()}`);
+  }
 
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  function handleSearch() {
+    updateQuery({
+      search: searchKeyword.trim(),
+      page: 1,
+    });
+  }
 
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
-
+  function handlePageChange(page) {
+    updateQuery({ page });
+  }
   return (
     <section className="space-y-5">
       <div className="flex space-x-3 items-center">
@@ -59,19 +76,20 @@ export function StockBarang({
           <SearchBar
             keyword={searchKeyword}
             onKeywordChange={setSearchKeyword}
+            onSearch={handleSearch}
             placeholder="Cari nama produk..."
           />
           <Separator orientation="vertical" />
           <AddProductButton selectedOutletId={selectedOutletId} />
         </div>
 
-        <ProductList products={paginatedProducts} />
+        <ProductList products={products} />
 
         <PaginationUi
           currentPage={currentPage}
           totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          totalItems={filteredProducts.length}
+          onPageChange={handlePageChange}
+          totalItems={totalItems}
         />
       </div>
     </section>

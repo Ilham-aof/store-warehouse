@@ -1,8 +1,16 @@
-import { SearchField } from "@heroui/react";
+"use client";
 
-export function SearchBar({ keyword, onKeywordChange, placeholder }) {
+import { SearchField, Button } from "@heroui/react";
+
+export function SearchBar({ keyword, onKeywordChange, onSearch, placeholder }) {
   return (
-    <div className="flex-1">
+    <form
+      className="flex-1"
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSearch();
+      }}
+    >
       <SearchField
         name="secondary-search"
         variant="secondary"
@@ -10,14 +18,16 @@ export function SearchBar({ keyword, onKeywordChange, placeholder }) {
       >
         <SearchField.Group className="rounded-3xl">
           <SearchField.SearchIcon />
+
           <SearchField.Input
             placeholder={placeholder}
             value={keyword}
             onChange={(event) => onKeywordChange(event.target.value)}
           />
+
           <SearchField.ClearButton />
         </SearchField.Group>
       </SearchField>
-    </div>
+    </form>
   );
 }

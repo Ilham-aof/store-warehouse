@@ -12,16 +12,74 @@ import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
 import { updateServiceReceiptStatus } from "@/app/action/serviceReceipt/updateServiceReceiptStatus";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
 import { TimeFilter } from "@/component/timeFilter";
 import { WarrantyFilter } from "@/component/warrantyFilter";
 
-export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
+export function ReceiptHistoryList({
+  outlets,
+  receipts,
+  selectedOutletId,
+  timeFilter,
+  warrantyFilter,
+  currentPage,
+  totalPages,
+  totalItems,
+}) {
   const router = useRouter();
-  const [timeFilter, setTimeFilter] = useState("all");
-  const [warrantyFilter, setWarrantyFilter] = useState("all");
+  const searchParams = useSearchParams();
+
+  const [searchKeyword, setSearchKeyword] = useState(
+    searchParams.get("search") ?? "",
+  );
+
+  useEffect(() => {
+    setSearchKeyword(searchParams.get("search") ?? "");
+  }, [searchParams]);
+
+  function updateQuery(params) {
+    const query = new URLSearchParams(searchParams.toString());
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === "" || value == null || value === "all") {
+        query.delete(key);
+      } else {
+        query.set(key, String(value));
+      }
+    });
+
+    const queryString = query.toString();
+    router.push(queryString ? `?${queryString}` : "?");
+  }
+
+  function handleSearch() {
+    const keyword = searchKeyword.trim();
+
+    updateQuery({
+      search: keyword.length >= 2 ? keyword : null,
+      page: 1,
+    });
+  }
+
+  function handleTimeFilterChange(value) {
+    updateQuery({
+      timeFilter: value,
+      page: 1,
+    });
+  }
+
+  function handleWarrantyFilterChange(value) {
+    updateQuery({
+      warrantyFilter: value,
+      page: 1,
+    });
+  }
+
+  function handlePageChange(page) {
+    updateQuery({ page });
+  }
 
   async function handleStatusChange(receiptId, status, value) {
     const result = await updateServiceReceiptStatus(receiptId, status, value);
@@ -33,73 +91,7 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
 
     router.refresh();
   }
-
-  const [searchKeyword, setSearchKeyword] = useState("");
-
-  const [currentPage, setCurrentPage] = useState(1);
-
   const today = new Date();
-  const itemsPerPage = 10;
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedOutletId, searchKeyword, timeFilter, warrantyFilter]);
-
-  const filteredReceipts = receipts.filter((receipt) => {
-    const keyword = searchKeyword.trim().toLowerCase();
-
-    const matchesSearch =
-      keyword.length < 2 ||
-      receipt.customerName.toLowerCase().includes(keyword);
-
-    const createdAt = new Date(receipt.createdAt);
-    const now = new Date();
-
-    let matchesTime = true;
-
-    if (timeFilter === "today") {
-      matchesTime = createdAt.toDateString() === now.toDateString();
-    } else if (timeFilter === "week") {
-      const oneWeekAgo = new Date(now);
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-      matchesTime = createdAt >= oneWeekAgo && createdAt <= now;
-    } else if (timeFilter === "month") {
-      const oneMonthAgo = new Date(now);
-      oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
-
-      matchesTime = createdAt >= oneMonthAgo && createdAt <= now;
-    }
-
-    const warrantyUntil = receipt.warrantyUntil
-      ? new Date(receipt.warrantyUntil)
-      : null;
-
-    let matchesWarranty = true;
-
-    if (warrantyFilter === "active") {
-      matchesWarranty =
-        receipt.warrantyDays > 0 &&
-        warrantyUntil !== null &&
-        warrantyUntil >= now;
-    } else if (warrantyFilter === "expired") {
-      matchesWarranty =
-        receipt.warrantyDays > 0 &&
-        warrantyUntil !== null &&
-        warrantyUntil < now;
-    } else if (warrantyFilter === "noWarranty") {
-      matchesWarranty = receipt.warrantyDays === 0;
-    }
-
-    return matchesSearch && matchesTime && matchesWarranty;
-  });
-
-  const totalPages = Math.ceil(filteredReceipts.length / itemsPerPage);
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-
-  const paginatedReceipts = filteredReceipts.slice(startIndex, endIndex);
 
   return (
     <section className="space-y-5">
@@ -110,15 +102,19 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
       <div className="flex space-x-5">
-        <TimeFilter timeFilter={timeFilter} setTimeFilter={setTimeFilter} />
+        <TimeFilter
+          timeFilter={timeFilter}
+          setTimeFilter={handleTimeFilterChange}
+        />
         <WarrantyFilter
           warrantyFilter={warrantyFilter}
-          setWarrantyFilter={setWarrantyFilter}
+          setWarrantyFilter={handleWarrantyFilterChange}
         />
         <Separator orientation="vertical" />
         <SearchBar
           keyword={searchKeyword}
           onKeywordChange={setSearchKeyword}
+          onSearch={handleSearch}
           placeholder="Cari nama customer..."
         />
       </div>
@@ -139,7 +135,7 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
             </Table.Header>
 
             <Table.Body>
-              {paginatedReceipts.map((receipt) => (
+              {receipts.map((receipt) => (
                 <Table.Row key={receipt.id}>
                   <Table.Cell className="whitespace-nowrap">
                     {receipt.invoiceNumber}
@@ -272,8 +268,8 @@ export function ReceiptHistoryList({ outlets, receipts, selectedOutletId }) {
       <PaginationUi
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
-        totalItems={filteredReceipts.length}
+        onPageChange={handlePageChange}
+        totalItems={totalItems}
       />
     </section>
   );

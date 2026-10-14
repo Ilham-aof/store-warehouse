@@ -9,7 +9,7 @@ import {
   FieldError,
 } from "@heroui/react";
 import { Plus } from "lucide-react";
-import { useState, useActionState, useEffect } from "react";
+import { useState, useActionState } from "react";
 import { addProductAction } from "@/app/action/product/addProduct";
 import { OutletSelection } from "@/component/outletSelection";
 
@@ -44,7 +44,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
             className="rounded-xl shadow-[4px_4px_4px,inset_0_0_4px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5"
           >
             <h2 className="font-bold">Detail Produk</h2>
-            <div className="flex ">
+            <div className="flex space-x-5">
               <TextField
                 name={`products[${index}][name]`}
                 aria-label="product Name"

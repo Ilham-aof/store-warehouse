@@ -182,3 +182,6 @@ export function PrintServiceReceipt({ receipt, user }) {
     </div>
   );
 }
+
+//buat print function
+//fixing query diubah menjadi perpage jangan di get query keseluruhan. parameter nya adalah outletID dan perpage paginationnya

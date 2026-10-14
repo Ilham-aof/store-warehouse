@@ -12,52 +12,74 @@ import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
 import { updateServiceReceiptStatus } from "@/app/action/serviceReceipt/updateServiceReceiptStatus";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { CreateReceiptButton } from "@/component/receipt-page/createReceiptButton";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
 import { UpdateReceiptModal } from "@/component/receipt-page/updateReceiptModal";
 
-export function ReceiptList({ outlets, receipts, selectedOutletId }) {
+export function ReceiptList({
+  outlets,
+  receipts,
+  selectedOutletId,
+  totalItems,
+  totalPages,
+}) {
   const router = useRouter();
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [selectedOutletId, searchKeyword]);
-
-  const filteredReceipts = receipts.filter((receipt) => {
-    const keyword = searchKeyword.trim().toLowerCase();
-
-    return (
-      keyword.length < 2 || receipt.customerName.toLowerCase().includes(keyword)
-    );
-  });
-
-  const totalPages = Math.ceil(filteredReceipts.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedReceipts = filteredReceipts.slice(startIndex, endIndex);
-
+  const searchParams = useSearchParams();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
 
-  async function handleStatusChange(receiptId, status, value) {
-    const result = await updateServiceReceiptStatus(receiptId, status, value);
+  const [searchKeyword, setSearchKeyword] = useState(
+    searchParams.get("search") ?? "",
+  );
 
-    if (!result.success) {
-      console.error(result.error);
-      return;
-    }
+  const currentPage = Math.max(1, Number(searchParams.get("page")) || 1);
 
-    router.refresh();
+  useEffect(() => {
+    setSearchKeyword(searchParams.get("search") ?? "");
+  }, [searchParams]);
+
+  function updateQuery(params) {
+    const query = new URLSearchParams(searchParams.toString());
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === "" || value == null) {
+        query.delete(key);
+      } else {
+        query.set(key, String(value));
+      }
+    });
+
+    router.push(`?${query.toString()}`);
+  }
+
+  function handleSearch() {
+    updateQuery({
+      search: searchKeyword.trim(),
+      page: 1,
+    });
+  }
+
+  function handlePageChange(page) {
+    updateQuery({ page });
   }
 
   function handleAction(key, receipt) {
     setSelectedReceipt(receipt);
     setActiveModal(key);
+  }
+
+  async function handleStatusChange(receiptId, statusType, value) {
+    const result = await updateServiceReceiptStatus(
+      receiptId,
+      statusType,
+      value,
+    );
+
+    if (result?.success) {
+      router.refresh();
+    }
   }
 
   return (
@@ -72,6 +94,7 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
         <SearchBar
           keyword={searchKeyword}
           onKeywordChange={setSearchKeyword}
+          onSearch={handleSearch}
           placeholder="Cari nama customer..."
         />
         <Separator orientation="vertical" />
@@ -94,7 +117,7 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
             </Table.Header>
 
             <Table.Body>
-              {paginatedReceipts.map((receipt) => (
+              {receipts.map((receipt) => (
                 <Table.Row key={receipt.id}>
                   <Table.Cell className="whitespace-nowrap">
                     {receipt.invoiceNumber}
@@ -232,8 +255,8 @@ export function ReceiptList({ outlets, receipts, selectedOutletId }) {
       <PaginationUi
         currentPage={currentPage}
         totalPages={totalPages}
-        onPageChange={setCurrentPage}
-        totalItems={filteredReceipts.length}
+        onPageChange={handlePageChange}
+        totalItems={totalItems}
       />
 
       <UpdateReceiptModal

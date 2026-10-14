@@ -4,8 +4,12 @@ import { Table, Button, Dropdown, Label, Separator } from "@heroui/react";
 import { useState } from "react";
 import { UserRoundX, EllipsisVertical } from "lucide-react";
 import { DeleteUserModal } from "@/component/admin-page/deleteUserModal";
+import { useRouter, useSearchParams } from "next/navigation";
+import { PaginationUi } from "@/component/pagination";
 
-export function UserList({ users }) {
+export function UserList({ users, currentPage, totalPages, totalItems }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
 
@@ -14,8 +18,27 @@ export function UserList({ users }) {
     setActiveModal(key);
   }
 
+  function updateQuery(params) {
+    const query = new URLSearchParams(searchParams.toString());
+
+    Object.entries(params).forEach(([key, value]) => {
+      if (value === "" || value == null || value === "all") {
+        query.delete(key);
+      } else {
+        query.set(key, String(value));
+      }
+    });
+
+    const queryString = query.toString();
+    router.push(queryString ? `?${queryString}` : "?");
+  }
+
+  function handlePageChange(page) {
+    updateQuery({ page });
+  }
+
   return (
-    <div>
+    <div className="space-y-5">
       <Table>
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar User">
@@ -70,6 +93,13 @@ export function UserList({ users }) {
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+
+      <PaginationUi
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+        totalItems={totalItems}
+      />
 
       <DeleteUserModal
         isOpen={activeModal === "delete"}

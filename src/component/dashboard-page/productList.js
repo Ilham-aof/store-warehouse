@@ -1,7 +1,7 @@
 "use client";
 
 import { Table, Button, Dropdown, Label, Separator } from "@heroui/react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
   Pencil,
   Trash,
@@ -15,36 +15,8 @@ import { AddProductStockModal } from "@/component/dashboard-page/addProductStock
 import { TakeProductStockModal } from "@/component/dashboard-page/takeProductStockModal";
 
 export function ProductList({ products }) {
-  const [sortDescriptor, setSortDescriptor] = useState(null);
   const [activeModal, setActiveModal] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
-
-  const sortedProducts = useMemo(() => {
-    if (!sortDescriptor) {
-      return products;
-    }
-
-    return [...products].sort((a, b) => {
-      const col = sortDescriptor.column;
-
-      const first = a[col];
-      const second = b[col];
-
-      let cmp;
-
-      if (typeof first === "number" && typeof second === "number") {
-        cmp = first - second;
-      } else {
-        cmp = String(first).localeCompare(String(second));
-      }
-
-      if (sortDescriptor.direction === "descending") {
-        cmp *= -1;
-      }
-
-      return cmp;
-    });
-  }, [products, sortDescriptor]);
 
   function handleAction(key, product) {
     setSelectedProduct(product);
@@ -55,70 +27,37 @@ export function ProductList({ products }) {
     <section>
       <Table>
         <Table.ScrollContainer>
-          <Table.Content
-            aria-label="Daftar produk"
-            sortDescriptor={sortDescriptor}
-            onSortChange={setSortDescriptor}
-          >
+          <Table.Content aria-label="Daftar produk">
             <Table.Header>
-              <Table.Column
-                allowsSorting
-                isRowHeader
-                id="name"
-                className="w-[35%]"
-              >
-                {({ sortDirection }) => (
-                  <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    Nama Produk
-                  </Table.SortableColumnHeader>
-                )}
+              <Table.Column isRowHeader id="name" className="w-[35%]">
+                Nama Produk
               </Table.Column>
 
               <Table.Column allowsSorting id="type" className="w-[10%]">
-                {({ sortDirection }) => (
-                  <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    Tipe
-                  </Table.SortableColumnHeader>
-                )}
+                Tipe
               </Table.Column>
 
               <Table.Column allowsSorting id="brand" className="w-[10%]">
-                {({ sortDirection }) => (
-                  <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    Brand
-                  </Table.SortableColumnHeader>
-                )}
+                Brand
               </Table.Column>
 
               <Table.Column allowsSorting id="quantity" className="w-[8%]">
-                {({ sortDirection }) => (
-                  <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    Stok
-                  </Table.SortableColumnHeader>
-                )}
+                Stok
               </Table.Column>
 
               <Table.Column allowsSorting id="price" className="w-[14%]">
-                {({ sortDirection }) => (
-                  <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    Harga
-                  </Table.SortableColumnHeader>
-                )}
+                Harga
               </Table.Column>
 
               <Table.Column allowsSorting id="stockIn" className="w-[15%]">
-                {({ sortDirection }) => (
-                  <Table.SortableColumnHeader sortDirection={sortDirection}>
-                    Tanggal Masuk
-                  </Table.SortableColumnHeader>
-                )}
+                Tanggal Masuk
               </Table.Column>
 
               <Table.Column className="w-[8%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
-              {sortedProducts.map((product) => (
+              {products.map((product) => (
                 <Table.Row key={product.id}>
                   <Table.Cell>{product.name}</Table.Cell>
                   <Table.Cell>{product.type}</Table.Cell>
