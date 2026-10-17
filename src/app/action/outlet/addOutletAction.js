@@ -36,7 +36,7 @@ export async function addOutletAction(prevState, formData) {
     }
 
     const name = formData.get("outletName")?.trim();
-    const code = formData.get("outletCode")?.trim();
+    const code = formData.get("outletCode")?.trim().toUpperCase();
     const address = formData.get("outletAddress")?.trim();
     const phone = formData.get("outletPhone")?.trim();
 
@@ -53,6 +53,12 @@ export async function addOutletAction(prevState, formData) {
         error: "Kode cabang wajib diisi",
       };
     }
+    if (!/^[A-Z0-9]{2,5}$/.test(code)) {
+      return {
+        success: false,
+        error: "Kode cabang harus 2–5 huruf",
+      };
+    }
 
     if (!address) {
       return {
@@ -60,6 +66,7 @@ export async function addOutletAction(prevState, formData) {
         error: "Alamat cabang wajib diisi",
       };
     }
+
     if (!phone) {
       return {
         success: false,
@@ -71,6 +78,7 @@ export async function addOutletAction(prevState, formData) {
         error: "Nomor telepon cabang tidak valid",
       };
     }
+
     const existingOutlet = await prisma.outlet.findUnique({
       where: {
         name,

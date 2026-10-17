@@ -88,7 +88,7 @@ export async function getFinishReceipt(
       serviceItems: true,
     },
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
     skip: (currentPage - 1) * safePageSize,
     take: safePageSize,

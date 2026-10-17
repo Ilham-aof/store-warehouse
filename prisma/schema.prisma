@@ -58,7 +58,7 @@ model Outlet {
 model Product {
   id        String        @id @default(cuid())
   name      String
-  type      String
+  category  String
   brand     String
   price     Int
   quantity  Int

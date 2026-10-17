@@ -3,7 +3,6 @@ import React from "react";
 import {
   TextField,
   Input,
-  Description,
   FieldError,
   ErrorMessage,
   Button,
@@ -144,10 +143,12 @@ export default function page() {
             angka.
           </p>
           <div className="min-h-6">
-            {state.errors?.password ? (
-              <ErrorMessage>{state.errors.password}</ErrorMessage>
-            ) : !password ? (
-              <FieldError />
+            {!password ? (
+              state.errors?.password ? (
+                <ErrorMessage>{state.errors.password}</ErrorMessage>
+              ) : (
+                <FieldError />
+              )
             ) : (
               <ErrorMessage className={strength.text}>
                 Password {strength.label}

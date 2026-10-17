@@ -1,6 +1,6 @@
 "use client";
 import { Modal, Button } from "@heroui/react";
-import { TriangleAlert } from "lucide-react";
+import { TriangleAlert, Trash } from "lucide-react";
 import { useActionState } from "react";
 import { deleteProductAction } from "@/app/action/product/deleteProduct";
 
@@ -23,8 +23,11 @@ export function DeleteProductModal({ isOpen, selectedProduct, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-2xl font-bold">
-                Hapus Produk
+              <Modal.Heading>
+                <div className="flex space-x-3 items-center">
+                  <Trash size={30} />
+                  <h1 className="text-2xl font-bold">Hapus Produk</h1>
+                </div>
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
@@ -40,18 +43,22 @@ export function DeleteProductModal({ isOpen, selectedProduct, onClose }) {
                   defaultValue={selectedProduct?.outletId ?? ""}
                 />
                 <TriangleAlert
-                  size={250}
+                  size={200}
                   strokeWidth={1.5}
                   className="text-danger"
                 />
-                <p className="text-lg">
-                  Apa anda yakin akan menghapus produk{" "}
+                <p className="text-lg text-black text-center">
+                  Apakah Anda yakin ingin menghapus produk{" "}
                   <span className="font-bold text-black">
-                    {selectedProduct?.name}
+                    "{selectedProduct?.name}"
                   </span>
                   ?
                 </p>
-                <div className="min-h-6">
+                <p className="test-muted text-center">
+                  Tindakan ini tidak dapat dibatalkan dan data produk akan
+                  dihapus secara permanen
+                </p>
+                <div>
                   {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
@@ -60,7 +67,7 @@ export function DeleteProductModal({ isOpen, selectedProduct, onClose }) {
                   Batal
                 </Button>
                 <Button variant="danger" type="submit" isDisabled={isPending}>
-                  {isPending ? "Menghapus..." : "Ya"}
+                  {isPending ? "Menghapus..." : "Hapus"}
                 </Button>
               </Modal.Footer>
             </form>

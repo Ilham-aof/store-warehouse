@@ -7,7 +7,7 @@ import {
   Separator,
   Button,
 } from "@heroui/react";
-import { Pencil, EllipsisVertical, Files, Printer } from "lucide-react";
+import { Pencil, EllipsisVertical, ReceiptText, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
@@ -85,8 +85,8 @@ export function ReceiptList({
   return (
     <section className="space-y-5">
       <div className="flex space-x-3 items-center">
-        <Files size={30} />
-        <h1 className="text-2xl font-bold">Daftar Nota Servis</h1>
+        <ReceiptText size={30} />
+        <h1 className="text-2xl font-bold">Daftar Servis</h1>
       </div>
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
@@ -95,7 +95,7 @@ export function ReceiptList({
           keyword={searchKeyword}
           onKeywordChange={setSearchKeyword}
           onSearch={handleSearch}
-          placeholder="Cari nama customer..."
+          placeholder="Cari nama pelanggan..."
         />
         <Separator orientation="vertical" />
         <CreateReceiptButton selectedOutletId={selectedOutletId} />
@@ -107,7 +107,7 @@ export function ReceiptList({
               <Table.Column isRowHeader className="w-[18%]">
                 Kode Nota
               </Table.Column>
-              <Table.Column className="w-[17%]">Customer</Table.Column>
+              <Table.Column className="w-[17%]">Pelanggan</Table.Column>
               <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
               <Table.Column className="w-[8%]">Garansi</Table.Column>
               <Table.Column className="w-[10%]">Status Garansi</Table.Column>

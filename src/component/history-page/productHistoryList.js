@@ -3,7 +3,7 @@ import { Table, Label } from "@heroui/react";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
 import { PaginationUi } from "@/component/pagination";
-import { ClipboardClock } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export function ProductHistoryList({
@@ -45,8 +45,8 @@ export function ProductHistoryList({
   return (
     <>
       <div className="flex gap-3 items-center">
-        <ClipboardClock size={30} />
-        <h1 className="text-2xl font-bold">Daftar Riwayat barang</h1>
+        <RefreshCw size={30} />
+        <h1 className="text-2xl font-bold">Daftar Mutasi Stok</h1>
       </div>
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
@@ -58,22 +58,22 @@ export function ProductHistoryList({
         <Table.ScrollContainer>
           <Table.Content aria-label="Riwayat barang" className="min-w-150">
             <Table.Header>
-              <Table.Column isRowHeader className="w-[30%]">
+              <Table.Column isRowHeader className="w-[25%]">
                 Nama Produk
               </Table.Column>
-              <Table.Column className="w-[13%]">Tipe</Table.Column>
-              <Table.Column className="w-[12%]">Brand</Table.Column>
-              <Table.Column className="w-[12%]">Aktivitas Barang</Table.Column>
+              <Table.Column className="w-[15%]">Kategori</Table.Column>
+              <Table.Column className="w-[15%]">Brand</Table.Column>
+              <Table.Column className="w-[12%]">Tipe Mutasi</Table.Column>
               <Table.Column className="w-[8%]">Jumlah</Table.Column>
-              <Table.Column className="w-[10%]">Nama Staff</Table.Column>
-              <Table.Column className="w-[15%]">Tanggal</Table.Column>
+              <Table.Column className="w-[10%]">Staff</Table.Column>
+              <Table.Column className="w-[15%]">Waktu</Table.Column>
             </Table.Header>
 
             <Table.Body>
               {history.map((item) => (
                 <Table.Row key={item.id}>
                   <Table.Cell>{item.productName}</Table.Cell>
-                  <Table.Cell>{item.productType}</Table.Cell>
+                  <Table.Cell>{item.productCategory}</Table.Cell>
                   <Table.Cell>{item.productBrand}</Table.Cell>
                   <Table.Cell>
                     <Label

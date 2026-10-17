@@ -14,7 +14,7 @@ export function CreateReceiptButton({ selectedOutletId }) {
       }
     >
       <Plus />
-      Buat Nota
+      Buat Nota Servis
     </Button>
   );
 }

@@ -37,7 +37,7 @@ export async function updateOutletAction(prevState, formData) {
 
     const outletId = formData.get("outletId");
     const name = formData.get("outletName")?.trim();
-    const code = formData.get("outletCode")?.trim();
+    const code = formData.get("outletCode")?.trim().toUpperCase();
     const address = formData.get("outletAddress")?.trim();
     const phone = formData.get("outletPhone")?.trim();
 
@@ -59,6 +59,12 @@ export async function updateOutletAction(prevState, formData) {
       return {
         success: false,
         error: "Kode cabang wajib diisi.",
+      };
+    }
+    if (!/^[A-Z]{2,5}$/.test(code)) {
+      return {
+        success: false,
+        error: "Kode cabang harus 2–5 huruf",
       };
     }
 

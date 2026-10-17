@@ -7,7 +7,7 @@ import {
   Separator,
   Button,
 } from "@heroui/react";
-import { EllipsisVertical, Files, Printer } from "lucide-react";
+import { EllipsisVertical, ClipboardClock, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
@@ -96,8 +96,8 @@ export function ReceiptHistoryList({
   return (
     <section className="space-y-5">
       <div className="flex gap-3 items-center">
-        <Files size={30} />
-        <h1 className="text-2xl font-bold">Daftar Riwayat Nota</h1>
+        <ClipboardClock size={30} />
+        <h1 className="text-2xl font-bold">Daftar Riwayat Servis</h1>
       </div>
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
@@ -115,7 +115,7 @@ export function ReceiptHistoryList({
           keyword={searchKeyword}
           onKeywordChange={setSearchKeyword}
           onSearch={handleSearch}
-          placeholder="Cari nama customer..."
+          placeholder="Cari nama pelanggan..."
         />
       </div>
       <Table>
@@ -125,7 +125,7 @@ export function ReceiptHistoryList({
               <Table.Column isRowHeader className="w-[18%]">
                 Kode Nota
               </Table.Column>
-              <Table.Column className="w-[17%]">Customer</Table.Column>
+              <Table.Column className="w-[17%]">Pelanggan</Table.Column>
               <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
               <Table.Column className="w-[8%]">Garansi</Table.Column>
               <Table.Column className="w-[10%]">Status Garansi</Table.Column>

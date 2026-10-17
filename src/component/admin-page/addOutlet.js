@@ -11,9 +11,10 @@ import {
 } from "@heroui/react";
 import { useActionState, useState } from "react";
 import { addOutletAction } from "@/app/action/outlet/addOutletAction";
-import { Plus } from "lucide-react";
+import { Plus, BuildingComplexPlus } from "lucide-react";
 
 export function AddOutlet() {
+  const [outletCode, setOutletCode] = useState("");
   const [state, action, isPending] = useActionState(addOutletAction, {
     success: false,
     errors: {},
@@ -32,91 +33,114 @@ export function AddOutlet() {
               <Modal.CloseTrigger />
               <Modal.Header>
                 <Modal.Heading className="text-2xl font-bold">
-                  Tambah Cabang
+                  <div className="flex space-x-3 items-center">
+                    <BuildingComplexPlus size={30} />
+                    <h1 className="text-2xl font-bold">Tambah Cabang Baru</h1>
+                  </div>
                 </Modal.Heading>
               </Modal.Header>
               <form action={action}>
-                <Modal.Body className="flex flex-nowrap gap-4">
-                  <TextField
-                    name="outletName"
-                    aria-label="Outlet Name"
-                    type="text"
-                    validate={(value) => {
-                      if (!value) return "Nama cabang wajib diisi";
-                    }}
-                  >
-                    <Label>Nama</Label>
-                    <Input placeholder="Nama Cabang" />
-                    <div className="min-h-6">
-                      <FieldError />
-                    </div>
-                  </TextField>
+                <Modal.Body className="space-y-3">
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                    <TextField
+                      name="outletName"
+                      aria-label="Outlet Name"
+                      type="text"
+                      validate={(value) => {
+                        if (!value) return "Nama cabang wajib diisi";
+                      }}
+                    >
+                      <Label>Nama Cabang</Label>
+                      <Input placeholder="Nama Cabang" />
+                      <div className="min-h-6">
+                        <FieldError />
+                      </div>
+                    </TextField>
 
-                  <TextField
-                    name="outletCode"
-                    aria-label="Outlet Code"
-                    type="text"
-                    validate={(value) => {
-                      if (!value) return "Kode cabang wajib diisi";
-                    }}
-                  >
-                    <Label>Kode</Label>
-                    <Input placeholder="Kode Cabang" />
-                    <div className="min-h-6">
-                      <FieldError />
-                    </div>
-                  </TextField>
+                    <TextField
+                      name="outletCode"
+                      aria-label="Outlet Code"
+                      type="text"
+                      value={outletCode}
+                      onChange={(value) => {
+                        setOutletCode(
+                          value
+                            .replace(/[^a-zA-Z0-9]/g, "")
+                            .toUpperCase()
+                            .slice(0, 5),
+                        );
+                      }}
+                      validate={(value) => {
+                        if (!value) {
+                          return "Kode cabang wajib diisi";
+                        }
 
-                  <TextField
-                    name="outletAddress"
-                    aria-label="Outlet Address"
-                    type="text"
-                    validate={(value) => {
-                      if (!value) return "Alamat cabang wajib diisi";
-                    }}
-                  >
-                    <Label>Alamat</Label>
-                    <Input placeholder="Alamat Cabang" />
-                    <div className="min-h-6">
-                      <FieldError />
-                    </div>
-                  </TextField>
+                        if (!/^[A-Z0-9]{2,5}$/.test(value)) {
+                          return "Kode cabang harus 2–5 huruf";
+                        }
+                      }}
+                    >
+                      <Label>Kode Cabang</Label>
+                      <Input
+                        placeholder="Maks. 5 Huruf (ex: WRLG)"
+                        maxLength={5}
+                      />
+                      <div className="min-h-6">
+                        <FieldError />
+                      </div>
+                    </TextField>
 
-                  <TextField
-                    name="outletPhone"
-                    aria-label="Outlet Phone"
-                    type="tel"
-                    value={phone}
-                    onChange={(value) => setPhone(value.replace(/\D/g, ""))}
-                    validate={(value) => {
-                      if (!value) {
-                        return "Nomor telepon cabang wajib diisi";
-                      }
-                      if (!/^08\d{8,11}$/.test(value)) {
-                        return "Nomor telepon cabang tidak valid";
-                      }
-                    }}
-                  >
-                    <Label>Nomor Telepon</Label>
-                    <Input placeholder="Nomor Telepon Cabang" />
-                    <div className="min-h-6">
-                      <FieldError />
-                    </div>
-                  </TextField>
+                    <TextField
+                      name="outletAddress"
+                      aria-label="Outlet Address"
+                      type="text"
+                      validate={(value) => {
+                        if (!value) return "Alamat cabang wajib diisi";
+                      }}
+                    >
+                      <Label>Alamat Cabang</Label>
+                      <Input placeholder="Alamat Cabang" />
+                      <div className="min-h-6">
+                        <FieldError />
+                      </div>
+                    </TextField>
+
+                    <TextField
+                      name="outletPhone"
+                      aria-label="Outlet Phone"
+                      type="tel"
+                      value={phone}
+                      onChange={(value) => setPhone(value.replace(/\D/g, ""))}
+                      validate={(value) => {
+                        if (!value) {
+                          return "Nomor telepon cabang wajib diisi";
+                        }
+                        if (!/^08\d{8,11}$/.test(value)) {
+                          return "Nomor telepon cabang tidak valid";
+                        }
+                      }}
+                    >
+                      <Label>Nomor HP / WA Cabang</Label>
+                      <Input placeholder="Nomor Cabang" />
+                      <div className="min-h-6">
+                        <FieldError />
+                      </div>
+                    </TextField>
+                  </div>
+                  <div className="text-center">
+                    {state?.error && (
+                      <ErrorMessage slot="description">
+                        {state.error}
+                      </ErrorMessage>
+                    )}
+                  </div>
                 </Modal.Body>
-                <div className="min-h-6 text-center">
-                  {state?.error && (
-                    <ErrorMessage slot="description">
-                      {state.error}
-                    </ErrorMessage>
-                  )}
-                </div>
-                <Modal.Footer>
+                <Modal.Footer className="space-x-3">
                   <Button type="button" variant="secondary" slot="close">
                     Batal
                   </Button>
                   <Button type="submit" isDisabled={isPending}>
-                    {isPending ? "Menyimpan..." : "Simpan"}
+                    {isPending ? "Menyimpan..." : "Tambahkan Cabang"}
                   </Button>
                 </Modal.Footer>
               </form>

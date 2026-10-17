@@ -24,7 +24,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
   });
 
   return (
-    <div className="flex flex-col items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
+    <div className="bg-white flex flex-col items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
       <h1 className="text-2xl font-bold">Tambah Produk</h1>
 
       <form action={action} className="flex flex-col space-y-5">
@@ -56,7 +56,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                   }
                 }}
               >
-                <Label>Nama Produk</Label>
+                <Label>Nama</Label>
 
                 <Input
                   placeholder="Nama Produk"
@@ -72,20 +72,20 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 </div>
               </TextField>
               <TextField
-                name={`products[${index}][type]`}
-                aria-label="product Type"
+                name={`products[${index}][category]`}
+                aria-label="product category"
                 type="text"
                 className="w-full max-w-64"
                 validate={(value) => {
                   if (!value) {
-                    return "Tipe produk wajib diisi";
+                    return "Kategori produk wajib diisi";
                   }
                 }}
               >
-                <Label>Tipe</Label>
+                <Label>Kategori</Label>
 
                 <Input
-                  placeholder="Tipe Produk"
+                  placeholder="Kategori Produk"
                   className="hover:bg-gray-200"
                 />
 
@@ -126,7 +126,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
               <TextField
                 name={`products[${index}][quantity]`}
                 aria-label="product Quantity"
-                type="tel"
+                type="number"
                 className="w-full max-w-64"
                 value={quantity[index] ?? ""}
                 onChange={(value) => {
@@ -141,7 +141,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                   }
                 }}
               >
-                <Label>Jumlah Produk</Label>
+                <Label>Jumlah</Label>
 
                 <Input
                   placeholder="Jumlah Produk"
@@ -159,7 +159,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
               <TextField
                 name={`products[${index}][price]`}
                 aria-label="product Price"
-                type="tel"
+                type="text"
                 className="w-full max-w-64"
                 value={price[index] ?? ""}
                 onChange={(value) => {

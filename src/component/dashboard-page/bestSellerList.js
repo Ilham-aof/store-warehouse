@@ -1,9 +1,9 @@
 import { Card } from "@heroui/react";
-import { Medal, Package, TrendingUp } from "lucide-react";
+import { Package, TrendingUp } from "lucide-react";
 
 export function BestSellerList({ bestSellers }) {
   return (
-    <Card className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 w-full">
+    <Card className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-300 p-4 w-full">
       <Card.Header>
         <div className="flex items-center gap-3">
           <TrendingUp size={30} />

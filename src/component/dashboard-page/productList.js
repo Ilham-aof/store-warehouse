@@ -29,29 +29,19 @@ export function ProductList({ products }) {
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar produk">
             <Table.Header>
-              <Table.Column isRowHeader id="name" className="w-[35%]">
+              <Table.Column isRowHeader id="name" className="w-[30%]">
                 Nama Produk
               </Table.Column>
 
-              <Table.Column allowsSorting id="type" className="w-[10%]">
-                Tipe
-              </Table.Column>
+              <Table.Column className="w-[13%]">Kategori</Table.Column>
 
-              <Table.Column allowsSorting id="brand" className="w-[10%]">
-                Brand
-              </Table.Column>
+              <Table.Column className="w-[12%]">Brand</Table.Column>
 
-              <Table.Column allowsSorting id="quantity" className="w-[8%]">
-                Stok
-              </Table.Column>
+              <Table.Column className="w-[8%]">Stok</Table.Column>
 
-              <Table.Column allowsSorting id="price" className="w-[14%]">
-                Harga
-              </Table.Column>
+              <Table.Column className="w-[14%]">Harga</Table.Column>
 
-              <Table.Column allowsSorting id="stockIn" className="w-[15%]">
-                Tanggal Masuk
-              </Table.Column>
+              <Table.Column className="w-[15%]">Tanggal Masuk</Table.Column>
 
               <Table.Column className="w-[8%]"></Table.Column>
             </Table.Header>
@@ -60,7 +50,7 @@ export function ProductList({ products }) {
               {products.map((product) => (
                 <Table.Row key={product.id}>
                   <Table.Cell>{product.name}</Table.Cell>
-                  <Table.Cell>{product.type}</Table.Cell>
+                  <Table.Cell>{product.category}</Table.Cell>
                   <Table.Cell>{product.brand}</Table.Cell>
                   <Table.Cell>{product.quantity}</Table.Cell>
                   <Table.Cell>
@@ -99,7 +89,7 @@ export function ProductList({ products }) {
                               className="flex items-center"
                             >
                               <PackagePlus />
-                              <Label>Tambahkan Stok</Label>
+                              <Label>Tambah Stok</Label>
                             </Dropdown.Item>
                             <Dropdown.Item
                               id="take-stock"
@@ -107,7 +97,7 @@ export function ProductList({ products }) {
                               className="flex items-center"
                             >
                               <PackageMinus />
-                              <Label>Kurangi Stok</Label>
+                              <Label>Ambil Stok</Label>
                             </Dropdown.Item>
                             <Dropdown.Item
                               id="edit"

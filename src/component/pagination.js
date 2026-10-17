@@ -12,6 +12,22 @@ export function PaginationUi({
     return null;
   }
 
+  function getVisiblePages() {
+    if (totalPages <= 3) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    if (currentPage <= 2) {
+      return [1, 2, "...", totalPages];
+    }
+
+    if (currentPage >= totalPages - 1) {
+      return [1, "...", totalPages - 1, totalPages];
+    }
+
+    return [1, "...", currentPage, "...", totalPages];
+  }
+
   return (
     <Pagination className="justify-center">
       <Pagination.Content>
@@ -23,16 +39,22 @@ export function PaginationUi({
             <Pagination.PreviousIcon />
           </Pagination.Previous>
         </Pagination.Item>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-          <Pagination.Item key={page}>
-            <Pagination.Link
-              isActive={page === currentPage}
-              onPress={() => onPageChange(page)}
-            >
-              {page}
-            </Pagination.Link>
+
+        {getVisiblePages().map((page, index) => (
+          <Pagination.Item key={`${page}-${index}`}>
+            {page === "..." ? (
+              <span className="px-2">...</span>
+            ) : (
+              <Pagination.Link
+                isActive={page === currentPage}
+                onPress={() => onPageChange(page)}
+              >
+                {page}
+              </Pagination.Link>
+            )}
           </Pagination.Item>
         ))}
+
         <Pagination.Item>
           <Pagination.Next
             isDisabled={currentPage >= totalPages}

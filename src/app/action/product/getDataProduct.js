@@ -30,7 +30,7 @@ export async function getDataProduct(outletId, search, page, pageSize) {
       select: {
         id: true,
         name: true,
-        type: true,
+        category: true,
         brand: true,
         quantity: true,
         price: true,

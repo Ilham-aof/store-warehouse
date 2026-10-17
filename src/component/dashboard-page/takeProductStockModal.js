@@ -7,12 +7,11 @@ import {
   Label,
   Button,
 } from "@heroui/react";
-import { useState, useActionState } from "react";
+import { useActionState } from "react";
 import { stockOutAction } from "@/app/action/product/takeStockProduct";
+import { PackageMinus } from "lucide-react";
 
 export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
-  const [quantity, setQuantity] = useState("");
-
   const [state, action, isPending] = useActionState(stockOutAction, null);
 
   return (
@@ -31,15 +30,23 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-2xl font-bold">
-                Ambil Stok
+              <Modal.Heading>
+                <div className="flex space-x-3 items-center">
+                  <PackageMinus size={30} />
+                  <h1 className="text-2xl font-bold">Ambil Stok Produk</h1>
+                </div>
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg text-muted">
-                  Produk : {selectedProduct?.name}
-                </p>
+                <div>
+                  <p className="text-lg text-black">
+                    Nama Produk: {selectedProduct?.name}
+                  </p>
+                  <p className="text-muted">
+                    Sisa Stok: {selectedProduct?.quantity}
+                  </p>
+                </div>
                 <input
                   type="hidden"
                   name="productId"
@@ -55,27 +62,23 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
                   <TextField
                     name="productQuantity"
                     aria-label="productQuantity"
-                    type="tel"
-                    value={quantity}
-                    onChange={(value) => {
-                      setQuantity(value.replace(/\D/g, ""));
-                    }}
+                    type="number"
                     validate={(value) => {
                       if (!value) {
                         return "Quantity produk wajib diisi";
                       }
                     }}
                   >
-                    <Label>Kurangi Stok</Label>
+                    <Label>Jumlah Stok Diambil</Label>
                     <Input
-                      placeholder="Masukkan disini"
+                      placeholder="Contoh: 10"
                       className="hover:bg-gray-200"
                     />
                     <div className="min-h-6">
                       <FieldError />
                     </div>
                   </TextField>
-                  <div className="min-h-6">
+                  <div className="flex justify-center">
                     {state?.error && (
                       <p className="text-danger text-center">{state.error}</p>
                     )}
@@ -83,7 +86,7 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
                 </div>
               </Modal.Body>
 
-              <Modal.Footer>
+              <Modal.Footer className="space-x-3">
                 <Button type="button" variant="secondary" onPress={onClose}>
                   Batal
                 </Button>

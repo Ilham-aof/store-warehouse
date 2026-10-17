@@ -9,14 +9,11 @@ import {
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateReceiptData } from "@/app/action/serviceReceipt/updateReceiptData";
+import { Pencil } from "lucide-react";
 
 export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
   const [customerPhone, setCustomerPhone] = useState(
     String(selectedReceipt?.customerPhone ?? ""),
-  );
-
-  const [warranty, setWarranty] = useState(
-    String(selectedReceipt?.warrantyDays ?? ""),
   );
 
   const [state, action, isPending] = useActionState(updateReceiptData, null);
@@ -37,14 +34,17 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-2xl font-bold">
-                Ubah Produk
+              <Modal.Heading>
+                <div className="flex space-x-3 items-center">
+                  <Pencil size={30} />
+                  <h1 className="text-2xl font-bold">Ubah Data Nota</h1>
+                </div>
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg text-muted">
-                  Kode Nota : {selectedReceipt?.invoiceNumber}
+                <p className="text-lg text-black">
+                  Kode Nota: {selectedReceipt?.invoiceNumber}
                 </p>
                 <input
                   type="hidden"
@@ -58,22 +58,22 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   defaultValue={selectedReceipt?.outletId ?? ""}
                 />
 
-                <div className="flex gap-4">
+                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
                   <TextField
                     name="customerName"
                     aria-label="Customer Name"
                     type="text"
                     defaultValue={selectedReceipt?.customerName ?? ""}
-                    className="w-full max-w-64"
+                    className="w-full"
                     validate={(value) => {
                       if (!value) {
-                        return "Nama produk wajib diisi";
+                        return "Nama Pelanggan wajib diisi";
                       }
                     }}
                   >
-                    <Label>Nama Customer</Label>
+                    <Label>Nama Pelanggan</Label>
                     <Input
-                      placeholder="Nama Customer"
+                      placeholder="Nama Pelanggan"
                       className="hover:bg-gray-200"
                     />
                     <div className="min-h-6">
@@ -91,13 +91,13 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     }}
                     validate={(value) => {
                       if (!value) {
-                        return "Nomor customer wajib diisi";
+                        return "Nomor pelanggan wajib diisi";
                       }
                     }}
                   >
-                    <Label>Nomor Customer</Label>
+                    <Label>Nomor HP / WA</Label>
                     <Input
-                      placeholder="Nomor Customer"
+                      placeholder="Nomor Pelanggan (081234567890)"
                       className="hover:bg-gray-200"
                     />
                     <div className="min-h-6">
@@ -110,15 +110,18 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     aria-label="Device"
                     type="text"
                     defaultValue={selectedReceipt?.device ?? ""}
-                    className="w-full max-w-64"
+                    className="w-full"
                     validate={(value) => {
                       if (!value) {
-                        return "Device wajib diisi";
+                        return "Tipe HP wajib diisi";
                       }
                     }}
                   >
-                    <Label>Device</Label>
-                    <Input placeholder="Device" className="hover:bg-gray-200" />
+                    <Label>Tipe HP</Label>
+                    <Input
+                      placeholder="Tipe HP Pelanggan"
+                      className="hover:bg-gray-200"
+                    />
                     <div className="min-h-6">
                       <FieldError />
                     </div>
@@ -127,12 +130,8 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   <TextField
                     name="warranty"
                     aria-label="Warranty"
-                    type="text"
+                    type="number"
                     defaultValue={String(selectedReceipt?.warrantyDays ?? "")}
-                    value={warranty}
-                    onChange={(value) => {
-                      setWarranty(value.replace(/\D/g, ""));
-                    }}
                     validate={(value) => {
                       if (!value) {
                         return "Garansi wajib diisi";
@@ -141,7 +140,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   >
                     <Label>Garansi</Label>
                     <Input
-                      placeholder="Garansi"
+                      placeholder="Masa Garansi (Hari)"
                       className="hover:bg-gray-200"
                     />
                     <div className="min-h-6">
@@ -149,12 +148,12 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     </div>
                   </TextField>
                 </div>
-                <div className="min-h-6">
+                <div className="flex justify-center">
                   {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
 
-              <Modal.Footer>
+              <Modal.Footer className="space-x-3">
                 <Button type="button" variant="secondary" onPress={onClose}>
                   Batal
                 </Button>

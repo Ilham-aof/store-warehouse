@@ -7,12 +7,11 @@ import {
   Label,
   Button,
 } from "@heroui/react";
-import { useState, useActionState } from "react";
+import { useActionState } from "react";
 import { stockInAction } from "@/app/action/product/addStockProduct";
+import { PackagePlus } from "lucide-react";
 
 export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
-  const [quantity, setQuantity] = useState("");
-
   const [state, action, isPending] = useActionState(stockInAction, null);
 
   return (
@@ -29,15 +28,24 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
         <Modal.Container>
           <Modal.Dialog className="space-y-5">
             <Modal.Header>
-              <Modal.Heading className="text-2xl font-bold">
-                Tambah Stok
+              <Modal.Heading>
+                <div className="flex space-x-3 items-center">
+                  <PackagePlus size={30} />
+                  <h1 className="text-2xl font-bold">Tambah Stok Produk</h1>
+                </div>
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg text-muted">
-                  Produk : {selectedProduct?.name}
-                </p>
+                <div>
+                  <p className="text-lg text-black">
+                    Nama Produk: {selectedProduct?.name}
+                  </p>
+                  <p className="text-muted">
+                    Sisa Stok: {selectedProduct?.quantity}
+                  </p>
+                </div>
+
                 <input
                   type="hidden"
                   name="productId"
@@ -50,39 +58,33 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
                   defaultValue={selectedProduct?.outletId ?? ""}
                 />
 
-                <div className="gap-4">
-                  <TextField
-                    name="addQuantity"
-                    aria-label="addQuantity"
-                    type="tel"
-                    value={quantity}
-                    onChange={(value) => {
-                      setQuantity(value.replace(/\D/g, ""));
-                    }}
-                    validate={(value) => {
-                      if (!value) {
-                        return "Quantity produk wajib diisi";
-                      }
-                    }}
-                  >
-                    <Label>Tambahan Stok</Label>
-                    <Input
-                      placeholder="Masukkan Tambahan Stok"
-                      className="hover:bg-gray-200"
-                    />
-                    <div className="min-h-6">
-                      <FieldError />
-                    </div>
-                  </TextField>
+                <TextField
+                  name="addQuantity"
+                  aria-label="addQuantity"
+                  type="number"
+                  validate={(value) => {
+                    if (!value) {
+                      return "Quantity produk wajib diisi";
+                    }
+                  }}
+                >
+                  <Label>Jumlah Stok Tambahan</Label>
+                  <Input
+                    placeholder="Contoh: 10"
+                    className="hover:bg-gray-200"
+                  />
                   <div className="min-h-6">
-                    {state?.error && (
-                      <p className="text-danger text-center">{state.error}</p>
-                    )}
+                    <FieldError />
                   </div>
+                </TextField>
+                <div className="flex justify-center">
+                  {state?.error && (
+                    <p className="text-danger text-center">{state.error}</p>
+                  )}
                 </div>
               </Modal.Body>
 
-              <Modal.Footer>
+              <Modal.Footer className="space-x-3">
                 <Button type="button" variant="secondary" onPress={onClose}>
                   Batal
                 </Button>

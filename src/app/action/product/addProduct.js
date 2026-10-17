@@ -55,7 +55,7 @@ export async function addProductAction(prevState, formData) {
 
   while (formData.get(`products[${index}][name]`) !== null) {
     const name = formData.get(`products[${index}][name]`);
-    const type = formData.get(`products[${index}][type]`);
+    const category = formData.get(`products[${index}][category]`);
     const brand = formData.get(`products[${index}][brand]`);
     const quantity = formData.get(`products[${index}][quantity]`);
     const price = formData.get(`products[${index}][price]`);
@@ -66,8 +66,8 @@ export async function addProductAction(prevState, formData) {
       productErrors.name = "Nama produk wajib diisi";
     }
 
-    if (!type?.trim()) {
-      productErrors.type = "Tipe produk wajib diisi";
+    if (!category?.trim()) {
+      productErrors.category = "Kategori produk wajib diisi";
     }
 
     if (!brand?.trim()) {
@@ -88,7 +88,7 @@ export async function addProductAction(prevState, formData) {
 
     products.push({
       name: name?.trim(),
-      type: type?.trim(),
+      category: category?.trim(),
       brand: brand?.trim(),
       quantity: Number(quantity),
       price: Number(price),
@@ -134,8 +134,6 @@ export async function addProductAction(prevState, formData) {
       }
     });
   } catch (error) {
-    console.error("Add product error:", error);
-
     return {
       success: false,
       errors: {

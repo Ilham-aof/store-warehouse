@@ -5,10 +5,21 @@ import { useState } from "react";
 import { Trash, Pencil, EllipsisVertical } from "lucide-react";
 import { DeleteOutletModal } from "@/component/admin-page/deleteOutletModal";
 import { UpdateOutletModal } from "@/component/admin-page/updateOutletModal";
+import { PaginationUi } from "@/component/pagination";
 
 export function OutletList({ outlets }) {
   const [activeModal, setActiveModal] = useState(null);
   const [selectedOutlet, setSelectedOutlet] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 5;
+  const totalItems = outlets.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+
+  const startIndex = (currentPage - 1) * pageSize;
+
+  const paginatedOutlets = outlets.slice(startIndex, startIndex + pageSize);
 
   function handleAction(key, outlet) {
     setSelectedOutlet(outlet);
@@ -16,7 +27,7 @@ export function OutletList({ outlets }) {
   }
 
   return (
-    <div>
+    <div className="space-y-5">
       <Table>
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar outlet">
@@ -27,14 +38,13 @@ export function OutletList({ outlets }) {
               <Table.Column className="w-[15%]"> Kode Cabang</Table.Column>
               <Table.Column className="w-[40%]"> Alamat Cabang</Table.Column>
               <Table.Column className="w-[15%]">
-                {" "}
                 Nomor Telepon Cabang
               </Table.Column>
               <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
-              {outlets.map((outlet) => (
+              {paginatedOutlets.map((outlet) => (
                 <Table.Row key={outlet.id}>
                   <Table.Cell>{outlet.name}</Table.Cell>
                   <Table.Cell>{outlet.code}</Table.Cell>
@@ -85,6 +95,13 @@ export function OutletList({ outlets }) {
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+
+      <PaginationUi
+        currentPage={currentPage}
+        totalPages={totalPages}
+        totalItems={totalItems}
+        onPageChange={setCurrentPage}
+      />
 
       <UpdateOutletModal
         key={`edit-${selectedOutlet?.id}`}

@@ -6,7 +6,9 @@ import {
   CircleUserRound,
   Boxes,
   ChartLine,
+  RefreshCw,
   Wrench,
+  Settings,
   ReceiptText,
   ClipboardClock,
 } from "lucide-react";
@@ -29,7 +31,7 @@ export function Sidebar({ user }) {
 
   return (
     <aside>
-      <nav className="sticky top-0 flex flex-col h-screen w-70  shrink-0 p-4 border-r-4 gap-3">
+      <nav className="sticky top-0 flex flex-col h-screen w-70  shrink-0 p-4 shadow-[0_0_4px,inset_-1px_0_6px_rgba(0,0,0,0.2)] shadow-gray-300 gap-3 bg-white">
         <div className="flex items-center h-13 w-full px-4">
           <h1>Toko Saya Logo</h1>
         </div>
@@ -38,45 +40,45 @@ export function Sidebar({ user }) {
 
         <div className="flex flex-col justify-center gap-3">
           <Link
-            className="no-underline font-bold w-full px-4 py-1 rounded-full hover:bg-gray-400 gap-3"
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
             href={stockHref}
           >
             <Boxes />
-            Manajemen Stok
+            Inventaris
           </Link>
           <Link
-            className="no-underline font-bold w-full px-4 py-1 rounded-full hover:bg-gray-400 gap-3"
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
             href={productHistoryHref}
           >
-            <ChartLine />
-            Laporan Penjualan
+            <RefreshCw />
+            Mutasi Stok
           </Link>
 
           <Separator variant="default" />
 
           <Link
-            className="no-underline font-bold w-full px-4 py-1 rounded-full hover:bg-gray-400 gap-3"
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
             href={receiptHref}
           >
             <ReceiptText />
-            Cetak Nota
+            Servis
           </Link>
           <Link
-            className="no-underline font-bold w-full px-4 py-1 rounded-full hover:bg-gray-400 gap-3"
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
             href={receiptHistoryHref}
           >
             <ClipboardClock />
-            Riwayat Nota
+            Riwayat Servis
           </Link>
           {user?.role === "Admin" && (
             <div className="flex flex-col gap-3">
               <Separator variant="default" />
               <Link
-                className="no-underline font-bold w-full px-4 py-1 rounded-full hover:bg-gray-400 gap-3"
+                className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
                 href="/admin"
               >
-                <Wrench />
-                Admin Control
+                <Settings />
+                Pengaturan
               </Link>
             </div>
           )}

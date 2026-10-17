@@ -9,8 +9,10 @@ import {
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateOutletAction } from "@/app/action/outlet/updateOutletAction";
+import { BuildingComplexPlus } from "lucide-react";
 
 export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
+  const [outletCode, setOutletCode] = useState(selectedOutlet?.code ?? "");
   const [state, action, isPending] = useActionState(updateOutletAction, null);
   const [phone, setPhone] = useState(selectedOutlet?.phone ?? "");
   return (
@@ -29,13 +31,17 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-2xl font-bold">
-                Ubah Cabang
+              <Modal.Heading>
+                <div className="flex space-x-3 items-center">
+                  <BuildingComplexPlus size={30} />
+                  <h1 className="text-2xl font-bold">Ubah Data Cabang</h1>
+                </div>
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <p className="text-lg text-muted">
+                <div></div>
+                <p className="text-lg text-black">
                   Cabang : {selectedOutlet?.name}
                 </p>
                 <input
@@ -71,11 +77,23 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                     name="outletCode"
                     aria-label="Outlet Code"
                     type="text"
-                    defaultValue={selectedOutlet?.code ?? ""}
                     className="w-full max-w-64"
+                    value={outletCode}
+                    onChange={(value) => {
+                      setOutletCode(
+                        value
+                          .replace(/[^a-zA-Z]/g, "")
+                          .toUpperCase()
+                          .slice(0, 5),
+                      );
+                    }}
                     validate={(value) => {
                       if (!value) {
                         return "Kode cabang wajib diisi";
+                      }
+
+                      if (!/^[A-Z]{2,5}$/.test(value)) {
+                        return "Kode cabang harus 2–5 huruf";
                       }
                     }}
                   >
@@ -112,7 +130,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                   <TextField
                     name="outletPhone"
                     aria-label="Outlet Phone"
-                    type="text"
+                    type="tel"
                     value={phone}
                     onChange={(value) => setPhone(value.replace(/\D/g, ""))}
                     className="w-full max-w-64"

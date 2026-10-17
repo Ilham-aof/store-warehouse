@@ -9,6 +9,7 @@ import {
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateProductAction } from "@/app/action/product/updateProduct";
+import { Pencil } from "lucide-react";
 
 export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
   const [price, setPrice] = useState(String(selectedProduct?.price ?? ""));
@@ -31,14 +32,17 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-2xl font-bold">
-                Ubah Produk
+              <Modal.Heading>
+                <div className="flex space-x-3 items-center">
+                  <Pencil size={30} />
+                  <h1 className="text-2xl font-bold">Ubah Data Produk</h1>
+                </div>
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
-              <Modal.Body className="space-y-5">
-                <p className="text-lg text-muted">
-                  Produk : {selectedProduct?.name}
+              <Modal.Body className="space-y-3">
+                <p className="text-lg text-black">
+                  Nama Produk: {selectedProduct?.name}
                 </p>
                 <input
                   type="hidden"
@@ -52,13 +56,13 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                   defaultValue={selectedProduct?.outletId ?? ""}
                 />
 
-                <div className="flex gap-4">
+                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
                   <TextField
                     name="productName"
                     aria-label="productName"
                     type="text"
                     defaultValue={selectedProduct?.name ?? ""}
-                    className="w-full max-w-64"
+                    className="w-full"
                     validate={(value) => {
                       if (!value) {
                         return "Nama produk wajib diisi";
@@ -75,20 +79,20 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                     </div>
                   </TextField>
                   <TextField
-                    name="productType"
-                    aria-label="productType"
+                    name="productCategory"
+                    aria-label="productCategory"
                     type="text"
-                    defaultValue={selectedProduct?.type ?? ""}
-                    className="w-full max-w-64"
+                    defaultValue={selectedProduct?.category ?? ""}
+                    className="w-full"
                     validate={(value) => {
                       if (!value) {
-                        return "Tipe produk wajib diisi";
+                        return "Kategori produk wajib diisi";
                       }
                     }}
                   >
-                    <Label>Tipe</Label>
+                    <Label>Kategori</Label>
                     <Input
-                      placeholder="Tipe Produk"
+                      placeholder="Kategori Produk"
                       className="hover:bg-gray-200"
                     />
                     <div className="min-h-6">
@@ -100,7 +104,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                     aria-label="productBrand"
                     type="text"
                     defaultValue={selectedProduct?.brand ?? ""}
-                    className="w-full max-w-64"
+                    className="w-full"
                     validate={(value) => {
                       if (!value) {
                         return "Brand produk wajib diisi";
@@ -119,8 +123,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                   <TextField
                     name="productPrice"
                     aria-label="productPrice"
-                    type="tel"
-                    defaultValue={String(selectedProduct?.price ?? "")}
+                    type="text"
                     value={price}
                     onChange={(value) => {
                       setPrice(value.replace(/\D/g, ""));
@@ -141,12 +144,12 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                     </div>
                   </TextField>
                 </div>
-                <div className="min-h-6">
+                <div className="flex justify-center">
                   {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
 
-              <Modal.Footer>
+              <Modal.Footer className="space-x-3">
                 <Button type="button" variant="secondary" onPress={onClose}>
                   Batal
                 </Button>

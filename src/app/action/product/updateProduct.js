@@ -27,7 +27,7 @@ export async function updateProductAction(prevState, formData) {
   const productId = formData.get("productId");
   const outletId = formData.get("outletId");
   const productName = formData.get("productName");
-  const productType = formData.get("productType");
+  const productCategory = formData.get("productCategory");
   const productBrand = formData.get("productBrand");
   const productPrice = formData.get("productPrice");
 
@@ -51,10 +51,10 @@ export async function updateProductAction(prevState, formData) {
     };
   }
 
-  if (!productType?.trim()) {
+  if (!productCategory?.trim()) {
     return {
       success: false,
-      error: "Type wajib diisi",
+      error: "Kategori wajib diisi",
     };
   }
 
@@ -79,7 +79,7 @@ export async function updateProductAction(prevState, formData) {
       },
       data: {
         name: productName.trim(),
-        type: productType.trim(),
+        category: productCategory.trim(),
         brand: productBrand.trim(),
         price: Number(productPrice),
       },

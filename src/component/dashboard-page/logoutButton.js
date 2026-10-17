@@ -14,8 +14,8 @@ export function LogoutButton() {
         <Button
           type="submit"
           isDisabled={isPending}
-          variant="danger"
           isIconOnly
+          className="border-2 border-slate-700 bg-white text-slate-700 hover:bg-danger hover:border-danger hover:text-white "
         >
           <LogOut />
           {isPending ? "" : ""}
