@@ -68,7 +68,7 @@ export function ProductList({ products }) {
                       },
                     )}
                   </Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">
                     <div className="flex justify-center">
                       <Dropdown>
                         <Button
@@ -76,7 +76,7 @@ export function ProductList({ products }) {
                           variant="secondary"
                           isIconOnly
                         >
-                          <EllipsisVertical />
+                          <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
                           <Dropdown.Menu
@@ -86,7 +86,7 @@ export function ProductList({ products }) {
                             <Dropdown.Item
                               id="add-stock"
                               textValue="Add Stock"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <PackagePlus />
                               <Label>Tambah Stok</Label>
@@ -94,7 +94,7 @@ export function ProductList({ products }) {
                             <Dropdown.Item
                               id="take-stock"
                               textValue="Take Stock"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <PackageMinus />
                               <Label>Ambil Stok</Label>
@@ -102,7 +102,7 @@ export function ProductList({ products }) {
                             <Dropdown.Item
                               id="edit"
                               textValue="Edit Product"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <Pencil />
                               <Label>Ubah Produk</Label>
@@ -112,7 +112,7 @@ export function ProductList({ products }) {
                               id="delete"
                               textValue="Delete Product"
                               variant="danger"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <Trash className="text-danger" />
                               <Label>Hapus Produk</Label>

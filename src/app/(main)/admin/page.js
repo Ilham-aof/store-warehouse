@@ -16,7 +16,7 @@ export default async function page({ searchParams }) {
 
   return (
     <main className="space-y-5">
-      <section className="bg-white rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 w-full h-fit space-y-5">
+      <section className="bg-white rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 w-full h-fit space-y-5">
         <div className="flex justify-between">
           <div className="flex gap-3 items-center">
             <BuildingComplex size={30} />
@@ -30,7 +30,7 @@ export default async function page({ searchParams }) {
         <OutletList outlets={outlets} />
       </section>
 
-      <section className="bg-white rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 w-full h-fit space-y-5">
+      <section className="bg-white rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 w-full h-fit space-y-5">
         <div className="flex gap-3 items-center">
           <UserRoundGroup size={30} />
           <h1 className="font-bold text-2xl">Daftar Staff</h1>

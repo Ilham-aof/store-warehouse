@@ -74,7 +74,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     <Label>Nama Pelanggan</Label>
                     <Input
                       placeholder="Nama Pelanggan"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -97,8 +97,8 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   >
                     <Label>Nomor HP / WA</Label>
                     <Input
-                      placeholder="Nomor Pelanggan (081234567890)"
-                      className="hover:bg-gray-200"
+                      placeholder="Nomor Pelanggan"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -120,7 +120,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     <Label>Tipe HP</Label>
                     <Input
                       placeholder="Tipe HP Pelanggan"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -141,23 +141,32 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     <Label>Garansi</Label>
                     <Input
                       placeholder="Masa Garansi (Hari)"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
                     </div>
                   </TextField>
                 </div>
-                <div className="flex justify-center">
+                <div className="text-center">
                   {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
 
               <Modal.Footer className="space-x-3">
-                <Button type="button" variant="secondary" onPress={onClose}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onPress={onClose}
+                  className="text-slate-800"
+                >
                   Batal
                 </Button>
-                <Button type="submit" isDisabled={isPending}>
+                <Button
+                  type="submit"
+                  isDisabled={isPending}
+                  className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+                >
                   {isPending ? "Menyimpan..." : "Simpan"}
                 </Button>
               </Modal.Footer>

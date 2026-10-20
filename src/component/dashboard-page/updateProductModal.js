@@ -72,7 +72,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                     <Label>Nama Produk</Label>
                     <Input
                       placeholder="Nama Produk"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -93,7 +93,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                     <Label>Kategori</Label>
                     <Input
                       placeholder="Kategori Produk"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -114,7 +114,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                     <Label>Brand</Label>
                     <Input
                       placeholder="Brand Produk"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -137,23 +137,32 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                     <Label>Harga</Label>
                     <Input
                       placeholder="Harga Produk"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
                     </div>
                   </TextField>
                 </div>
-                <div className="flex justify-center">
+                <div className="text-center">
                   {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
 
               <Modal.Footer className="space-x-3">
-                <Button type="button" variant="secondary" onPress={onClose}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onPress={onClose}
+                  className="text-slate-800"
+                >
                   Batal
                 </Button>
-                <Button type="submit" isDisabled={isPending}>
+                <Button
+                  type="submit"
+                  isDisabled={isPending}
+                  className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+                >
                   {isPending ? "Menyimpan..." : "Simpan"}
                 </Button>
               </Modal.Footer>

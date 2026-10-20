@@ -47,7 +47,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
   });
 
   return (
-    <div className="bg-white flex flex-col rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
+    <div className="bg-white flex flex-col rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 space-y-5">
       <div className="flex space-x-3 items-center">
         <FilePlus size={30} />
         <h1 className="text-2xl font-bold">Tambah Servis Baru</h1>
@@ -66,7 +66,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
           readOnly
         />
         <div className="grid grid-cols-[2fr_3fr] gap-5">
-          <div className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 h-fit">
+          <div className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 h-fit">
             <div className="flex flex-col space-y-3">
               <h2 className="text-xl font-bold">Data Pelanggan</h2>
               <TextField
@@ -83,7 +83,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
 
                 <Input
                   placeholder="Nama Pelanggan"
-                  className="hover:bg-gray-200"
+                  className="hover:bg-gray-200 focus:ring-slate-800"
                 />
 
                 <div className="min-h-6">
@@ -112,7 +112,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 <Label>Nomor HP / WA</Label>
                 <Input
                   placeholder="Nomor Pelanggan"
-                  className="hover:bg-gray-200"
+                  className="hover:bg-gray-200 focus:ring-slate-800"
                 />
 
                 <div className="min-h-6">
@@ -136,7 +136,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 <Label>Tipe HP</Label>
                 <Input
                   placeholder="Tipe HP Pelanggan"
-                  className="hover:bg-gray-200"
+                  className="hover:bg-gray-200 focus:ring-slate-800"
                 />
 
                 <div className="min-h-6">
@@ -160,7 +160,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 <Label>Garansi</Label>
                 <Input
                   placeholder="Masa Garansi (Hari)"
-                  className="hover:bg-gray-200"
+                  className="hover:bg-gray-200 focus:ring-slate-800"
                 />
                 <div className="min-h-6">
                   {state.errors?.service ? (
@@ -173,7 +173,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
             </div>
           </div>
 
-          <div className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4">
+          <div className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4">
             <div className="space-y-3">
               <h2 className="text-xl font-bold">Data Servis</h2>
               {services.map((item, index) => (
@@ -203,7 +203,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
 
                     <Input
                       placeholder="Jenis Kerusakan"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
 
                     <div className="min-h-6">
@@ -243,7 +243,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
 
                     <Input
                       placeholder="Biaya Servis"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
 
                     <div className="min-h-6">
@@ -270,7 +270,12 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   </div>
                 </div>
               ))}
-              <Button type="button" onPress={addService} variant="secondary">
+              <Button
+                type="button"
+                onPress={addService}
+                variant="secondary"
+                className="text-slate-800"
+              >
                 <Plus />
                 Tambah Kerusakan
               </Button>
@@ -289,11 +294,16 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
               type="button"
               variant="secondary"
               onClick={() => router.push(`/order?outletId=${selectedOutletId}`)}
+              className="text-slate-800"
             >
               Kembali
             </Button>
 
-            <Button type="submit" isDisabled={isPending}>
+            <Button
+              type="submit"
+              isDisabled={isPending}
+              className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+            >
               {isPending ? "Memproses..." : "Simpan & Buat Nota"}
             </Button>
           </div>

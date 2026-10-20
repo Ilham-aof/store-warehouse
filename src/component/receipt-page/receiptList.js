@@ -207,7 +207,7 @@ export function ReceiptList({
                     </Switch>
                   </Table.Cell>
 
-                  <Table.Cell>
+                  <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">
                     <div className="flex items-center justify-center">
                       <Dropdown>
                         <Button
@@ -215,7 +215,7 @@ export function ReceiptList({
                           variant="secondary"
                           isIconOnly
                         >
-                          <EllipsisVertical />
+                          <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
                           <Dropdown.Menu
@@ -225,7 +225,7 @@ export function ReceiptList({
                             <Dropdown.Item
                               id="cetak"
                               textValue="Cetak Nota"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                               onAction={() =>
                                 router.push(`/receipt/${receipt.id}`)
                               }
@@ -236,7 +236,7 @@ export function ReceiptList({
                             <Dropdown.Item
                               id="edit"
                               textValue="Edit Nota"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <Pencil />
                               <Label>Ubah Nota</Label>

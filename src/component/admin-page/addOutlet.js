@@ -23,7 +23,11 @@ export function AddOutlet() {
   return (
     <>
       <Modal>
-        <Button type="submit" isDisabled={isPending}>
+        <Button
+          type="submit"
+          isDisabled={isPending}
+          className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+        >
           <Plus />
           {isPending ? "Menambahkan..." : "Tambah Cabang"}
         </Button>
@@ -51,7 +55,10 @@ export function AddOutlet() {
                       }}
                     >
                       <Label>Nama Cabang</Label>
-                      <Input placeholder="Nama Cabang" />
+                      <Input
+                        placeholder="Nama Cabang"
+                        className="hover:bg-gray-200 focus:ring-slate-800"
+                      />
                       <div className="min-h-6">
                         <FieldError />
                       </div>
@@ -84,6 +91,7 @@ export function AddOutlet() {
                       <Input
                         placeholder="Maks. 5 Huruf (ex: WRLG)"
                         maxLength={5}
+                        className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
                         <FieldError />
@@ -99,7 +107,10 @@ export function AddOutlet() {
                       }}
                     >
                       <Label>Alamat Cabang</Label>
-                      <Input placeholder="Alamat Cabang" />
+                      <Input
+                        placeholder="Alamat Cabang"
+                        className="hover:bg-gray-200 focus:ring-slate-800"
+                      />
                       <div className="min-h-6">
                         <FieldError />
                       </div>
@@ -121,7 +132,10 @@ export function AddOutlet() {
                       }}
                     >
                       <Label>Nomor HP / WA Cabang</Label>
-                      <Input placeholder="Nomor Cabang" />
+                      <Input
+                        placeholder="Nomor Cabang"
+                        className="hover:bg-gray-200 focus:ring-slate-800"
+                      />
                       <div className="min-h-6">
                         <FieldError />
                       </div>
@@ -136,10 +150,19 @@ export function AddOutlet() {
                   </div>
                 </Modal.Body>
                 <Modal.Footer className="space-x-3">
-                  <Button type="button" variant="secondary" slot="close">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    slot="close"
+                    className="text-slate-800"
+                  >
                     Batal
                   </Button>
-                  <Button type="submit" isDisabled={isPending}>
+                  <Button
+                    type="submit"
+                    isDisabled={isPending}
+                    className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+                  >
                     {isPending ? "Menyimpan..." : "Tambahkan Cabang"}
                   </Button>
                 </Modal.Footer>

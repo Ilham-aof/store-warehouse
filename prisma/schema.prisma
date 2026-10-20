@@ -57,6 +57,7 @@ model Outlet {
 
 model Product {
   id        String        @id @default(cuid())
+  barcode   String
   name      String
   category  String
   brand     String
@@ -71,6 +72,8 @@ model Product {
 
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
+
+  @@unique([outletId, barcode])
 }
 
 model StockIn {

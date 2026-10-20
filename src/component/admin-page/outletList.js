@@ -50,7 +50,7 @@ export function OutletList({ outlets }) {
                   <Table.Cell>{outlet.code}</Table.Cell>
                   <Table.Cell>{outlet.address}</Table.Cell>
                   <Table.Cell>{outlet.phone}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">
                     <div className="flex justify-center">
                       <Dropdown>
                         <Button
@@ -58,7 +58,7 @@ export function OutletList({ outlets }) {
                           variant="secondary"
                           isIconOnly
                         >
-                          <EllipsisVertical />
+                          <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
                           <Dropdown.Menu
@@ -68,7 +68,7 @@ export function OutletList({ outlets }) {
                             <Dropdown.Item
                               id="edit"
                               textValue="Edit Outlet"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <Pencil />
                               <Label>Ubah Outlet</Label>
@@ -79,7 +79,7 @@ export function OutletList({ outlets }) {
                               id="delete"
                               textValue="Delete Product"
                               variant="danger"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <Trash className="text-danger" />
                               <Label>Hapus Outlet</Label>

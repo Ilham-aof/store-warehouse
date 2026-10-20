@@ -16,7 +16,7 @@ export function SearchBar({ keyword, onKeywordChange, onSearch, placeholder }) {
         variant="secondary"
         aria-label="Search Produk"
       >
-        <SearchField.Group className="rounded-3xl">
+        <SearchField.Group className="rounded-3xl ring-slate-800">
           <SearchField.SearchIcon />
 
           <SearchField.Input

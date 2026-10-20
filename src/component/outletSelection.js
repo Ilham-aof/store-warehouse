@@ -21,7 +21,7 @@ export function OutletSelection({ outlets, selectedOutletId }) {
         selectedKey={selectedOutletId}
         onSelectionChange={handleOutletChange}
       >
-        <Select.Trigger>
+        <Select.Trigger className="ring-0 outline-none shadow-none ring-offset-0">
           <Select.Value />
           <Select.Indicator />
         </Select.Trigger>
@@ -33,9 +33,9 @@ export function OutletSelection({ outlets, selectedOutletId }) {
                 key={outlet.id}
                 id={outlet.id}
                 textValue={outlet.name}
+                className="ring-0 outline-none shadow-none ring-offset-0"
               >
                 {outlet.name}
-
                 <ListBox.ItemIndicator />
               </ListBox.Item>
             ))}

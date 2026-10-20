@@ -66,7 +66,7 @@ export function StockBarang({
 
       <BestSellerList bestSellers={bestSellers} />
 
-      <div className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-300 p-4 w-full space-y-5">
+      <div className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 w-full space-y-5">
         <div className="flex space-x-3 items-center">
           <Box size={30} />
           <h1 className="text-2xl font-bold">Stok Produk</h1>

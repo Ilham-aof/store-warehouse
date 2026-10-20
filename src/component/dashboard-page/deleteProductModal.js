@@ -63,7 +63,12 @@ export function DeleteProductModal({ isOpen, selectedProduct, onClose }) {
                 </div>
               </Modal.Body>
               <Modal.Footer>
-                <Button type="button" variant="secondary" onPress={onClose}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onPress={onClose}
+                  className="text-slate-800"
+                >
                   Batal
                 </Button>
                 <Button variant="danger" type="submit" isDisabled={isPending}>

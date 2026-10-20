@@ -54,6 +54,7 @@ export async function addProductAction(prevState, formData) {
   let index = 0;
 
   while (formData.get(`products[${index}][name]`) !== null) {
+    const barcode = formData.get(`products[${index}][barcode]`);
     const name = formData.get(`products[${index}][name]`);
     const category = formData.get(`products[${index}][category]`);
     const brand = formData.get(`products[${index}][brand]`);
@@ -61,6 +62,10 @@ export async function addProductAction(prevState, formData) {
     const price = formData.get(`products[${index}][price]`);
 
     const productErrors = {};
+
+    if (!barcode?.trim()) {
+      productErrors.barcode = "Barcode produk wajib diisi";
+    }
 
     if (!name?.trim()) {
       productErrors.name = "Nama produk wajib diisi";
@@ -87,6 +92,7 @@ export async function addProductAction(prevState, formData) {
     }
 
     products.push({
+      barcode: barcode?.trim(),
       name: name?.trim(),
       category: category?.trim(),
       brand: brand?.trim(),
@@ -95,6 +101,55 @@ export async function addProductAction(prevState, formData) {
     });
 
     index++;
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return {
+      success: false,
+      errors,
+    };
+  }
+
+  const seenBarcodes = new Set();
+
+  for (let i = 0; i < products.length; i++) {
+    const barcode = products[i].barcode;
+
+    if (seenBarcodes.has(barcode)) {
+      errors[i] = {
+        ...errors[i],
+        barcode: "Barcode duplikat dalam form",
+      };
+    }
+
+    seenBarcodes.add(barcode);
+  }
+
+  if (products.length > 0) {
+    const existingProducts = await prisma.product.findMany({
+      where: {
+        outletId,
+        barcode: {
+          in: [...seenBarcodes],
+        },
+      },
+      select: {
+        barcode: true,
+      },
+    });
+
+    const existingBarcodes = new Set(
+      existingProducts.map((product) => product.barcode),
+    );
+
+    for (let i = 0; i < products.length; i++) {
+      if (existingBarcodes.has(products[i].barcode)) {
+        errors[i] = {
+          ...errors[i],
+          barcode: "Barcode sudah digunakan di outlet ini",
+        };
+      }
+    }
   }
 
   if (Object.keys(errors).length > 0) {
@@ -134,6 +189,7 @@ export async function addProductAction(prevState, formData) {
       }
     });
   } catch (error) {
+    console.log(error);
     return {
       success: false,
       errors: {

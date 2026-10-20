@@ -48,7 +48,6 @@ export function UserList({ users, currentPage, totalPages, totalItems }) {
               </Table.Column>
               <Table.Column className="w-[30%]">Nomor HP</Table.Column>
               <Table.Column className="w-[30%]">E-mail</Table.Column>
-
               <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
@@ -58,7 +57,7 @@ export function UserList({ users, currentPage, totalPages, totalItems }) {
                   <Table.Cell>{user.name}</Table.Cell>
                   <Table.Cell>{user.phone}</Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">
                     <div className="flex justify-center">
                       <Dropdown>
                         <Button
@@ -66,7 +65,7 @@ export function UserList({ users, currentPage, totalPages, totalItems }) {
                           variant="secondary"
                           isIconOnly
                         >
-                          <EllipsisVertical />
+                          <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
                           <Dropdown.Menu
@@ -77,7 +76,7 @@ export function UserList({ users, currentPage, totalPages, totalItems }) {
                               id="delete"
                               textValue="Delete User"
                               variant="danger"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <UserRoundX className="text-danger" />
                               <Label>Hapus Staff</Label>

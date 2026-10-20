@@ -31,8 +31,8 @@ export function Sidebar({ user }) {
 
   return (
     <aside>
-      <nav className="sticky top-0 flex flex-col h-screen w-70  shrink-0 p-4 shadow-[0_0_4px,inset_-1px_0_6px_rgba(0,0,0,0.2)] shadow-gray-300 gap-3 bg-white">
-        <div className="flex items-center h-13 w-full px-4">
+      <nav className="sticky top-0 flex flex-col h-screen w-70  shrink-0 p-4 gap-3 bg-slate-800">
+        <div className="flex items-center h-13 w-full px-4 text-white">
           <h1>Toko Saya Logo</h1>
         </div>
 
@@ -40,14 +40,14 @@ export function Sidebar({ user }) {
 
         <div className="flex flex-col justify-center gap-3">
           <Link
-            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={stockHref}
           >
             <Boxes />
             Inventaris
           </Link>
           <Link
-            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={productHistoryHref}
           >
             <RefreshCw />
@@ -57,14 +57,14 @@ export function Sidebar({ user }) {
           <Separator variant="default" />
 
           <Link
-            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={receiptHref}
           >
             <ReceiptText />
             Servis
           </Link>
           <Link
-            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={receiptHistoryHref}
           >
             <ClipboardClock />
@@ -74,7 +74,7 @@ export function Sidebar({ user }) {
             <div className="flex flex-col gap-3">
               <Separator variant="default" />
               <Link
-                className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full hover:bg-slate-700 hover:text-white"
+                className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
                 href="/admin"
               >
                 <Settings />
@@ -84,13 +84,13 @@ export function Sidebar({ user }) {
           )}
         </div>
 
-        <div className="flex items-center px-3 py-2 space-x-3 rounded-full shadow-[2px_2px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 w-full h-fit mt-auto">
-          <Avatar>
-            <CircleUserRound size={40} />
+        <div className="flex items-center px-3 py-2 space-x-3 rounded-full shadow-[2px_2px_4px,inset_0_0_4px_rgba(0,0,0,0.2)] shadow-yellow-100 w-full h-fit mt-auto">
+          <Avatar className="bg-slate-800">
+            <CircleUserRound size={40} className="text-yellow-100" />
           </Avatar>
           <div>
-            <p className="font-bold">{user?.name ?? "None"}</p>
-            <p className="text-xs">{user?.role ?? "None"}</p>
+            <p className="font-bold text-white">{user?.name ?? "None"}</p>
+            <p className="text-xs text-white ">{user?.role ?? "None"}</p>
           </div>
           <div className="ml-auto">
             <LogoutButton />

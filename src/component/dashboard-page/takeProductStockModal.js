@@ -72,13 +72,13 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
                     <Label>Jumlah Stok Diambil</Label>
                     <Input
                       placeholder="Contoh: 10"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
                     </div>
                   </TextField>
-                  <div className="flex justify-center">
+                  <div className="text-center">
                     {state?.error && (
                       <p className="text-danger text-center">{state.error}</p>
                     )}
@@ -87,10 +87,19 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
               </Modal.Body>
 
               <Modal.Footer className="space-x-3">
-                <Button type="button" variant="secondary" onPress={onClose}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onPress={onClose}
+                  className="text-slate-800"
+                >
                   Batal
                 </Button>
-                <Button type="submit" isDisabled={isPending}>
+                <Button
+                  type="submit"
+                  isDisabled={isPending}
+                  className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+                >
                   {isPending ? "Mengambil Stok..." : "Ambil Stok"}
                 </Button>
               </Modal.Footer>

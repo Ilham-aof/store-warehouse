@@ -12,6 +12,7 @@ export function CreateReceiptButton({ selectedOutletId }) {
       onClick={() =>
         router.push(`/order/create-receipt?outletId=${selectedOutletId}`)
       }
+      className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
     >
       <Plus />
       Buat Nota Servis

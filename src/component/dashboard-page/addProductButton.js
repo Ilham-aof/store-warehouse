@@ -10,7 +10,7 @@ export function AddProductButton({ selectedOutletId }) {
   return (
     <Button
       onClick={() => router.push(`/add-product?outletId=${selectedOutletId}`)}
-      className="border-2 border-slate-700 bg-white text-slate-700 hover:bg-slate-700 hover:text-white"
+      className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
     >
       <Plus />
       Tambah Produk

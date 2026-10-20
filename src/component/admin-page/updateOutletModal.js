@@ -27,7 +27,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
         isDismissable={false}
       >
         <Modal.Container>
-          <Modal.Dialog className="max-w-4xl max-h-xl space-y-5">
+          <Modal.Dialog className="max-w-5xl max-h-xl">
             <Modal.CloseTrigger />
 
             <Modal.Header>
@@ -51,13 +51,13 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                   defaultValue={selectedOutlet?.id ?? ""}
                 />
 
-                <div className="flex gap-4">
+                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
                   <TextField
                     name="outletName"
                     aria-label="Outlet Name"
                     type="text"
                     defaultValue={selectedOutlet?.name ?? ""}
-                    className="w-full max-w-64"
+                    className="w-full"
                     validate={(value) => {
                       if (!value) {
                         return "Nama cabang wajib diisi";
@@ -67,7 +67,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                     <Label>Nama</Label>
                     <Input
                       placeholder="Nama Cabang"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -77,7 +77,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                     name="outletCode"
                     aria-label="Outlet Code"
                     type="text"
-                    className="w-full max-w-64"
+                    className="w-full"
                     value={outletCode}
                     onChange={(value) => {
                       setOutletCode(
@@ -100,7 +100,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                     <Label>Kode</Label>
                     <Input
                       placeholder="Kode Cabang"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -111,7 +111,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                     aria-label="Outlet Address"
                     type="text"
                     defaultValue={selectedOutlet?.address ?? ""}
-                    className="w-full max-w-64"
+                    className="w-full"
                     validate={(value) => {
                       if (!value) {
                         return "Alamat cabang wajib diisi";
@@ -121,7 +121,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                     <Label>Alamat</Label>
                     <Input
                       placeholder="Alamat Cabang"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
@@ -133,7 +133,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                     type="tel"
                     value={phone}
                     onChange={(value) => setPhone(value.replace(/\D/g, ""))}
-                    className="w-full max-w-64"
+                    className="w-full"
                     validate={(value) => {
                       if (!value) {
                         return "Nomor telepon cabang wajib diisi";
@@ -146,23 +146,32 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                     <Label>Nomor Telepon</Label>
                     <Input
                       placeholder="Nomor Telepon Cabang"
-                      className="hover:bg-gray-200"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
                       <FieldError />
                     </div>
                   </TextField>
                 </div>
-                <div className="min-h-6">
+                <div className="text-center">
                   {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
 
               <Modal.Footer>
-                <Button type="button" variant="secondary" onPress={onClose}>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onPress={onClose}
+                  className="text-slate-800"
+                >
                   Batal
                 </Button>
-                <Button type="submit" isDisabled={isPending}>
+                <Button
+                  type="submit"
+                  isDisabled={isPending}
+                  className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+                >
                   {isPending ? "Menyimpan..." : "Simpan"}
                 </Button>
               </Modal.Footer>

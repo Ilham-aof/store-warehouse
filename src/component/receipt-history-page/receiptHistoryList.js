@@ -231,7 +231,7 @@ export function ReceiptHistoryList({
                     </Switch>
                   </Table.Cell>
 
-                  <Table.Cell>
+                  <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">
                     <div className="flex justify-center">
                       <Dropdown>
                         <Button
@@ -239,14 +239,14 @@ export function ReceiptHistoryList({
                           variant="secondary"
                           isIconOnly
                         >
-                          <EllipsisVertical />
+                          <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
                           <Dropdown.Menu className="space-y-3">
                             <Dropdown.Item
                               id="cetak"
                               textValue="Cetak Nota"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                               onAction={() =>
                                 router.push(`/receipt/${receipt.id}`)
                               }
