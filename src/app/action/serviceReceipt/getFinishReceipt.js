@@ -75,29 +75,36 @@ export async function getFinishReceipt(
     }),
   };
 
-  const totalItems = await prisma.serviceReceipt.count({
-    where,
-  });
+  try {
+    const totalItems = await prisma.serviceReceipt.count({
+      where,
+    });
 
-  const totalPages = Math.ceil(totalItems / safePageSize);
-  const currentPage = totalPages === 0 ? 1 : Math.min(safePage, totalPages);
-  const receipts = await prisma.serviceReceipt.findMany({
-    where,
-    include: {
-      outlet: true,
-      serviceItems: true,
-    },
-    orderBy: {
-      updatedAt: "desc",
-    },
-    skip: (currentPage - 1) * safePageSize,
-    take: safePageSize,
-  });
+    const totalPages = Math.ceil(totalItems / safePageSize);
+    const currentPage = totalPages === 0 ? 1 : Math.min(safePage, totalPages);
+    const receipts = await prisma.serviceReceipt.findMany({
+      where,
+      include: {
+        outlet: true,
+        serviceItems: true,
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+      skip: (currentPage - 1) * safePageSize,
+      take: safePageSize,
+    });
 
-  return {
-    receipts,
-    totalItems,
-    totalPages,
-    currentPage,
-  };
+    return {
+      receipts,
+      totalItems,
+      totalPages,
+      currentPage,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: "Gagal mengambil data nota",
+    };
+  }
 }

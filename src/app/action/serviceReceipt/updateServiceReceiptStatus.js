@@ -44,58 +44,64 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
       error: "Nilai status tidak valid",
     };
   }
+  try {
+    const receipt = await prisma.serviceReceipt.findUnique({
+      where: {
+        id: receiptId,
+      },
+      select: {
+        id: true,
+        processStatus: true,
+        pickupStatus: true,
+        warrantyDays: true,
+        createdAt: true,
+      },
+    });
 
-  const receipt = await prisma.serviceReceipt.findUnique({
-    where: {
-      id: receiptId,
-    },
-    select: {
-      id: true,
-      processStatus: true,
-      pickupStatus: true,
-      warrantyDays: true,
-      createdAt: true,
-    },
-  });
+    if (!receipt) {
+      return {
+        success: false,
+        error: "Nota tidak ditemukan",
+      };
+    }
 
-  if (!receipt) {
+    const newProcessStatus =
+      status === "processStatus" ? value : receipt.processStatus;
+
+    const newPickupStatus =
+      status === "pickupStatus" ? value : receipt.pickupStatus;
+
+    let warrantyUntil = null;
+
+    if (newProcessStatus && newPickupStatus) {
+      if (receipt.warrantyDays > 0) {
+        warrantyUntil = new Date();
+
+        warrantyUntil.setDate(warrantyUntil.getDate() + receipt.warrantyDays);
+      } else {
+        warrantyUntil = null;
+      }
+    }
+
+    await prisma.serviceReceipt.update({
+      where: {
+        id: receiptId,
+      },
+      data: {
+        [status]: value,
+        warrantyUntil,
+      },
+    });
+
+    revalidatePath("/receipt");
+
+    return {
+      success: true,
+    };
+  } catch (error) {
     return {
       success: false,
-      error: "Nota tidak ditemukan",
+      error: "Gagal memperbarui nota",
     };
   }
-
-  const newProcessStatus =
-    status === "processStatus" ? value : receipt.processStatus;
-
-  const newPickupStatus =
-    status === "pickupStatus" ? value : receipt.pickupStatus;
-
-  let warrantyUntil = null;
-
-  if (newProcessStatus && newPickupStatus) {
-    if (receipt.warrantyDays > 0) {
-      warrantyUntil = new Date();
-
-      warrantyUntil.setDate(warrantyUntil.getDate() + receipt.warrantyDays);
-    } else {
-      warrantyUntil = null;
-    }
-  }
-
-  await prisma.serviceReceipt.update({
-    where: {
-      id: receiptId,
-    },
-    data: {
-      [status]: value,
-      warrantyUntil,
-    },
-  });
-
-  revalidatePath("/receipt");
-
-  return {
-    success: true,
-  };
 }

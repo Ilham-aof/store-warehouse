@@ -18,8 +18,8 @@ export function OutletSelection({ outlets, selectedOutletId }) {
         variant="secondary"
         aria-label="Pilih Outlet"
         className="w-56"
-        selectedKey={selectedOutletId}
-        onSelectionChange={handleOutletChange}
+        value={selectedOutletId}
+        onChange={handleOutletChange}
       >
         <Select.Trigger className="ring-0 outline-none shadow-none ring-offset-0">
           <Select.Value />

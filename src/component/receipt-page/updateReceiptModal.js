@@ -6,15 +6,51 @@ import {
   FieldError,
   Label,
   Button,
+  Select,
+  ListBox,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateReceiptData } from "@/app/action/serviceReceipt/updateReceiptData";
 import { Pencil } from "lucide-react";
 
+const accessoryLabels = {
+  handphone: "Handphone",
+  simcard: "SIM Card",
+  charger: "Charger",
+  battery: "Battery",
+  memory: "Memory",
+  softcase: "Soft Case",
+};
+
+const accessoryIdsByLabel = Object.fromEntries(
+  Object.entries(accessoryLabels).map(([id, label]) => [label, id]),
+);
+
+function getAccessoryIds(items) {
+  if (!Array.isArray(items)) return [];
+
+  return items
+    .map((item) => {
+      if (Object.prototype.hasOwnProperty.call(accessoryLabels, item)) {
+        return item;
+      }
+
+      return accessoryIdsByLabel[item];
+    })
+    .filter(Boolean);
+}
+
 export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
   const [customerPhone, setCustomerPhone] = useState(
     String(selectedReceipt?.customerPhone ?? ""),
   );
+
+  const [selectedDeviceInclusions, setSelectedDeviceInclusions] = useState(() =>
+    getAccessoryIds(selectedReceipt?.deviceInclusions),
+  );
+
+  const [showDeviceInclusionsError, setShowDeviceInclusionsError] =
+    useState(false);
 
   const [state, action, isPending] = useActionState(updateReceiptData, null);
 
@@ -147,6 +183,103 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                       <FieldError />
                     </div>
                   </TextField>
+
+                  <Select
+                    name="deviceInclusions"
+                    placeholder="Kelengkapan HP"
+                    selectionMode="multiple"
+                    value={selectedDeviceInclusions}
+                    onChange={(value) => {
+                      setSelectedDeviceInclusions(value ?? []);
+
+                      if (value?.length > 0) {
+                        setShowDeviceInclusionsError(false);
+                      }
+                    }}
+                    isInvalid={
+                      showDeviceInclusionsError &&
+                      selectedDeviceInclusions.length === 0
+                    }
+                  >
+                    <Label>Kelengkapan</Label>
+
+                    <Select.Trigger>
+                      <Select.Value>
+                        {({ defaultChildren, isPlaceholder }) => {
+                          if (
+                            isPlaceholder ||
+                            selectedDeviceInclusions.length === 0
+                          ) {
+                            return defaultChildren;
+                          }
+
+                          const labels = selectedDeviceInclusions
+                            .map((value) => accessoryLabels[value])
+                            .filter(Boolean);
+
+                          if (labels.length === 0) {
+                            return defaultChildren;
+                          }
+
+                          if (labels.length === 1) {
+                            return labels[0];
+                          }
+
+                          if (labels.length === 2) {
+                            return `${labels[0]} dan ${labels[1]}`;
+                          }
+
+                          return `${labels.slice(0, -1).join(", ")}, dan ${
+                            labels[labels.length - 1]
+                          }`;
+                        }}
+                      </Select.Value>
+
+                      <Select.Indicator />
+                    </Select.Trigger>
+
+                    <Select.Popover>
+                      <ListBox selectionMode="multiple">
+                        <ListBox.Item id="handphone" textValue="Handphone">
+                          Handphone
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+
+                        <ListBox.Item id="simcard" textValue="SIM Card">
+                          SIM Card
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+
+                        <ListBox.Item id="charger" textValue="Charger">
+                          Charger
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+
+                        <ListBox.Item id="battery" textValue="Battery">
+                          Battery
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+
+                        <ListBox.Item id="memory" textValue="Memory">
+                          Memory
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+
+                        <ListBox.Item id="softcase" textValue="Soft Case">
+                          Soft Case
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+                      </ListBox>
+                    </Select.Popover>
+                    <div className="min-h-6">
+                      {showDeviceInclusionsError &&
+                        selectedDeviceInclusions.length === 0 && (
+                          <FieldError>
+                            Pilih minimal satu kelengkapan HP
+                          </FieldError>
+                        )}
+                    </div>
+                  </Select>
                 </div>
                 <div className="text-center">
                   {state?.error && <p className="text-danger">{state.error}</p>}

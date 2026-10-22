@@ -2,15 +2,18 @@
 
 import { Button } from "@heroui/react";
 import { useRef } from "react";
-import { FileDown } from "lucide-react";
+import { FileDown, Printer } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function PrintServiceReceipt({ receipt, user }) {
   const receiptRef = useRef(null);
-
-  const total = receipt.serviceItems.reduce(
+  const router = useRouter();
+  const subtotal = receipt.serviceItems.reduce(
     (sum, service) => sum + service.price,
     0,
   );
+
+  const total = subtotal - receipt.discount;
 
   const formatRupiah = (value) => `Rp${value.toLocaleString("id-ID")}`;
 
@@ -20,6 +23,10 @@ export function PrintServiceReceipt({ receipt, user }) {
       month: "2-digit",
       year: "numeric",
     });
+
+  function printReceipt() {
+    window.print();
+  }
 
   async function downloadPDF() {
     const element = receiptRef.current;
@@ -58,128 +65,170 @@ export function PrintServiceReceipt({ receipt, user }) {
   }
 
   return (
-    <div className="space-y-4">
-      <div
-        ref={receiptRef}
-        className="box-border w-[80mm] bg-white p-5 text-black"
-        style={{
-          fontFamily: "Arial, sans-serif",
-          fontSize: "10pt",
-        }}
-      >
-        <header className="flex flex-col items-center">
-          <h1 className="text-xl font-black">{receipt.outlet.name}</h1>
+    <section className="flex flex-1 min-h-0 w-full flex-col items-center gap-4">
+      <div className="bg-black w-full p-3 flex-1 min-h-0 overflow-y-auto overflow-x-hidden flex flex-col items-center">
+        <div
+          ref={receiptRef}
+          className="receipt box-border w-[80mm] bg-white p-5 text-black"
+          style={{
+            fontFamily: "Arial, sans-serif",
+            fontSize: "10pt",
+          }}
+        >
+          <header className="flex flex-col items-center">
+            <h1 className="text-xl font-black">{receipt.outlet.name}</h1>
 
-          <p>{receipt.outlet.address}</p>
-          <p>Telp: {receipt.outlet.phone}</p>
-          <p className="font-bold">NOTA SERVIS HP</p>
-        </header>
+            <p>{receipt.outlet.address}</p>
+            <p>Telp: {receipt.outlet.phone}</p>
+            <p className="font-bold">
+              {receipt.processStatus
+                ? "NOTA SERVIS HP"
+                : "NOTA SEMENTARA SERVIS HP"}
+            </p>
+          </header>
 
-        <section className="mt-3">
-          <div className="h-0.5 w-full bg-black" />
-          <div>
-            <p>No. Nota: {receipt.invoiceNumber}</p>
-            <p>Tanggal: {formatDate(receipt.createdAt)}</p>
-            <p>Staff: {user.name}</p>
-          </div>
-          <div className="h-px w-full bg-black mt-3" />
-          <div>
-            <h2 className="font-bold  border-black">Informasi Customer</h2>
-
+          <section>
+            <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>
-              <p>Customer: {receipt.customerName}</p>
-              <p>No. HP: {receipt.customerPhone}</p>
-              <p>Perangkat: {receipt.device}</p>
+              <p>No. Nota: {receipt.invoiceNumber}</p>
+              <p>Tanggal: {formatDate(receipt.createdAt)}</p>
+              <p>Staff: {user.name}</p>
             </div>
-          </div>
+            <div className="mt-1 w-full border-t-2 border-solid border-black" />
+            <div>
+              <h2 className="font-bold  border-black">Informasi Customer</h2>
 
-          <div className="h-px w-full bg-black mt-3" />
-
-          <div>
-            <h2 className="font-bold">Rincian Servis</h2>
-
-            {receipt.serviceItems.map((service) => (
-              <div key={service.id} className="flex justify-between gap-4">
-                <span>{service.description}</span>
-                <span>{formatRupiah(service.price)}</span>
+              <div>
+                <p>Customer: {receipt.customerName}</p>
+                <p>No. HP: {receipt.customerPhone}</p>
+                <p>Perangkat: {receipt.device}</p>
+                <div>
+                  <p>Kelengkapan:</p>
+                  {receipt.deviceInclusions?.length > 0 ? (
+                    receipt.deviceInclusions.map((item, index) => (
+                      <p key={`${item}-${index}`}>- {item}</p>
+                    ))
+                  ) : (
+                    <p>-</p>
+                  )}
+                </div>
               </div>
-            ))}
-
-            <div className="h-px w-full bg-black mt-3" />
-
-            <div className="flex justify-between font-bold">
-              <span>Total</span>
-              <span>{formatRupiah(total)}</span>
             </div>
-          </div>
+            <div className="mt-1 w-full border-t-2 border-solid border-black" />
+            <div>
+              <h2 className="font-bold">Rincian Servis</h2>
 
-          <div className="h-0.5 w-full bg-black mt-3" />
+              {receipt.serviceItems.map((service) => (
+                <div key={service.id} className="flex justify-between gap-4">
+                  <span>{service.description}</span>
+                  <span>{formatRupiah(service.price)}</span>
+                </div>
+              ))}
 
-          <div>
-            <h2 className="font-bold">Informasi Garansi</h2>
-            <p>
-              {receipt.warrantyDays === 0
-                ? "Garansi: Tidak Bergaransi"
-                : receipt.warrantyDays > 0 && !receipt.warrantyUntil
-                  ? "Garansi: -"
-                  : `Garansi: ${receipt.warrantyDays} hari`}
-            </p>
-            <p>
-              {receipt.warrantyDays === 0
-                ? ""
-                : receipt.warrantyDays > 0 && !receipt.warrantyUntil
-                  ? "Berlaku Hingga: Belum ditentukan"
-                  : `Berlaku Hingga: ${formatDate(receipt.warrantyUntil)}`}
-            </p>
-          </div>
-        </section>
+              <div className="flex justify-between font-bold mt-3">
+                <span>Potongan</span>
+                <span>{formatRupiah(receipt.discount)}</span>
+              </div>
 
-        <footer className="mt-3">
-          <div className="h-0.5 w-full bg-black" />
+              <div className="mt-1 w-full border-t-2 border-solid border-black" />
 
-          <div className="">
-            <h3 className=" font-bold">PERINGATAN!</h3>
-            <ul className="">
-              <li className="flex items-start gap-1">
-                <span className="shrink-0">-</span>
-                <span>HP bermasalah hukum menjadi tanggung jawab pemilik.</span>
-              </li>
+              <div className="flex justify-between font-bold">
+                <span>Total</span>
+                <span>{formatRupiah(total)}</span>
+              </div>
+            </div>
+            <div className="h-0.5 w-full bg-black mt-3" />
+            <div>
+              <h2 className="font-bold">Informasi Garansi</h2>
+              <p>
+                {receipt.warrantyDays === 0
+                  ? "Garansi: Tidak Bergaransi"
+                  : receipt.warrantyDays > 0 && !receipt.warrantyUntil
+                    ? "Garansi: -"
+                    : `Garansi: ${receipt.warrantyDays} hari`}
+              </p>
+              <p>
+                {receipt.warrantyDays === 0
+                  ? ""
+                  : receipt.warrantyDays > 0 && !receipt.warrantyUntil
+                    ? "Berlaku Hingga: Belum ditentukan"
+                    : `Berlaku Hingga: ${formatDate(receipt.warrantyUntil)}`}
+              </p>
+            </div>
+          </section>
 
-              <li className="flex items-start gap-1">
-                <span className="shrink-0">-</span>
-                <span>Pengambilan dan retur wajib membawa nota.</span>
-              </li>
+          <footer>
+            <div className="mt-1 w-full border-t-2 border-solid border-black" />
 
-              <li className="flex items-start gap-1">
-                <span className="shrink-0">-</span>
-                <span>Garansi batal jika segel rusak.</span>
-              </li>
+            <div className="">
+              <h3 className=" font-bold">PERINGATAN!</h3>
+              <ul className="">
+                <li className="flex items-start gap-1">
+                  <span className="shrink-0">-</span>
+                  <span>
+                    HP bermasalah hukum menjadi tanggung jawab pemilik.
+                  </span>
+                </li>
 
-              <li className="flex items-start gap-1">
-                <span className="shrink-0">-</span>
-                <span>Pergantian LCD/TS tidak ada garansi.</span>
-              </li>
+                <li className="flex items-start gap-1">
+                  <span className="shrink-0">-</span>
+                  <span>Pengambilan dan retur wajib membawa nota.</span>
+                </li>
 
-              <li className="flex items-start gap-1">
-                <span className="shrink-0">-</span>
-                <span>
-                  HP yang tidak diambil lebih dari 1 bulan, jika rusak atau
-                  hilang bukan tanggung jawab kami.
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div className="h-0.5 w-full bg-black mt-3" />
+                <li className="flex items-start gap-1">
+                  <span className="shrink-0">-</span>
+                  <span>Garansi batal jika segel rusak.</span>
+                </li>
 
-          <p className="text-center">Terima kasih atas kepercayaan Anda.</p>
-        </footer>
+                <li className="flex items-start gap-1">
+                  <span className="shrink-0">-</span>
+                  <span>Pergantian LCD/TS tidak ada garansi.</span>
+                </li>
+
+                <li className="flex items-start gap-1">
+                  <span className="shrink-0">-</span>
+                  <span>
+                    HP yang tidak diambil lebih dari 1 bulan, jika rusak atau
+                    hilang bukan tanggung jawab kami.
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div className="mt-1 w-full border-t-2 border-solid border-black" />
+
+            <p className="text-center">Terima kasih atas kepercayaan Anda.</p>
+          </footer>
+        </div>
       </div>
+      <div className="flex justify-between w-full">
+        <Button
+          onClick={() => router.push("/")}
+          variant="secondary"
+          className="text-slate-800"
+        >
+          Kembali
+        </Button>
 
-      <Button type="button" onClick={downloadPDF}>
-        <FileDown />
-        Download PDF
-      </Button>
-    </div>
+        <div className="space-x-3">
+          <Button
+            type="button"
+            onClick={downloadPDF}
+            className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+          >
+            <FileDown />
+            Download PDF
+          </Button>
+          <Button
+            type="button"
+            onClick={printReceipt}
+            className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+          >
+            <Printer />
+            Cetak Nota
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 }
 

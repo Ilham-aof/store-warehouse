@@ -99,24 +99,27 @@ model StockOut {
 }
 
 model ServiceReceipt {
-  id            String        @id @default(cuid())
-  invoiceNumber String        @unique
+  id                String        @id @default(cuid())
+  invoiceNumber     String        @unique
 
-  customerName  String
-  customerPhone String
-  device        String
+  customerName      String
+  customerPhone     String
+  device            String
+  deviceInclusions  String[]      @default([])
 
-  warrantyDays  Int
-  warrantyUntil DateTime?
+  warrantyDays      Int
+  warrantyUntil     DateTime?
 
-  processStatus Boolean       @default(false)
-  pickupStatus  Boolean       @default(false)
+  discount          Int           @default(0)
 
-  outletId String
-  outlet   Outlet @relation(fields: [outletId], references: [id])
+  processStatus     Boolean       @default(false)
+  pickupStatus      Boolean       @default(false)
 
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  outletId          String
+  outlet            Outlet @relation(fields: [outletId], references: [id])
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
   serviceItems  ServiceItem[]
 }

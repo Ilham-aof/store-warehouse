@@ -6,6 +6,7 @@ import {
   FieldError,
   Label,
   Button,
+  Separator,
 } from "@heroui/react";
 import { useActionState } from "react";
 import { stockOutAction } from "@/app/action/product/takeStockProduct";
@@ -39,13 +40,34 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <div>
-                  <p className="text-lg text-black">
-                    Nama Produk: {selectedProduct?.name}
+                <div className="space-y-2">
+                  <p>Detail Produk</p>
+                  <p className="text-lg font-bold text-black">
+                    {selectedProduct?.name}
                   </p>
-                  <p className="text-muted">
-                    Sisa Stok: {selectedProduct?.quantity}
-                  </p>
+                  <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted">Barcode</span>
+                    <span className="text-black">
+                      {selectedProduct?.barcode}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Kategori</span>
+                    <span className="text-black">
+                      {selectedProduct?.category}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Brand</span>
+                    <span className="text-black">{selectedProduct?.brand}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Sisa Stok</span>
+                    <span className="text-black">
+                      {selectedProduct?.quantity}
+                    </span>
+                  </div>
                 </div>
                 <input
                   type="hidden"

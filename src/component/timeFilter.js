@@ -10,8 +10,8 @@ export function TimeFilter({ timeFilter, setTimeFilter }) {
         variant="secondary"
         className="w-32"
         aria-label="Filter waktu"
-        selectedKey={timeFilter}
-        onSelectionChange={setTimeFilter}
+        value={timeFilter}
+        onChange={setTimeFilter}
       >
         <Select.Trigger className="ring-0 outline-none shadow-none ring-offset-0">
           <Select.Value />

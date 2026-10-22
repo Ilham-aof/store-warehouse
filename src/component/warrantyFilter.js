@@ -10,8 +10,8 @@ export function WarrantyFilter({ warrantyFilter, setWarrantyFilter }) {
         variant="secondary"
         className="w-40"
         aria-label="Filter garansi"
-        selectedKey={warrantyFilter}
-        onSelectionChange={setWarrantyFilter}
+        value={warrantyFilter}
+        onChange={setWarrantyFilter}
       >
         <Select.Trigger className="ring-0 outline-none shadow-none ring-offset-0">
           <Select.Value />

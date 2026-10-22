@@ -23,11 +23,26 @@ export async function createServiceReceipt(prevState, formData) {
     redirect("/login");
   }
 
-  const outletId = formData.get("outletId")?.toString().trim();
-  const customerName = formData.get("customerName")?.toString().trim();
-  const customerPhone = formData.get("customerPhone")?.toString().trim();
-  const device = formData.get("device")?.toString().trim();
-  const serviceWarranty = formData.get("serviceWarranty")?.toString().trim();
+  const outletId = formData.get("outletId")?.trim();
+  const customerName = formData.get("customerName")?.trim();
+  const customerPhone = formData.get("customerPhone")?.trim();
+  const device = formData.get("device")?.trim();
+  const deviceInclusions = formData.getAll("deviceInclusions");
+
+  const inclusionLabels = {
+    handphone: "Handphone",
+    simcard: "SIM Card",
+    charger: "Charger",
+    battery: "Battery",
+    memory: "Memory",
+    softcase: "Soft Case",
+  };
+
+  const serviceWarranty = formData.get("serviceWarranty")?.trim();
+  const rawDiscount = formData.get("discount");
+  const discount = typeof rawDiscount === "string" ? rawDiscount.trim() : "";
+
+  const discountAmount = Number(discount);
 
   const errors = {};
 
@@ -49,9 +64,33 @@ export async function createServiceReceipt(prevState, formData) {
     errors.cusitem = "Device customer wajib diisi";
   }
 
+  if (deviceInclusions.length === 0) {
+    errors.deviceInclusions = "Pilih minimal satu kelengkapan HP";
+  } else if (
+    deviceInclusions.some(
+      (item) =>
+        typeof item !== "string" ||
+        !Object.prototype.hasOwnProperty.call(inclusionLabels, item),
+    )
+  ) {
+    errors.deviceInclusions = "Data kelengkapan tidak valid";
+  }
+
+  if (discount === "") {
+    errors.discount = "Discount wajib diisi";
+  } else if (!Number.isSafeInteger(discountAmount) || discountAmount < 0) {
+    errors.discount = "Discount harus berupa angka yang valid";
+  }
+
   const warrantyDays = Number(serviceWarranty);
 
-  if (!serviceWarranty || !Number.isInteger(warrantyDays) || warrantyDays < 0) {
+  if (
+    serviceWarranty === undefined ||
+    serviceWarranty === null ||
+    serviceWarranty === "" ||
+    !Number.isInteger(warrantyDays) ||
+    warrantyDays < 0
+  ) {
     errors.serviceWarranty = "Garansi harus berupa jumlah hari yang valid";
   }
 
@@ -61,6 +100,8 @@ export async function createServiceReceipt(prevState, formData) {
       errors,
     };
   }
+
+  const inclusionNames = deviceInclusions.map((item) => inclusionLabels[item]);
 
   const outlet = await prisma.outlet.findUnique({
     where: {
@@ -147,6 +188,20 @@ export async function createServiceReceipt(prevState, formData) {
     };
   }
 
+  const subtotal = serviceItems.reduce(
+    (total, service) => total + Number(service.price),
+    0,
+  );
+
+  if (discountAmount > subtotal) {
+    return {
+      success: false,
+      errors: {
+        discount: "Potongan harga melebihi total biaya servis",
+      },
+    };
+  }
+
   const now = new Date();
 
   const year = now.getFullYear();
@@ -172,33 +227,42 @@ export async function createServiceReceipt(prevState, formData) {
   const sequence = String(receiptCount + 1).padStart(4, "0");
 
   const invoiceNumber = `SRV-${outlet.code}-${dateString}-${sequence}`;
+  try {
+    await prisma.serviceReceipt.create({
+      data: {
+        invoiceNumber,
 
-  await prisma.serviceReceipt.create({
-    data: {
-      invoiceNumber,
+        customerName,
+        customerPhone,
+        device,
+        deviceInclusions: inclusionNames,
 
-      customerName,
-      customerPhone,
-      device,
+        warrantyDays,
+        warrantyUntil: null,
 
-      warrantyDays,
-      warrantyUntil: null,
+        discount: discountAmount,
 
-      processStatus: false,
-      pickupStatus: false,
+        processStatus: false,
+        pickupStatus: false,
 
-      outletId: outlet.id,
+        outletId: outlet.id,
 
-      serviceItems: {
-        create: serviceItems.map((service) => ({
-          description: service.description,
-          price: Number(service.price),
-        })),
+        serviceItems: {
+          create: serviceItems.map((service) => ({
+            description: service.description,
+            price: Number(service.price),
+          })),
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      error: "Gagal membuat nota",
+    };
+  }
 
   revalidatePath("/order");
-
   redirect(`/order?outletId=${outletId}`);
 }

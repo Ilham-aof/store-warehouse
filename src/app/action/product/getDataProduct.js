@@ -17,10 +17,19 @@ export async function getDataProduct(outletId, search, page, pageSize) {
   const where = {
     outletId,
     ...(keyword.length > 0 && {
-      name: {
-        contains: keyword,
-        mode: "insensitive",
-      },
+      OR: [
+        {
+          name: {
+            contains: keyword,
+            mode: "insensitive",
+          },
+        },
+        {
+          barcode: {
+            contains: keyword,
+          },
+        },
+      ],
     }),
   };
 
@@ -30,6 +39,7 @@ export async function getDataProduct(outletId, search, page, pageSize) {
       select: {
         id: true,
         name: true,
+        barcode: true,
         category: true,
         brand: true,
         quantity: true,

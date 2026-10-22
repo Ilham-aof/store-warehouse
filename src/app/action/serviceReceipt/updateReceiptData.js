@@ -29,6 +29,17 @@ export async function updateReceiptData(prevState, formData) {
   const customerName = formData.get("customerName");
   const customerPhone = formData.get("customerPhone");
   const device = formData.get("device");
+  const deviceInclusions = formData.getAll("deviceInclusions");
+
+  const inclusionLabels = {
+    handphone: "Handphone",
+    simcard: "SIM Card",
+    charger: "Charger",
+    battery: "Battery",
+    memory: "Memory",
+    softcase: "Soft Case",
+  };
+
   const warranty = formData.get("warranty");
 
   if (!receiptId) {
@@ -65,6 +76,18 @@ export async function updateReceiptData(prevState, formData) {
     };
   }
 
+  if (deviceInclusions.length === 0) {
+    errors.deviceInclusions = "Pilih minimal satu kelengkapan HP";
+  } else if (
+    deviceInclusions.some(
+      (item) =>
+        typeof item !== "string" ||
+        !Object.prototype.hasOwnProperty.call(inclusionLabels, item),
+    )
+  ) {
+    errors.deviceInclusions = "Data kelengkapan tidak valid";
+  }
+
   const warrantyDays = Number(warranty);
 
   if (!warranty || !Number.isInteger(warrantyDays) || warrantyDays < 0) {
@@ -73,6 +96,8 @@ export async function updateReceiptData(prevState, formData) {
       error: "Garansi harus berupa jumlah hari yang valid",
     };
   }
+
+  const inclusionNames = deviceInclusions.map((item) => inclusionLabels[item]);
 
   try {
     const receipt = await prisma.serviceReceipt.findUnique({
@@ -110,12 +135,12 @@ export async function updateReceiptData(prevState, formData) {
         customerName: customerName.trim(),
         customerPhone: customerPhone.trim(),
         device: device.trim(),
+        deviceInclusions: inclusionNames,
         warrantyDays,
         warrantyUntil,
       },
     });
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       error: "Gagal memperbarui nota",

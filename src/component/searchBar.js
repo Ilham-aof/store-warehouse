@@ -1,8 +1,15 @@
 "use client";
 
-import { SearchField, Button } from "@heroui/react";
+import { SearchField, Button, Separator } from "@heroui/react";
+import { ScanBarcode } from "lucide-react";
 
-export function SearchBar({ keyword, onKeywordChange, onSearch, placeholder }) {
+export function SearchBar({
+  keyword,
+  onKeywordChange,
+  onSearch,
+  placeholder,
+  showScanButton,
+}) {
   return (
     <form
       className="flex-1"
@@ -20,12 +27,27 @@ export function SearchBar({ keyword, onKeywordChange, onSearch, placeholder }) {
           <SearchField.SearchIcon />
 
           <SearchField.Input
+            id="search-input"
             placeholder={placeholder}
             value={keyword}
             onChange={(event) => onKeywordChange(event.target.value)}
           />
 
-          <SearchField.ClearButton />
+          <SearchField.ClearButton onPress={() => onKeywordChange("")} />
+
+          {showScanButton && (
+            <Button
+              type="button"
+              onPress={() => {
+                document.getElementById("search-input")?.focus();
+              }}
+              aria-label="Aktifkan mode scan barcode"
+              variant="ghost"
+              className="rounded-r-full"
+            >
+              <ScanBarcode /> Scan
+            </Button>
+          )}
         </SearchField.Group>
       </SearchField>
     </form>

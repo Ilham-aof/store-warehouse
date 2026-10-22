@@ -13,80 +13,79 @@ export async function updateOutletAction(prevState, formData) {
     redirect("/login");
   }
 
+  const session = await prisma.session.findUnique({
+    where: {
+      id: sessionId,
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  if (!session || session.expiresAt < new Date()) {
+    cookieStore.delete("session");
+    redirect("/login");
+  }
+
+  if (session.user.role !== "Admin") {
+    return {
+      success: false,
+      error: "Kamu tidak memiliki akses.",
+    };
+  }
+
+  const outletId = formData.get("outletId");
+  const name = formData.get("outletName")?.trim();
+  const code = formData.get("outletCode")?.trim().toUpperCase();
+  const address = formData.get("outletAddress")?.trim();
+  const phone = formData.get("outletPhone")?.trim();
+
+  if (!outletId) {
+    return {
+      success: false,
+      error: "Cabang tidak ditemukan.",
+    };
+  }
+
+  if (!name) {
+    return {
+      success: false,
+      error: "Nama cabang wajib diisi.",
+    };
+  }
+
+  if (!code) {
+    return {
+      success: false,
+      error: "Kode cabang wajib diisi.",
+    };
+  }
+  if (!/^[A-Z]{2,5}$/.test(code)) {
+    return {
+      success: false,
+      error: "Kode cabang harus 2–5 huruf",
+    };
+  }
+
+  if (!address) {
+    return {
+      success: false,
+      error: "Alamat cabang wajib diisi.",
+    };
+  }
+
+  if (!phone) {
+    return {
+      success: false,
+      error: "Nomor telepon cabang wajib diisi",
+    };
+  } else if (!/^08\d{8,11}$/.test(phone)) {
+    return {
+      success: false,
+      error: "Nomor telepon cabang tidak valid",
+    };
+  }
   try {
-    const session = await prisma.session.findUnique({
-      where: {
-        id: sessionId,
-      },
-      include: {
-        user: true,
-      },
-    });
-
-    if (!session || session.expiresAt < new Date()) {
-      cookieStore.delete("session");
-      redirect("/login");
-    }
-
-    if (session.user.role !== "Admin") {
-      return {
-        success: false,
-        error: "Kamu tidak memiliki akses.",
-      };
-    }
-
-    const outletId = formData.get("outletId");
-    const name = formData.get("outletName")?.trim();
-    const code = formData.get("outletCode")?.trim().toUpperCase();
-    const address = formData.get("outletAddress")?.trim();
-    const phone = formData.get("outletPhone")?.trim();
-
-    if (!outletId) {
-      return {
-        success: false,
-        error: "Cabang tidak ditemukan.",
-      };
-    }
-
-    if (!name) {
-      return {
-        success: false,
-        error: "Nama cabang wajib diisi.",
-      };
-    }
-
-    if (!code) {
-      return {
-        success: false,
-        error: "Kode cabang wajib diisi.",
-      };
-    }
-    if (!/^[A-Z]{2,5}$/.test(code)) {
-      return {
-        success: false,
-        error: "Kode cabang harus 2–5 huruf",
-      };
-    }
-
-    if (!address) {
-      return {
-        success: false,
-        error: "Alamat cabang wajib diisi.",
-      };
-    }
-
-    if (!phone) {
-      return {
-        success: false,
-        error: "Nomor telepon cabang wajib diisi",
-      };
-    } else if (!/^08\d{8,11}$/.test(phone)) {
-      return {
-        success: false,
-        error: "Nomor telepon cabang tidak valid",
-      };
-    }
-
     const outlet = await prisma.outlet.findUnique({
       where: {
         id: outletId,

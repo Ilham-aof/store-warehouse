@@ -78,6 +78,7 @@ export function StockBarang({
             onKeywordChange={setSearchKeyword}
             onSearch={handleSearch}
             placeholder="Cari nama produk..."
+            showScanButton
           />
           <Separator orientation="vertical" />
           <AddProductButton selectedOutletId={selectedOutletId} />

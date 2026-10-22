@@ -7,7 +7,8 @@ import {
   ErrorMessage,
   FieldError,
   Label,
-  Separator,
+  ListBox,
+  Select,
 } from "@heroui/react";
 import { Plus, Trash, FilePlus } from "lucide-react";
 import { useState, useActionState } from "react";
@@ -17,7 +18,7 @@ import { useRouter } from "next/navigation";
 
 export function ReceiptForm({ outlets, selectedOutletId }) {
   const router = useRouter();
-
+  const [discount, setDiscount] = useState("0");
   const [services, setServices] = useState([
     {
       description: "",
@@ -26,6 +27,20 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
   ]);
 
   const [cusPhone, setCusPhone] = useState("");
+  const [selectedDeviceInclusions, setSelectedDeviceInclusions] = useState([
+    "handphone",
+  ]);
+  const [showDeviceInclusionsError, setShowDeviceInclusionsError] =
+    useState(false);
+
+  const accessoryLabels = {
+    handphone: "Handphone",
+    simcard: "SIM Card",
+    charger: "Charger",
+    battery: "Battery",
+    memory: "Memory",
+    softcase: "Soft Case",
+  };
 
   const addService = () => {
     setServices((prev) => [
@@ -53,7 +68,16 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
         <h1 className="text-2xl font-bold">Tambah Servis Baru</h1>
       </div>
 
-      <form action={action} className="flex flex-col space-y-5">
+      <form
+        action={action}
+        onSubmit={(event) => {
+          if (selectedDeviceInclusions.length === 0) {
+            event.preventDefault();
+            setShowDeviceInclusionsError(true);
+          }
+        }}
+        className="flex flex-col space-y-5"
+      >
         <OutletSelection
           outlets={outlets}
           selectedOutletId={selectedOutletId}
@@ -147,6 +171,126 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   )}
                 </div>
               </TextField>
+
+              <Select
+                name="deviceInclusions"
+                placeholder="Kelengkapan HP"
+                selectionMode="multiple"
+                value={selectedDeviceInclusions}
+                onChange={(value) => {
+                  setSelectedDeviceInclusions(value ?? []);
+
+                  if (value?.length > 0) {
+                    setShowDeviceInclusionsError(false);
+                  }
+                }}
+                isInvalid={
+                  showDeviceInclusionsError &&
+                  selectedDeviceInclusions.length === 0
+                }
+              >
+                <Label>Kelengkapan</Label>
+
+                <Select.Trigger className="ring-0 outline-none shadow-none ring-offset-0">
+                  <Select.Value>
+                    {({ defaultChildren, isPlaceholder }) => {
+                      if (
+                        isPlaceholder ||
+                        selectedDeviceInclusions.length === 0
+                      ) {
+                        return defaultChildren;
+                      }
+
+                      const labels = selectedDeviceInclusions
+                        .map((value) => accessoryLabels[value])
+                        .filter(Boolean);
+
+                      if (labels.length === 0) {
+                        return defaultChildren;
+                      }
+
+                      if (labels.length === 1) {
+                        return labels[0];
+                      }
+
+                      if (labels.length === 2) {
+                        return `${labels[0]} dan ${labels[1]}`;
+                      }
+
+                      return `${labels.slice(0, -1).join(", ")}, dan ${
+                        labels[labels.length - 1]
+                      }`;
+                    }}
+                  </Select.Value>
+
+                  <Select.Indicator />
+                </Select.Trigger>
+
+                <Select.Popover>
+                  <ListBox selectionMode="multiple">
+                    <ListBox.Item
+                      id="handphone"
+                      textValue="Handphone"
+                      className="ring-0 outline-none shadow-none ring-offset-0"
+                    >
+                      Handphone
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+
+                    <ListBox.Item
+                      id="simcard"
+                      textValue="SIM Card"
+                      className="ring-0 outline-none shadow-none ring-offset-0"
+                    >
+                      SIM Card
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+
+                    <ListBox.Item
+                      id="charger"
+                      textValue="Charger"
+                      className="ring-0 outline-none shadow-none ring-offset-0"
+                    >
+                      Charger
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+
+                    <ListBox.Item
+                      id="battery"
+                      textValue="Battery"
+                      className="ring-0 outline-none shadow-none ring-offset-0"
+                    >
+                      Battery
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+
+                    <ListBox.Item
+                      id="memory"
+                      textValue="Memory"
+                      className="ring-0 outline-none shadow-none ring-offset-0"
+                    >
+                      Memory
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+
+                    <ListBox.Item
+                      id="softcase"
+                      textValue="Soft Case"
+                      className="ring-0 outline-none shadow-none ring-offset-0"
+                    >
+                      Soft Case
+                      <ListBox.ItemIndicator />
+                    </ListBox.Item>
+                  </ListBox>
+                </Select.Popover>
+                <div className="min-h-6">
+                  {showDeviceInclusionsError &&
+                    selectedDeviceInclusions.length === 0 && (
+                      <FieldError>Pilih minimal satu kelengkapan HP</FieldError>
+                    )}
+                </div>
+              </Select>
+
               <TextField
                 name="serviceWarranty"
                 aria-label="Service Warranty"
@@ -163,7 +307,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
                 <div className="min-h-6">
-                  {state.errors?.service ? (
+                  {state.errors?.serviceWarranty ? (
                     <ErrorMessage>{state.errors.serviceWarranty}</ErrorMessage>
                   ) : (
                     <FieldError />
@@ -177,7 +321,10 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
             <div className="space-y-3">
               <h2 className="text-xl font-bold">Data Servis</h2>
               {services.map((item, index) => (
-                <div key={index} className="flex space-x-5">
+                <div
+                  key={index}
+                  className="grid grid-cols-[1fr_1fr_0.4fr] gap-5"
+                >
                   <TextField
                     name={`phoneDamageType[${index}][description]`}
                     aria-label="Jenis Kerusakan"
@@ -256,7 +403,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                       )}
                     </div>
                   </TextField>
-                  <div className="min-w-30 pt-6">
+                  <div className="pt-6">
                     {services.length > 1 && (
                       <Button
                         type="button"
@@ -279,6 +426,30 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 <Plus />
                 Tambah Kerusakan
               </Button>
+              <div className="grid grid-cols-[1fr_1fr_0.4fr] gap-5">
+                <TextField
+                  name="discount"
+                  aria-label="Potongan Harga"
+                  type="text"
+                  value={discount}
+                  onChange={(value) => {
+                    setDiscount(value.replace(/\D/g, ""));
+                  }}
+                >
+                  <Label>Potongan Harga (Rp)</Label>
+                  <Input
+                    placeholder="Masukkan potongan"
+                    className="hover:bg-gray-200 focus:ring-slate-800"
+                  />
+                  <div className="min-h-6">
+                    {state.errors?.discount ? (
+                      <ErrorMessage>{state.errors.discount}</ErrorMessage>
+                    ) : (
+                      <FieldError />
+                    )}
+                  </div>
+                </TextField>
+              </div>
             </div>
           </div>
         </div>
