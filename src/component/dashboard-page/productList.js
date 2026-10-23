@@ -35,7 +35,7 @@ export function ProductList({ products }) {
 
               <Table.Column className="w-[13%]">Kategori</Table.Column>
 
-              <Table.Column className="w-[12%]">Brand</Table.Column>
+              <Table.Column className="w-[12%]">Merek</Table.Column>
 
               <Table.Column className="w-[8%]">Stok</Table.Column>
 
@@ -54,7 +54,11 @@ export function ProductList({ products }) {
                   <Table.Cell>{product.brand}</Table.Cell>
                   <Table.Cell>{product.quantity}</Table.Cell>
                   <Table.Cell>
-                    Rp {product.price.toLocaleString("id-ID")}
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      maximumFractionDigits: 0,
+                    }).format(product.price)}
                   </Table.Cell>
                   <Table.Cell>
                     {new Date(product.stockIns[0].createdAt).toLocaleString(
@@ -89,7 +93,7 @@ export function ProductList({ products }) {
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <PackagePlus />
-                              <Label>Tambah Stok</Label>
+                              <Label>Tambah Stok Manual</Label>
                             </Dropdown.Item>
                             <Dropdown.Item
                               id="take-stock"
@@ -97,7 +101,7 @@ export function ProductList({ products }) {
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <PackageMinus />
-                              <Label>Ambil Stok</Label>
+                              <Label>Ambil Stok Manual</Label>
                             </Dropdown.Item>
                             <Dropdown.Item
                               id="edit"

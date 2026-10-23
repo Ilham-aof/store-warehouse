@@ -1,7 +1,7 @@
 "use client";
 import { Separator } from "@heroui/react";
 import { useState, useEffect } from "react";
-import { AddProductButton } from "@/component/dashboard-page/addProductButton";
+import { ProductActionButton } from "@/component/dashboard-page/productActionButton";
 import { OutletSelection } from "@/component/outletSelection";
 import { ProductList } from "@/component/dashboard-page/productList";
 import { SearchBar } from "@/component/searchBar";
@@ -72,7 +72,7 @@ export function StockBarang({
           <h1 className="text-2xl font-bold">Stok Produk</h1>
         </div>
 
-        <div className="flex space-x-5">
+        <div className="flex space-x-3">
           <SearchBar
             keyword={searchKeyword}
             onKeywordChange={setSearchKeyword}
@@ -81,7 +81,7 @@ export function StockBarang({
             showScanButton
           />
           <Separator orientation="vertical" />
-          <AddProductButton selectedOutletId={selectedOutletId} />
+          <ProductActionButton selectedOutletId={selectedOutletId} />
         </div>
 
         <ProductList products={products} />

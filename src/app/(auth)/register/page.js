@@ -50,6 +50,7 @@ export default function page() {
         <TextField
           name="name"
           aria-label="Nama"
+          variant="secondary"
           type="text"
           className="w-80"
           validate={(value) => {
@@ -74,6 +75,7 @@ export default function page() {
         <TextField
           name="email"
           aria-label="Email"
+          variant="secondary"
           type="email"
           className="w-80"
           validate={(value) => {
@@ -101,6 +103,7 @@ export default function page() {
         <TextField
           name="phone"
           aria-label="Phone"
+          variant="secondary"
           type="tel"
           className="w-80"
           value={phone}
@@ -133,6 +136,7 @@ export default function page() {
         <TextField
           name="password"
           aria-label="Password"
+          variant="secondary"
           type="password"
           className="w-80"
           value={password}

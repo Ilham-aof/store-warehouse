@@ -40,7 +40,6 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
             </Modal.Header>
             <form action={action}>
               <Modal.Body className="space-y-5">
-                <div></div>
                 <p className="text-lg text-black">
                   Cabang : {selectedOutlet?.name}
                 </p>
@@ -55,6 +54,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                   <TextField
                     name="outletName"
                     aria-label="Outlet Name"
+                    variant="secondary"
                     type="text"
                     defaultValue={selectedOutlet?.name ?? ""}
                     className="w-full"
@@ -76,6 +76,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                   <TextField
                     name="outletCode"
                     aria-label="Outlet Code"
+                    variant="secondary"
                     type="text"
                     className="w-full"
                     value={outletCode}
@@ -109,6 +110,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                   <TextField
                     name="outletAddress"
                     aria-label="Outlet Address"
+                    variant="secondary"
                     type="text"
                     defaultValue={selectedOutlet?.address ?? ""}
                     className="w-full"
@@ -130,6 +132,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                   <TextField
                     name="outletPhone"
                     aria-label="Outlet Phone"
+                    variant="secondary"
                     type="tel"
                     value={phone}
                     onChange={(value) => setPhone(value.replace(/\D/g, ""))}

@@ -27,6 +27,8 @@ export async function stockInAction(prevState, formData) {
   const productId = formData.get("productId");
   const outletId = formData.get("outletId");
   const quantity = formData.get("addQuantity");
+  const redirectTo = formData.get("redirectTo");
+  console.log("tujuan", redirectTo);
 
   if (!productId) {
     return {
@@ -101,6 +103,11 @@ export async function stockInAction(prevState, formData) {
     };
   }
 
-  revalidatePath("/");
-  redirect(`/?outletId=${outletId}`);
+  const destination =
+    redirectTo === "/add-product-stock"
+      ? `/add-product-stock?outletId=${outletId}`
+      : `/?outletId=${outletId}`;
+
+  revalidatePath(destination);
+  redirect(destination);
 }

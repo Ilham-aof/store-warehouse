@@ -96,6 +96,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
               <TextField
                 name="customerName"
                 aria-label="Customer Name"
+                variant="secondary"
                 type="text"
                 validate={(value) => {
                   if (!value) {
@@ -121,6 +122,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
               <TextField
                 name="customerPhone"
                 aria-label="Cutomer Phone"
+                variant="secondary"
                 type="tel"
                 value={cusPhone}
                 onChange={(value) => setCusPhone(value.replace(/\D/g, ""))}
@@ -150,6 +152,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
               <TextField
                 name="device"
                 aria-label="Device Customer"
+                variant="secondary"
                 type="text"
                 validate={(value) => {
                   if (!value) {
@@ -176,6 +179,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 name="deviceInclusions"
                 placeholder="Kelengkapan HP"
                 selectionMode="multiple"
+                variant="secondary"
                 value={selectedDeviceInclusions}
                 onChange={(value) => {
                   setSelectedDeviceInclusions(value ?? []);
@@ -294,6 +298,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
               <TextField
                 name="serviceWarranty"
                 aria-label="Service Warranty"
+                variant="secondary"
                 type="number"
                 validate={(value) => {
                   if (!value) {
@@ -328,6 +333,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   <TextField
                     name={`phoneDamageType[${index}][description]`}
                     aria-label="Jenis Kerusakan"
+                    variant="secondary"
                     type="text"
                     className="w-full"
                     value={item.description}
@@ -366,6 +372,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   <TextField
                     name={`servicePrice[${index}][price]`}
                     aria-label="Service Price"
+                    variant="secondary"
                     type="text"
                     className="w-full"
                     value={item.price}
@@ -430,6 +437,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 <TextField
                   name="discount"
                   aria-label="Potongan Harga"
+                  variant="secondary"
                   type="text"
                   value={discount}
                   onChange={(value) => {

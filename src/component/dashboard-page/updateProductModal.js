@@ -60,6 +60,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                   <TextField
                     name="productName"
                     aria-label="productName"
+                    variant="secondary"
                     type="text"
                     defaultValue={selectedProduct?.name ?? ""}
                     className="w-full"
@@ -81,6 +82,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                   <TextField
                     name="productCategory"
                     aria-label="productCategory"
+                    variant="secondary"
                     type="text"
                     defaultValue={selectedProduct?.category ?? ""}
                     className="w-full"
@@ -102,18 +104,19 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                   <TextField
                     name="productBrand"
                     aria-label="productBrand"
+                    variant="secondary"
                     type="text"
                     defaultValue={selectedProduct?.brand ?? ""}
                     className="w-full"
                     validate={(value) => {
                       if (!value) {
-                        return "Brand produk wajib diisi";
+                        return "Merek produk wajib diisi";
                       }
                     }}
                   >
-                    <Label>Brand</Label>
+                    <Label>Merek</Label>
                     <Input
-                      placeholder="Brand Produk"
+                      placeholder="Merek Produk"
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
@@ -123,6 +126,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                   <TextField
                     name="productPrice"
                     aria-label="productPrice"
+                    variant="secondary"
                     type="text"
                     value={price}
                     onChange={(value) => {

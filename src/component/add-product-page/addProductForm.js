@@ -8,7 +8,7 @@ import {
   ErrorMessage,
   FieldError,
 } from "@heroui/react";
-import { Plus } from "lucide-react";
+import { Plus, BadgePlus } from "lucide-react";
 import { useState, useActionState } from "react";
 import { addProductAction } from "@/app/action/product/addProduct";
 import { OutletSelection } from "@/component/outletSelection";
@@ -29,6 +29,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
   return (
     <div className="bg-white  items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
       <div className="flex space-x-3 items-center">
+        <BadgePlus size={30} />
         <h1 className="text-2xl font-bold">Tambah Produk Baru</h1>
       </div>
 
@@ -53,6 +54,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
               <TextField
                 name={`products[${index}][barcode]`}
                 aria-label="product Barcode"
+                variant="secondary"
                 type="text"
                 className="w-full"
                 validate={(value) => {
@@ -79,6 +81,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
               <TextField
                 name={`products[${index}][name]`}
                 aria-label="product Name"
+                variant="secondary"
                 type="text"
                 className="w-full"
                 validate={(value) => {
@@ -105,6 +108,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
               <TextField
                 name={`products[${index}][category]`}
                 aria-label="product category"
+                variant="secondary"
                 type="text"
                 className="w-full"
                 validate={(value) => {
@@ -131,18 +135,19 @@ export function AddProductForm({ outlets, selectedOutletId }) {
               <TextField
                 name={`products[${index}][brand]`}
                 aria-label="product Brand"
+                variant="secondary"
                 type="text"
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Brand produk wajib diisi";
+                    return "Merek produk wajib diisi";
                   }
                 }}
               >
-                <Label>Brand</Label>
+                <Label>Merek</Label>
 
                 <Input
-                  placeholder="Brand Produk"
+                  placeholder="Merek Produk"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
 
@@ -157,6 +162,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
               <TextField
                 name={`products[${index}][quantity]`}
                 aria-label="product Quantity"
+                variant="secondary"
                 type="number"
                 className="w-full"
                 value={quantity[formId] ?? ""}
@@ -190,6 +196,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
               <TextField
                 name={`products[${index}][price]`}
                 aria-label="product Price"
+                variant="secondary"
                 type="text"
                 className="w-full"
                 value={price[formId] ?? ""}

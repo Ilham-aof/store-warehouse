@@ -62,7 +62,7 @@ export function ProductHistoryList({
                 Nama Produk
               </Table.Column>
               <Table.Column className="w-[15%]">Kategori</Table.Column>
-              <Table.Column className="w-[15%]">Brand</Table.Column>
+              <Table.Column className="w-[15%]">Merek</Table.Column>
               <Table.Column className="w-[12%]">Tipe Mutasi</Table.Column>
               <Table.Column className="w-[8%]">Jumlah</Table.Column>
               <Table.Column className="w-[10%]">Staff</Table.Column>

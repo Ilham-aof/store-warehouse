@@ -9,6 +9,7 @@ export function SearchBar({
   onSearch,
   placeholder,
   showScanButton,
+  inputRef,
 }) {
   return (
     <form
@@ -27,6 +28,7 @@ export function SearchBar({
           <SearchField.SearchIcon />
 
           <SearchField.Input
+            ref={inputRef}
             id="search-input"
             placeholder={placeholder}
             value={keyword}

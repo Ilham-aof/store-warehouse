@@ -98,6 +98,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   <TextField
                     name="customerName"
                     aria-label="Customer Name"
+                    variant="secondary"
                     type="text"
                     defaultValue={selectedReceipt?.customerName ?? ""}
                     className="w-full"
@@ -119,6 +120,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   <TextField
                     name="customerPhone"
                     aria-label="Customer Phone"
+                    variant="secondary"
                     type="text"
                     defaultValue={String(selectedReceipt?.customerPhone ?? "")}
                     value={customerPhone}
@@ -144,6 +146,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   <TextField
                     name="device"
                     aria-label="Device"
+                    variant="secondary"
                     type="text"
                     defaultValue={selectedReceipt?.device ?? ""}
                     className="w-full"
@@ -166,6 +169,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   <TextField
                     name="warranty"
                     aria-label="Warranty"
+                    variant="secondary"
                     type="number"
                     defaultValue={String(selectedReceipt?.warrantyDays ?? "")}
                     validate={(value) => {
@@ -186,6 +190,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
 
                   <Select
                     name="deviceInclusions"
+                    variant="secondary"
                     placeholder="Kelengkapan HP"
                     selectionMode="multiple"
                     value={selectedDeviceInclusions}

@@ -49,6 +49,7 @@ export function AddOutlet() {
                     <TextField
                       name="outletName"
                       aria-label="Outlet Name"
+                      variant="secondary"
                       type="text"
                       validate={(value) => {
                         if (!value) return "Nama cabang wajib diisi";
@@ -67,6 +68,7 @@ export function AddOutlet() {
                     <TextField
                       name="outletCode"
                       aria-label="Outlet Code"
+                      variant="secondary"
                       type="text"
                       value={outletCode}
                       onChange={(value) => {
@@ -101,6 +103,7 @@ export function AddOutlet() {
                     <TextField
                       name="outletAddress"
                       aria-label="Outlet Address"
+                      variant="secondary"
                       type="text"
                       validate={(value) => {
                         if (!value) return "Alamat cabang wajib diisi";
@@ -119,6 +122,7 @@ export function AddOutlet() {
                     <TextField
                       name="outletPhone"
                       aria-label="Outlet Phone"
+                      variant="secondary"
                       type="tel"
                       value={phone}
                       onChange={(value) => setPhone(value.replace(/\D/g, ""))}

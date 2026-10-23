@@ -59,8 +59,18 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted">Brand</span>
+                    <span className="text-muted">Merek</span>
                     <span className="text-black">{selectedProduct?.brand}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Harga</span>
+                    <span className="text-black">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(selectedProduct?.price)}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted">Sisa Stok</span>
@@ -84,6 +94,7 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
                   <TextField
                     name="productQuantity"
                     aria-label="productQuantity"
+                    variant="secondary"
                     type="number"
                     validate={(value) => {
                       if (!value) {

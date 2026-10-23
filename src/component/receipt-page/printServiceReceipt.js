@@ -121,20 +121,38 @@ export function PrintServiceReceipt({ receipt, user }) {
               {receipt.serviceItems.map((service) => (
                 <div key={service.id} className="flex justify-between gap-4">
                   <span>{service.description}</span>
-                  <span>{formatRupiah(service.price)}</span>
+                  <span>
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      maximumFractionDigits: 0,
+                    }).format(service.price)}
+                  </span>
                 </div>
               ))}
 
               <div className="flex justify-between font-bold mt-3">
                 <span>Potongan</span>
-                <span>{formatRupiah(receipt.discount)}</span>
+                <span>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(receipt.discount)}
+                </span>
               </div>
 
               <div className="mt-1 w-full border-t-2 border-solid border-black" />
 
               <div className="flex justify-between font-bold">
                 <span>Total</span>
-                <span>{formatRupiah(total)}</span>
+                <span>
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(total)}
+                </span>
               </div>
             </div>
             <div className="h-0.5 w-full bg-black mt-3" />
