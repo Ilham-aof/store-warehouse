@@ -20,8 +20,7 @@
     "nodemailer": "^10.0.13",
     "prisma": "^6.19.3",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "web-escpos-printer": "^1.4.0"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

@@ -8,12 +8,21 @@ import {
   Button,
   Separator,
 } from "@heroui/react";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { stockOutAction } from "@/app/action/product/takeStockProduct";
 import { PackageMinus } from "lucide-react";
+import { StockOutSelection } from "@/component/stockOutSelection";
+import { OutletInputForm } from "@/component/outletInputForm";
 
-export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
+export function TakeProductStockModal({
+  isOpen,
+  selectedProduct,
+  onClose,
+  outlets,
+  label,
+}) {
   const [state, action, isPending] = useActionState(stockOutAction, null);
+  const [stockOutSelection, setStockOutSelection] = useState("SERVIS");
 
   return (
     <>
@@ -27,7 +36,7 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
         isDismissable={false}
       >
         <Modal.Container>
-          <Modal.Dialog className="space-y-5">
+          <Modal.Dialog className="space-y-3">
             <Modal.CloseTrigger />
 
             <Modal.Header>
@@ -39,13 +48,20 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
-              <Modal.Body className="space-y-5">
-                <div className="space-y-2">
+              <Modal.Body className="space-y-3">
+                <div className="space-y-1">
                   <p>Detail Produk</p>
                   <p className="text-lg font-bold text-black">
                     {selectedProduct?.name}
                   </p>
                   <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted">Cabang</span>
+                    <span className="text-black">
+                      {selectedProduct?.outlet.name}
+                    </span>
+                  </div>
+
                   <div className="flex justify-between">
                     <span className="text-muted">Barcode</span>
                     <span className="text-black">
@@ -90,32 +106,40 @@ export function TakeProductStockModal({ isOpen, selectedProduct, onClose }) {
                   name="outletId"
                   value={selectedProduct?.outletId ?? ""}
                 />
-                <div className="flex flex-col">
-                  <TextField
-                    name="productQuantity"
-                    aria-label="productQuantity"
-                    variant="secondary"
-                    type="number"
-                    validate={(value) => {
-                      if (!value) {
-                        return "Quantity produk wajib diisi";
-                      }
-                    }}
-                  >
-                    <Label>Jumlah Stok Diambil</Label>
-                    <Input
-                      placeholder="Contoh: 10"
-                      className="hover:bg-gray-200 focus:ring-slate-800"
-                    />
-                    <div className="min-h-6">
-                      <FieldError />
-                    </div>
-                  </TextField>
-                  <div className="text-center">
-                    {state?.error && (
-                      <p className="text-danger text-center">{state.error}</p>
-                    )}
+                <StockOutSelection
+                  stockOutSelection={stockOutSelection}
+                  setStockOutSelection={setStockOutSelection}
+                />
+
+                {stockOutSelection === "TRANSFER" && (
+                  <OutletInputForm outlets={outlets} label={label} />
+                )}
+
+                <TextField
+                  name="productQuantity"
+                  aria-label="productQuantity"
+                  variant="secondary"
+                  type="number"
+                  validate={(value) => {
+                    if (!value) {
+                      return "Quantity produk wajib diisi";
+                    }
+                  }}
+                >
+                  <Label>Jumlah Stok Diambil</Label>
+                  <Input
+                    placeholder="Contoh: 10"
+                    className="hover:bg-gray-200 focus:ring-slate-800"
+                  />
+                  <div className="min-h-6">
+                    <FieldError />
                   </div>
+                </TextField>
+
+                <div className="text-center">
+                  {state?.error && (
+                    <p className="text-danger text-center">{state.error}</p>
+                  )}
                 </div>
               </Modal.Body>
 

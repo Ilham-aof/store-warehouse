@@ -27,6 +27,8 @@ export async function stockOutAction(prevState, formData) {
   const productId = formData.get("productId");
   const outletId = formData.get("outletId");
   const quantity = formData.get("productQuantity");
+  const mutationType = formData.get("mutationOutType");
+  const targetOutlet = formData.get("targetOutlet");
 
   if (!productId) {
     return {
@@ -47,6 +49,20 @@ export async function stockOutAction(prevState, formData) {
       success: false,
       error: "Cabang tidak ditemukan",
     };
+  }
+
+  if (mutationType === "TRANSFER") {
+    if (!targetOutlet) {
+      return {
+        error: "Cabang tujuan wajib dipilih untuk transfer.",
+      };
+    }
+
+    if (outletId === targetOutlet) {
+      return {
+        error: "Cabang tujuan tidak boleh sama dengan cabang asal.",
+      };
+    }
   }
 
   const stockQuantity = Number(quantity);
@@ -100,6 +116,8 @@ export async function stockOutAction(prevState, formData) {
           productId,
           userId: session.userId,
           quantity: stockQuantity,
+          type: mutationType,
+          sendTo: targetOutlet,
         },
       });
     });

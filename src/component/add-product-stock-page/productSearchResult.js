@@ -11,17 +11,23 @@ import {
 
 import { stockInAction } from "@/app/action/product/addStockProduct";
 import { useRouter } from "next/navigation";
-import { useActionState, useRef, useEffect } from "react";
+import { useActionState, useRef, useEffect, useState } from "react";
+import { StockInSelection } from "@/component/stockInSelection";
+import { OutletInputForm } from "@/component/outletInputForm";
 
 export function ProductSearchResult({
   product,
   message,
   selectedOutletId,
+  addQuantity,
+  setAddQuantity,
   onStockInComplete,
+  outlets,
 }) {
   const router = useRouter();
   const [state, action, isPending] = useActionState(stockInAction, null);
   const wasPending = useRef(false);
+  const [stockInSelection, setStockInSelection] = useState("PEMBELIAN");
 
   useEffect(() => {
     if (isPending) {
@@ -83,46 +89,64 @@ export function ProductSearchResult({
       <div>
         <form action={action}>
           <input type="hidden" name="productId" defaultValue={product.id} />
-
           <input
             type="hidden"
             name="outletId"
             defaultValue={selectedOutletId ?? ""}
           />
-
           <input
             type="hidden"
             name="redirectTo"
             value="/add-product-stock"
             readOnly
           />
-
-          <TextField
-            name="addQuantity"
-            aria-label="addQuantity"
-            variant="secondary"
-            type="number"
-            validate={(value) => {
-              if (!value) {
-                return "Quantity produk wajib diisi";
-              }
-            }}
-          >
-            <Label>Jumlah Stok Tambahan</Label>
-            <Input
-              placeholder="Contoh: 10"
-              className="hover:bg-gray-200 focus:ring-slate-800"
-            />
-            <div className="min-h-6">
-              <FieldError />
+          <div className="flex w-full items-start gap-5">
+            <div className="w-full">
+              <TextField
+                name="addQuantity"
+                aria-label="addQuantity"
+                variant="secondary"
+                type="number"
+                className="w-full"
+                value={addQuantity}
+                onChange={(value) => {
+                  setAddQuantity(value === "" ? "" : value);
+                }}
+                validate={(value) => {
+                  if (!value) {
+                    return "Quantity produk wajib diisi";
+                  }
+                }}
+              >
+                <Label>Jumlah Stok Tambahan</Label>
+                <Input
+                  placeholder="Contoh: 10"
+                  className="hover:bg-gray-200 focus:ring-slate-800"
+                />
+                <div className="min-h-6">
+                  <FieldError />
+                </div>
+              </TextField>
             </div>
-          </TextField>
+
+            <div className="w-full">
+              <StockInSelection
+                stockInSelection={stockInSelection}
+                setStockInSelection={setStockInSelection}
+              />
+            </div>
+
+            <div className="w-full">
+              {stockInSelection === "TRANSFER" && (
+                <OutletInputForm outlets={outlets} label="Terima Dari" />
+              )}
+            </div>
+          </div>
           <div className="text-center">
             {state?.error && (
               <p className="text-danger text-center">{state.error}</p>
             )}
           </div>
-
           <div className="flex justify-end space-x-3">
             <Button
               type="button"

@@ -36,6 +36,8 @@ export async function getProductHistory(outletId, timeFilter, page, pageSize) {
       select: {
         id: true,
         quantity: true,
+        type: true,
+        getFrom: true,
         createdAt: true,
         product: {
           select: {
@@ -46,6 +48,11 @@ export async function getProductHistory(outletId, timeFilter, page, pageSize) {
           },
         },
         user: { select: { name: true } },
+        sourceOutlet: {
+          select: {
+            name: true,
+          },
+        },
       },
     }),
     prisma.stockOut.findMany({
@@ -53,6 +60,8 @@ export async function getProductHistory(outletId, timeFilter, page, pageSize) {
       select: {
         id: true,
         quantity: true,
+        type: true,
+        sendTo: true,
         createdAt: true,
         product: {
           select: {
@@ -63,6 +72,11 @@ export async function getProductHistory(outletId, timeFilter, page, pageSize) {
           },
         },
         user: { select: { name: true } },
+        destinationOutlet: {
+          select: {
+            name: true,
+          },
+        },
       },
     }),
   ]);
@@ -75,6 +89,10 @@ export async function getProductHistory(outletId, timeFilter, page, pageSize) {
       productBrand: item.product.brand,
       outletId: item.product.outletId,
       activity: "Masuk",
+      type: item.type,
+      getFrom: item.sourceOutlet?.name
+        ? `Dari: ${item.sourceOutlet.name}`
+        : "-",
       quantity: item.quantity,
       userName: item.user.name,
       createdAt: item.createdAt,
@@ -86,6 +104,10 @@ export async function getProductHistory(outletId, timeFilter, page, pageSize) {
       productBrand: item.product.brand,
       outletId: item.product.outletId,
       activity: "Keluar",
+      type: item.type,
+      sendTo: item.destinationOutlet?.name
+        ? `Ke: ${item.destinationOutlet.name}`
+        : "-",
       quantity: item.quantity,
       userName: item.user.name,
       createdAt: item.createdAt,

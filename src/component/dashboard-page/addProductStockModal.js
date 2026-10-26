@@ -8,13 +8,21 @@ import {
   Button,
   Separator,
 } from "@heroui/react";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { stockInAction } from "@/app/action/product/addStockProduct";
 import { PackagePlus } from "lucide-react";
+import { StockInSelection } from "@/component/stockInSelection";
+import { OutletInputForm } from "@/component/outletInputForm";
 
-export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
+export function AddProductStockModal({
+  isOpen,
+  selectedProduct,
+  onClose,
+  outlets,
+  label,
+}) {
   const [state, action, isPending] = useActionState(stockInAction, null);
-
+  const [stockInSelection, setStockInSelection] = useState("PEMBELIAN");
   return (
     <>
       <Modal.Backdrop
@@ -27,7 +35,7 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
         isDismissable={false}
       >
         <Modal.Container>
-          <Modal.Dialog className="space-y-5">
+          <Modal.Dialog className="space-y-3">
             <Modal.Header>
               <Modal.Heading>
                 <div className="flex space-x-3 items-center">
@@ -37,13 +45,20 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
-              <Modal.Body className="space-y-5">
-                <div className="space-y-2">
+              <Modal.Body className="space-y-3">
+                <div className="space-y-1">
                   <p>Detail Produk</p>
                   <p className="text-lg font-bold text-black">
                     {selectedProduct?.name}
                   </p>
                   <Separator />
+                  <div className="flex justify-between">
+                    <span className="text-muted">Cabang</span>
+                    <span className="text-black">
+                      {selectedProduct?.outlet.name}
+                    </span>
+                  </div>
+
                   <div className="flex justify-between">
                     <span className="text-muted">Barcode</span>
                     <span className="text-black">
@@ -91,6 +106,15 @@ export function AddProductStockModal({ isOpen, selectedProduct, onClose }) {
                 />
 
                 <input type="hidden" name="redirectTo" value="/" readOnly />
+
+                <StockInSelection
+                  stockInSelection={stockInSelection}
+                  setStockInSelection={setStockInSelection}
+                />
+
+                {stockInSelection === "TRANSFER" && (
+                  <OutletInputForm outlets={outlets} label={label} />
+                )}
 
                 <TextField
                   name="addQuantity"

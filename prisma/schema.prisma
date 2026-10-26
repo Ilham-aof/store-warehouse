@@ -19,20 +19,33 @@ enum Role {
   Staff
 }
 
+enum StockInType {
+  STOCK_AWAL
+  PEMBELIAN
+  TRANSFER
+  RETUR
+}
+
+enum StockOutType {
+  SERVIS
+  PENJUALAN
+  TRANSFER
+}
+
 model User {
-  id            String   @id @default(cuid())
-  name          String
-  email         String   @unique
-  password      String
-  phone         String
-  role          Role     @default(Staff)
+  id                String      @id @default(cuid())
+  name              String
+  email             String      @unique
+  password          String
+  phone             String
+  role              Role        @default(Staff)
 
-  sessions      Session[]
-  stockIns      StockIn[]
-  stockOuts     StockOut[]
+  sessions          Session[]
+  stockIns          StockIn[]
+  stockOuts         StockOut[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 }
 
 model Session {
@@ -53,6 +66,10 @@ model Outlet {
 
   products Product[]
   receipts ServiceReceipt[]
+
+  stockInsFromHere  StockIn[]   @relation("StockInSourceOutlet")
+  stockOutsToHere   StockOut[]  @relation("StockOutDestinationOutlet")
+
 }
 
 model Product {
@@ -81,10 +98,14 @@ model StockIn {
   productId String
   userId    String
   quantity  Int
+  type      StockInType
+  getFrom   String?  
   createdAt DateTime @default(now())
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  sourceOutlet Outlet? @relation("StockInSourceOutlet", fields: [getFrom], references: [id], onDelete: Cascade)
 }
 
 model StockOut {
@@ -92,10 +113,14 @@ model StockOut {
   productId String
   userId    String
   quantity  Int
+  type      StockOutType
+  sendTo    String?
   createdAt DateTime @default(now())
 
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  destinationOutlet Outlet? @relation("StockOutDestinationOutlet", fields: [sendTo], references: [id], onDelete: Cascade)
 }
 
 model ServiceReceipt {

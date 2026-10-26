@@ -14,7 +14,7 @@ import { DeleteProductModal } from "@/component/dashboard-page/deleteProductModa
 import { AddProductStockModal } from "@/component/dashboard-page/addProductStockModal";
 import { TakeProductStockModal } from "@/component/dashboard-page/takeProductStockModal";
 
-export function ProductList({ products }) {
+export function ProductList({ products, outlets }) {
   const [activeModal, setActiveModal] = useState(null);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -147,12 +147,16 @@ export function ProductList({ products }) {
         key={`stockIn-${selectedProduct?.id}`}
         isOpen={activeModal === "add-stock"}
         selectedProduct={selectedProduct}
+        outlets={outlets}
+        label="Terima Dari"
         onClose={() => setActiveModal(null)}
       />
       <TakeProductStockModal
         key={`stockOut-${selectedProduct?.id}`}
         isOpen={activeModal === "take-stock"}
         selectedProduct={selectedProduct}
+        outlets={outlets}
+        label="Kirim Ke"
         onClose={() => setActiveModal(null)}
       />
     </section>

@@ -1,7 +1,7 @@
 import { getDataProduct } from "@/app/action//product/getDataProduct";
 import { getBestSeller } from "@/app/action//product/getBestSeller";
 
-import { StockBarang } from "@/component/dashboard-page/stockBarang";
+import { ProductStock } from "@/component/dashboard-page/productStock";
 import { getOutlet } from "@/app/action/outlet/getOutlet";
 
 export default async function Home({ searchParams }) {
@@ -23,7 +23,7 @@ export default async function Home({ searchParams }) {
   const bestSellers = await getBestSeller(outletId);
   return (
     <main className="bg-white rounded-2xl shadow-[4px_4px_4px,inset_0_0_4px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 w-full space-y-5">
-      <StockBarang
+      <ProductStock
         outlets={outlets}
         products={productList.products}
         selectedOutletId={outletId}

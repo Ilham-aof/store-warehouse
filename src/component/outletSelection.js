@@ -1,6 +1,6 @@
 "use client";
 
-import { ListBox, Select } from "@heroui/react";
+import { ListBox, Select, Header } from "@heroui/react";
 import { usePathname, useRouter } from "next/navigation";
 
 export function OutletSelection({ outlets, selectedOutletId }) {
@@ -28,6 +28,7 @@ export function OutletSelection({ outlets, selectedOutletId }) {
 
         <Select.Popover className="p-1">
           <ListBox className="space-y-3">
+            <Header>Daftar Cabang</Header>
             {outlets.map((outlet) => (
               <ListBox.Item
                 key={outlet.id}

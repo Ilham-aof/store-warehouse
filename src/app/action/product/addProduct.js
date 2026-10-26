@@ -172,7 +172,7 @@ export async function addProductAction(prevState, formData) {
         await tx.stockIn.create({
           data: {
             quantity: productData.quantity,
-
+            type: "STOCK_AWAL",
             product: {
               connect: {
                 id: product.id,

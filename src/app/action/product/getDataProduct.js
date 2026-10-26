@@ -45,6 +45,11 @@ export async function getDataProduct(outletId, search, page, pageSize) {
         quantity: true,
         price: true,
         outletId: true,
+        outlet: {
+          select: {
+            name: true,
+          },
+        },
         stockIns: {
           orderBy: {
             createdAt: "desc",

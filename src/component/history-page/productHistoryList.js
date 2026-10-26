@@ -61,9 +61,9 @@ export function ProductHistoryList({
               <Table.Column isRowHeader className="w-[25%]">
                 Nama Produk
               </Table.Column>
-              <Table.Column className="w-[15%]">Kategori</Table.Column>
-              <Table.Column className="w-[15%]">Merek</Table.Column>
-              <Table.Column className="w-[12%]">Tipe Mutasi</Table.Column>
+              <Table.Column className="w-[13%]">Kategori</Table.Column>
+              <Table.Column className="w-[16%]">Mutasi Stok</Table.Column>
+              <Table.Column className="w-[13%]">Transfer Produk</Table.Column>
               <Table.Column className="w-[8%]">Jumlah</Table.Column>
               <Table.Column className="w-[10%]">Staff</Table.Column>
               <Table.Column className="w-[15%]">Waktu</Table.Column>
@@ -74,7 +74,6 @@ export function ProductHistoryList({
                 <Table.Row key={item.id}>
                   <Table.Cell>{item.productName}</Table.Cell>
                   <Table.Cell>{item.productCategory}</Table.Cell>
-                  <Table.Cell>{item.productBrand}</Table.Cell>
                   <Table.Cell>
                     <Label
                       className={
@@ -83,9 +82,19 @@ export function ProductHistoryList({
                           : "rounded-2xl px-4 py-2 bg-success/20 text-success font-bold"
                       }
                     >
-                      {item.activity}
+                      {item.type}
                     </Label>
                   </Table.Cell>
+                  <Table.Cell
+                    className={
+                      item.activity === "Keluar"
+                        ? "text-danger font-bold"
+                        : "text-success font-bold"
+                    }
+                  >
+                    {item.activity === "Keluar" ? item.sendTo : item.getFrom}
+                  </Table.Cell>
+
                   <Table.Cell
                     className={
                       item.activity === "Keluar"

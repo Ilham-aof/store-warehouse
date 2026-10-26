@@ -19,6 +19,7 @@ export function AddProductStockForm({ outlets, selectedOutletId }) {
   const [isPending, startTransition] = useTransition();
   const [hasSearched, setHasSearched] = useState(false);
   const [searchedBarcode, setSearchedBarcode] = useState("");
+  const [addQuantity, setAddQuantity] = useState(1);
 
   const searchInputRef = useRef(null);
 
@@ -45,10 +46,23 @@ export function AddProductStockForm({ outlets, selectedOutletId }) {
     startTransition(async () => {
       const result = await searchProduct(searchKeyword, selectedOutletId);
 
-      setProduct(result.product);
+      if (result.product) {
+        if (product?.id === result.product.id) {
+          // Produk sama: tambah jumlah sementara 1
+          setAddQuantity((current) => Number(current || 0) + 1);
+        } else {
+          // Produk berbeda: tampilkan produk baru
+          setProduct(result.product);
+          setAddQuantity(1);
+        }
+      } else {
+        setProduct(null);
+        setMessage(result.message);
+      }
+
       setMessage(result.message);
       setSearchKeyword("");
-      document.activeElement?.blur();
+      // document.activeElement?.blur();
     });
   }
 
@@ -76,12 +90,7 @@ export function AddProductStockForm({ outlets, selectedOutletId }) {
       </section>
 
       <section className="bg-white rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4">
-        {isPending ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-12 text-gray-500">
-            <LoaderCircle size={32} className="animate-spin" />
-            <p className="text-sm">Mencari produk...</p>
-          </div>
-        ) : !hasSearched ? (
+        {!isPending && !hasSearched ? (
           <div className="flex flex-col items-center justify-center gap-3 py-12 text-gray-400">
             <ScanBarcode size={40} />
             <p className="font-medium text-gray-600">
@@ -96,9 +105,12 @@ export function AddProductStockForm({ outlets, selectedOutletId }) {
             product={product}
             message={message}
             selectedOutletId={selectedOutletId}
+            addQuantity={addQuantity}
+            setAddQuantity={setAddQuantity}
             onStockInComplete={focusSearchBar}
+            outlets={outlets}
           />
-        ) : (
+        ) : !isPending && hasSearched ? (
           <div className="flex flex-col items-center justify-center gap-3 py-12">
             <PackageSearch size={40} />
 
@@ -117,6 +129,12 @@ export function AddProductStockForm({ outlets, selectedOutletId }) {
             {message && (
               <p className="text-center text-sm text-red-500">{message}</p>
             )}
+          </div>
+        ) : null}
+        {isPending && (
+          <div className="flex items-center justify-center gap-3 py-4 text-gray-500">
+            <LoaderCircle size={24} className="animate-spin" />
+            <p className="text-sm">Mencari produk...</p>
           </div>
         )}
       </section>

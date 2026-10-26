@@ -10,7 +10,7 @@ import { BestSellerList } from "@/component/dashboard-page/bestSellerList";
 import { Box, Boxes } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export function StockBarang({
+export function ProductStock({
   outlets,
   products,
   selectedOutletId,
@@ -84,7 +84,7 @@ export function StockBarang({
           <ProductActionButton selectedOutletId={selectedOutletId} />
         </div>
 
-        <ProductList products={products} />
+        <ProductList products={products} outlets={outlets} />
 
         <PaginationUi
           currentPage={currentPage}
