@@ -1,19 +1,18 @@
 "use client";
 
 import { useState, useTransition, useRef, useEffect } from "react";
-import { PackagePlus } from "lucide-react";
+import { PackagePlus, PackageMinus } from "lucide-react";
 import { SearchBar } from "@/component/searchBar";
 import { OutletSelection } from "@/component/outletSelection";
 import { searchProduct } from "@/app/action/product/searchProduct";
 import { ProductSearchResult } from "@/component/add-product-stock-page/productSearchResult";
 
-export function AddProductStockForm({ outlets, selectedOutletId }) {
+export function AddProductStockForm({ outlets, selectedOutletId, mode }) {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const [hasSearched, setHasSearched] = useState(false);
   const [items, setItems] = useState([]);
-
   const searchInputRef = useRef(null);
 
   useEffect(() => {
@@ -70,8 +69,14 @@ export function AddProductStockForm({ outlets, selectedOutletId }) {
     <main className="space-y-5">
       <section className="bg-white items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
         <div className="flex space-x-3 items-center">
-          <PackagePlus size={30} />
-          <h1 className="text-2xl font-bold">Tambah Stok Produk</h1>
+          {mode === "in" ? (
+            <PackagePlus size={30} />
+          ) : (
+            <PackageMinus size={30} />
+          )}
+          <h1 className="text-2xl font-bold">
+            {mode === "in" ? "Tambah Stok Produk" : "Ambil Stok Produk"}
+          </h1>
         </div>
 
         <OutletSelection
@@ -97,6 +102,7 @@ export function AddProductStockForm({ outlets, selectedOutletId }) {
           isSearching={isPending}
           selectedOutletId={selectedOutletId}
           outlets={outlets}
+          mode={mode}
         />
       </section>
     </main>

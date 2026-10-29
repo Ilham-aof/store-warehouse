@@ -2,7 +2,7 @@
 
 import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
-import { Plus, PackagePlus } from "lucide-react";
+import { Plus, PackagePlus, PackageMinus } from "lucide-react";
 
 export function ProductActionButton({ selectedOutletId }) {
   const router = useRouter();
@@ -24,6 +24,15 @@ export function ProductActionButton({ selectedOutletId }) {
       >
         <PackagePlus />
         Tambah Stok
+      </Button>
+      <Button
+        onClick={() =>
+          router.push(`/take-product-stock?outletId=${selectedOutletId}`)
+        }
+        className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+      >
+        <PackageMinus />
+        Ambil Stok
       </Button>
     </div>
   );

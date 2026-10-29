@@ -23,7 +23,7 @@ export async function bulkStockInAction(prevState, formData) {
   }
 
   const outletId = formData.get("outletId");
-  const mutationType = formData.get("mutationInType");
+  const mutationType = formData.get("mutationType");
   const targetOutlet = formData.get("targetOutlet");
   const redirectTo = formData.get("redirectTo");
   const rawItems = formData.get("items");
@@ -60,7 +60,6 @@ export async function bulkStockInAction(prevState, formData) {
     };
   }
 
-  // Validasi setiap item
   const seenProductIds = new Set();
 
   for (const item of items) {
@@ -106,7 +105,6 @@ export async function bulkStockInAction(prevState, formData) {
 
   try {
     await prisma.$transaction(async (tx) => {
-      // Pastikan seluruh produk benar-benar berada di outlet terpilih.
       const products = await tx.product.findMany({
         where: {
           id: { in: items.map((item) => item.productId) },
@@ -121,7 +119,6 @@ export async function bulkStockInAction(prevState, formData) {
         throw new Error("PRODUCT_NOT_FOUND");
       }
 
-      // Untuk transfer, pastikan outlet sumber benar-benar ada.
       if (mutationType === "TRANSFER") {
         const sourceOutlet = await tx.outlet.findUnique({
           where: { id: targetOutlet },
@@ -133,7 +130,6 @@ export async function bulkStockInAction(prevState, formData) {
         }
       }
 
-      // Perbarui stok dan buat log untuk setiap produk.
       for (const item of items) {
         await tx.product.update({
           where: { id: item.productId },
@@ -169,8 +165,6 @@ export async function bulkStockInAction(prevState, formData) {
         error: "Outlet asal tidak ditemukan.",
       };
     }
-
-    console.error("Stock-in error:", error);
 
     return {
       success: false,

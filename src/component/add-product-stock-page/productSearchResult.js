@@ -3,9 +3,11 @@
 import { Button } from "@heroui/react";
 import { ScanBarcode, LoaderCircle, PackageSearch } from "lucide-react";
 import { bulkStockInAction } from "@/app/action/product/bulkAddStockProducts";
+import { bulkStockOutAction } from "@/app/action/product/bulkTakeStockProducts";
 import { useRouter } from "next/navigation";
-import { useActionState, useRef, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { StockInSelection } from "@/component/stockInSelection";
+import { StockOutSelection } from "@/component/stockOutSelection";
 import { OutletInputForm } from "@/component/outletInputForm";
 
 export function ProductSearchResult({
@@ -15,17 +17,38 @@ export function ProductSearchResult({
   isSearching,
   selectedOutletId,
   outlets,
+  mode,
 }) {
   const router = useRouter();
-  const [state, action, isPending] = useActionState(bulkStockInAction, null);
   const [stockInSelection, setStockInSelection] = useState("PEMBELIAN");
+  const [stockOutSelection, setStockOutSelection] = useState("SERVIS");
+
+  const selectedState = mode === "in" ? stockInSelection : stockOutSelection;
+  const selectedSetState =
+    mode === "in" ? setStockInSelection : setStockOutSelection;
+  const selectedRedirect =
+    mode === "in" ? "/add-product-stock" : "/take-product-stock";
+
+  const selectedAction = mode === "in" ? bulkStockInAction : bulkStockOutAction;
+
+  const [state, action, isPending] = useActionState(selectedAction, null);
 
   return (
     <div className="space-y-5">
       <form action={action} className="space-y-5">
-        <input type="hidden" name="outletId" value={selectedOutletId ?? ""} />
+        <input
+          type="hidden"
+          name="outletId"
+          value={selectedOutletId ?? ""}
+          readOnly
+        />
 
-        <input type="hidden" name="redirectTo" value="/add-product-stock" />
+        <input
+          type="hidden"
+          name="redirectTo"
+          value={selectedRedirect}
+          readOnly
+        />
 
         <input
           type="hidden"
@@ -96,20 +119,28 @@ export function ProductSearchResult({
           <>
             <div className="flex w-full items-start gap-5">
               <div className="w-full">
-                <StockInSelection
-                  stockInSelection={stockInSelection}
-                  setStockInSelection={setStockInSelection}
-                />
-
+                {mode === "in" ? (
+                  <StockInSelection
+                    stockInSelection={selectedState}
+                    setStockInSelection={selectedSetState}
+                  />
+                ) : (
+                  <StockOutSelection
+                    stockOutSelection={selectedState}
+                    setStockOutSelection={selectedSetState}
+                  />
+                )}
                 <input
-                  type="hidden"
-                  name="mutationInType"
-                  value={stockInSelection}
+                  type=""
+                  name="mutationType"
+                  value={selectedState}
+                  readOnly
                 />
               </div>
 
               <div className="w-full">
-                {stockInSelection === "TRANSFER" && (
+                {(stockInSelection === "TRANSFER" ||
+                  stockOutSelection === "TRANSFER") && (
                   <OutletInputForm outlets={outlets} label="Terima Dari" />
                 )}
               </div>
@@ -128,14 +159,23 @@ export function ProductSearchResult({
               >
                 Kembali
               </Button>
-
-              <Button
-                type="submit"
-                isDisabled={isPending || isSearching}
-                className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
-              >
-                {isPending ? "Menambahkan stok..." : "Tambahkan Stok"}
-              </Button>
+              {mode === "in" ? (
+                <Button
+                  type="submit"
+                  isDisabled={isPending || isSearching}
+                  className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+                >
+                  {isPending ? "Menambahkan stok..." : "Tambahkan Stok"}
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  isDisabled={isPending || isSearching}
+                  className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
+                >
+                  {isPending ? "Mengambil Stok..." : "Ambil Stok"}
+                </Button>
+              )}
             </div>
           </>
         )}

@@ -10,6 +10,7 @@ export default async function Page({ searchParams }) {
       <AddProductStockForm
         outlets={outlets}
         selectedOutletId={selectedOutletId}
+        mode="in"
       />
     </main>
   );
