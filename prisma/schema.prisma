@@ -33,19 +33,21 @@ enum StockOutType {
 }
 
 model User {
-  id                String      @id @default(cuid())
-  name              String
-  email             String      @unique
-  password          String
-  phone             String
-  role              Role        @default(Staff)
+  id                  String            @id @default(cuid())
+  name                String
+  email               String            @unique
+  password            String
+  phone               String
+  role                Role              @default(Staff)
 
-  sessions          Session[]
-  stockIns          StockIn[]
-  stockOuts         StockOut[]
+  sessions            Session[]
+  stockIns            StockIn[]
+  stockOuts           StockOut[]
+  saleReceipts        SaleReceipt[]
+  serviceReceipts     ServiceReceipt[]
 
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
 }
 
 model Session {
@@ -57,18 +59,20 @@ model Session {
 }
 
 model Outlet {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  code        String    @unique
-  address     String    
-  phone       String    
+  id                String            @id @default(cuid())
+  name              String            @unique
+  code              String            @unique
+  address           String    
+  phone             String    
 
 
-  products Product[]
-  receipts ServiceReceipt[]
-
-  stockInsFromHere  StockIn[]   @relation("StockInSourceOutlet")
-  stockOutsToHere   StockOut[]  @relation("StockOutDestinationOutlet")
+  products          Product[]
+  serviceReceipts   ServiceReceipt[]
+  saleReceipts      SaleReceipt[]
+  saleReceiptCounters SaleReceiptCounter[]
+  
+  stockInsFromHere  StockIn[]         @relation("StockInSourceOutlet")
+  stockOutsToHere   StockOut[]        @relation("StockOutDestinationOutlet")
 
 }
 
@@ -82,43 +86,44 @@ model Product {
   quantity  Int
 
   outletId  String
-  outlet    Outlet   @relation(fields: [outletId], references: [id])
+  outlet    Outlet        @relation(fields: [outletId], references: [id])
 
   stockIns  StockIn[]
   stockOuts StockOut[]
-
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  saleItems SaleItem[]
+  
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
   @@unique([outletId, barcode])
 }
 
 model StockIn {
-  id        String   @id @default(cuid())
+  id        String        @id @default(cuid())
   productId String
   userId    String
   quantity  Int
   type      StockInType
   getFrom   String?  
-  createdAt DateTime @default(now())
+  createdAt DateTime      @default(now())
 
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product       @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  sourceOutlet Outlet? @relation("StockInSourceOutlet", fields: [getFrom], references: [id], onDelete: Cascade)
+  sourceOutlet Outlet?    @relation("StockInSourceOutlet", fields: [getFrom], references: [id], onDelete: Cascade)
 }
 
 model StockOut {
-  id        String   @id @default(cuid())
+  id        String          @id @default(cuid())
   productId String
   userId    String
   quantity  Int
   type      StockOutType
   sendTo    String?
-  createdAt DateTime @default(now())
+  createdAt DateTime        @default(now())
 
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   destinationOutlet Outlet? @relation("StockOutDestinationOutlet", fields: [sendTo], references: [id], onDelete: Cascade)
 }
@@ -141,12 +146,15 @@ model ServiceReceipt {
   pickupStatus      Boolean       @default(false)
 
   outletId          String
-  outlet            Outlet @relation(fields: [outletId], references: [id])
+  userId            String
+
+  outlet            Outlet        @relation(fields: [outletId], references: [id])
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 
-  serviceItems  ServiceItem[]
+  serviceItems      ServiceItem[]
 }
 
 model ServiceItem {
@@ -157,4 +165,45 @@ model ServiceItem {
   price       Int
 
   receipt     ServiceReceipt @relation(fields: [receiptId], references: [id], onDelete: Cascade)
+}
+
+model SaleReceipt {
+  id            String     @id @default(cuid())
+  invoiceNumber String     @unique
+  totalAmount   Int
+  outletId      String
+  userId        String
+
+  outlet        Outlet     @relation(fields: [outletId], references: [id], onDelete: Cascade)
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  saleItems     SaleItem[]
+
+  createdAt     DateTime   @default(now())
+
+}
+
+model SaleItem {
+  id                  String      @id @default(cuid())
+
+  saleReceiptId       String
+  productId           String
+
+  productName         String
+  productBarcode      String
+  productPrice        Int
+  productQuantity     Int
+  subtotal            Int
+
+  saleReceipt         SaleReceipt @relation(fields: [saleReceiptId], references: [id], onDelete: Cascade)
+  product             Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model SaleReceiptCounter {
+  id         String   @id @default(cuid())
+  outletId   String
+  date       String
+  lastNumber Int      @default(0)
+
+  outlet Outlet @relation( fields: [outletId], references: [id], onDelete: Cascade )
+  @@unique([outletId, date])
 }

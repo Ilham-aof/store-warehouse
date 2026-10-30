@@ -5,12 +5,11 @@ import { LogoutButton } from "@/component/dashboard-page/logoutButton";
 import {
   CircleUserRound,
   Boxes,
-  ChartLine,
   RefreshCw,
-  Wrench,
   Settings,
   ReceiptText,
   ClipboardClock,
+  Calculator,
 } from "lucide-react";
 
 export function Sidebar({ user }) {
@@ -22,6 +21,8 @@ export function Sidebar({ user }) {
     : "/product-history";
 
   const stockHref = outletId ? `/?outletId=${outletId}` : "/";
+
+  const cashierHref = outletId ? `/cashier?outletId=${outletId}` : "/cashier";
 
   const receiptHref = outletId ? `/order?outletId=${outletId}` : "/order";
 
@@ -45,6 +46,13 @@ export function Sidebar({ user }) {
           >
             <Boxes />
             Inventaris
+          </Link>
+          <Link
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
+            href={cashierHref}
+          >
+            <Calculator />
+            Kasir
           </Link>
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"

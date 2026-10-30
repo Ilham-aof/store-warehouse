@@ -62,7 +62,7 @@ export function DeleteProductModal({ isOpen, selectedProduct, onClose }) {
                   {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
-              <Modal.Footer>
+              <Modal.Footer className="space-x-3">
                 <Button
                   type="button"
                   variant="secondary"

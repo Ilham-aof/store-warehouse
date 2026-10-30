@@ -249,6 +249,3 @@ export function PrintServiceReceipt({ receipt, user }) {
     </section>
   );
 }
-
-//buat print function
-// ubah penamaan UI dan styling

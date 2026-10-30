@@ -13,11 +13,18 @@ export default async function page({ searchParams }) {
   )
     ? params.timeFilter
     : "all";
+
+  const activityFilter = ["all", "masuk", "keluar"].includes(
+    params.activityFilter,
+  )
+    ? params.activityFilter
+    : "all";
   const pageNumber = Math.max(1, Number(params.page) || 1);
   const pageSize = 20;
   const historyList = await getProductHistory(
     outletId,
     timeFilter,
+    activityFilter,
     pageNumber,
     pageSize,
   );
@@ -29,6 +36,7 @@ export default async function page({ searchParams }) {
         history={historyList.history}
         selectedOutletId={outletId}
         timeFilter={timeFilter}
+        activityFilter={activityFilter}
         currentPage={historyList.currentPage}
         totalPages={historyList.totalPages}
         totalItems={historyList.totalItems}

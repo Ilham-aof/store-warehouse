@@ -174,8 +174,8 @@ export async function bulkStockInAction(prevState, formData) {
 
   const destination =
     redirectTo === "/add-product-stock"
-      ? `/add-product-stock?outletId=${encodeURIComponent(outletId)}`
-      : `/?outletId=${encodeURIComponent(outletId)}`;
+      ? `/add-product-stock?outletId=${outletId}`
+      : `/?outletId=${outletId}`;
 
   revalidatePath("/add-product-stock");
   revalidatePath("/");

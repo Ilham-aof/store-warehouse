@@ -83,16 +83,14 @@ export function ProductSearchResult({
               >
                 <div>
                   <h3 className="font-semibold">{item.name}</h3>
-                  <p className="text-sm text-gray-500">
-                    Barcode: {item.barcode}
-                  </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted">Barcode: {item.barcode}</p>
+                  <p className="text-sm text-muted">
                     Stok saat ini: {item.quantity} pcs
                   </p>
                 </div>
 
                 <div className="text-right">
-                  <p className="text-sm text-gray-500">Jumlah tambahan</p>
+                  <p className="text-sm text-muted">Jumlah tambahan</p>
                   <p className="text-xl font-bold">{item.addQuantity} pcs</p>
                 </div>
               </div>
@@ -131,7 +129,7 @@ export function ProductSearchResult({
                   />
                 )}
                 <input
-                  type=""
+                  type="hidden"
                   name="mutationType"
                   value={selectedState}
                   readOnly
@@ -150,7 +148,7 @@ export function ProductSearchResult({
               <p className="text-center text-danger">{state.error}</p>
             )}
 
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end space-x-5">
               <Button
                 type="button"
                 variant="secondary"

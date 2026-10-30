@@ -2,6 +2,7 @@
 import { Table, Label } from "@heroui/react";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
+import { ActivityFilter } from "@/component/activityFilter";
 import { PaginationUi } from "@/component/pagination";
 import { RefreshCw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,6 +12,7 @@ export function ProductHistoryList({
   history,
   selectedOutletId,
   timeFilter,
+  activityFilter,
   currentPage,
   totalPages,
   totalItems,
@@ -38,7 +40,12 @@ export function ProductHistoryList({
       page: 1,
     });
   }
-
+  function handleActivityChange(value) {
+    updateQuery({
+      activityFilter: value === "all" ? null : value,
+      page: 1,
+    });
+  }
   function handlePageChange(page) {
     updateQuery({ page });
   }
@@ -50,10 +57,17 @@ export function ProductHistoryList({
       </div>
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
-      <TimeFilter
-        timeFilter={timeFilter}
-        setTimeFilter={handleTimeFilterChange}
-      />
+      <div className="flex space-x-5">
+        <TimeFilter
+          timeFilter={timeFilter}
+          setTimeFilter={handleTimeFilterChange}
+        />
+        <ActivityFilter
+          activityFilter={activityFilter}
+          setActivityFilter={handleActivityChange}
+        />
+      </div>
+
       <Table>
         <Table.ScrollContainer>
           <Table.Content aria-label="Riwayat barang" className="min-w-150">
