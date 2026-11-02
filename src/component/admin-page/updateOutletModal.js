@@ -6,6 +6,7 @@ import {
   FieldError,
   Label,
   Button,
+  Separator,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateOutletAction } from "@/app/action/outlet/updateOutletAction";
@@ -16,7 +17,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
   const [state, action, isPending] = useActionState(updateOutletAction, null);
   const [phone, setPhone] = useState(selectedOutlet?.phone ?? "");
   return (
-    <main>
+    <>
       <Modal.Backdrop
         isOpen={isOpen}
         onOpenChange={(isOpen) => {
@@ -26,8 +27,8 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
         }}
         isDismissable={false}
       >
-        <Modal.Container>
-          <Modal.Dialog className="max-w-5xl max-h-xl">
+        <Modal.Container size="lg">
+          <Modal.Dialog className="space-y-3">
             <Modal.CloseTrigger />
 
             <Modal.Header>
@@ -39,10 +40,30 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
-              <Modal.Body className="space-y-5">
-                <p className="text-lg text-black">
-                  Cabang : {selectedOutlet?.name}
+              <Modal.Body className="space-y-3">
+                <p>Detail Cabang</p>
+                <p className="text-lg font-bold text-black">
+                  {selectedOutlet?.name}
                 </p>
+                <Separator />
+                <div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Kode Cabang</span>
+                    <span className="text-black">{selectedOutlet?.code}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Alamat</span>
+                    <span className="text-black">
+                      {selectedOutlet?.address}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">No Telp.</span>
+                    <span className="text-black">{selectedOutlet?.phone}</span>
+                  </div>
+                </div>
+                <Separator />
+
                 <input
                   type="hidden"
                   name="outletId"
@@ -50,7 +71,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                   defaultValue={selectedOutlet?.id ?? ""}
                 />
 
-                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                <div className="grid grid-cols-2 gap-x-5">
                   <TextField
                     name="outletName"
                     aria-label="Outlet Name"
@@ -182,6 +203,6 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>
-    </main>
+    </>
   );
 }

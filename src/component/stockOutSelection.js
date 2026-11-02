@@ -29,14 +29,6 @@ export function StockOutSelection({ stockOutSelection, setStockOutSelection }) {
             <ListBox.ItemIndicator />
           </ListBox.Item>
           <ListBox.Item
-            id="PENJUALAN"
-            textValue="Penjualan"
-            className="ring-0 outline-none shadow-none ring-offset-0"
-          >
-            Penjualan
-            <ListBox.ItemIndicator />
-          </ListBox.Item>
-          <ListBox.Item
             id="TRANSFER"
             textValue="Transfer"
             className="ring-0 outline-none shadow-none ring-offset-0"

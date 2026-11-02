@@ -227,7 +227,7 @@ export function ReceiptList({
                               textValue="Cetak Nota"
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                               onAction={() =>
-                                router.push(`/receipt/${receipt.id}`)
+                                router.push(`/serviceReceipt/${receipt.id}`)
                               }
                             >
                               <Printer />

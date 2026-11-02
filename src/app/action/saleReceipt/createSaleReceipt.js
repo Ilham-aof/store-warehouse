@@ -95,6 +95,8 @@ export async function createSaleReceiptAction(prevState, formData) {
     .format(now)
     .replaceAll("-", "");
 
+  let receiptId;
+
   try {
     await prisma.$transaction(async (tx) => {
       const outletData = await tx.outlet.findUnique({
@@ -126,11 +128,6 @@ export async function createSaleReceiptAction(prevState, formData) {
       const sequence = String(counter.lastNumber).padStart(4, "0");
 
       const invoiceNumber = `TRX-${outletData.code}-${dateString}-${sequence}`;
-
-      console.log("outlet :", outlet);
-      console.log("redirectTo :", redirectTo);
-      console.log("items :", rawItems);
-      console.log("items :", invoiceNumber);
 
       const products = await tx.product.findMany({
         where: {
@@ -168,7 +165,7 @@ export async function createSaleReceiptAction(prevState, formData) {
         totalAmount += product.price * item.quantity;
       }
 
-      await tx.saleReceipt.create({
+      const receipt = await tx.saleReceipt.create({
         data: {
           invoiceNumber,
           totalAmount,
@@ -186,7 +183,12 @@ export async function createSaleReceiptAction(prevState, formData) {
             })),
           },
         },
+        select: {
+          id: true,
+        },
       });
+
+      receiptId = receipt.id;
 
       for (const item of items) {
         await tx.product.update({
@@ -209,7 +211,6 @@ export async function createSaleReceiptAction(prevState, formData) {
       }
     });
   } catch (error) {
-    console.log("error : ", error);
     if (error.message === "OUTLET_NOT_FOUND") {
       return {
         success: false,
@@ -236,12 +237,7 @@ export async function createSaleReceiptAction(prevState, formData) {
     };
   }
 
-  const destination =
-    redirectTo === "/cashier"
-      ? `/cashier?outletId=${outlet}`
-      : `/?outletId=${outlet}`;
-
   revalidatePath("/cashier");
   revalidatePath("/");
-  redirect(destination);
+  redirect(`/saleReceipt/${receiptId}`);
 }

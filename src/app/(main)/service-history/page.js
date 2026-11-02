@@ -1,5 +1,5 @@
 import { getOutlet } from "@/app/action/outlet/getOutlet";
-import { ReceiptHistoryList } from "@/component/receipt-history-page/receiptHistoryList";
+import { ServiceHistoryList } from "@/component/service-history-page/serviceHistoryList";
 import { getFinishReceipt } from "@/app/action/serviceReceipt/getFinishReceipt";
 
 export default async function page({ searchParams }) {
@@ -33,7 +33,7 @@ export default async function page({ searchParams }) {
 
   return (
     <main className="bg-white rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 w-full space-y-5">
-      <ReceiptHistoryList
+      <ServiceHistoryList
         outlets={outlets}
         receipts={finishReceiptList.receipts}
         selectedOutletId={outletId}

@@ -7,7 +7,7 @@ import {
   Separator,
   Button,
 } from "@heroui/react";
-import { EllipsisVertical, ClipboardClock, Printer } from "lucide-react";
+import { EllipsisVertical, ShoppingBag, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
@@ -16,21 +16,19 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
 import { TimeFilter } from "@/component/timeFilter";
-import { WarrantyFilter } from "@/component/warrantyFilter";
-
-export function ReceiptHistoryList({
+import { ListProductModal } from "@/component/sale-history-page/listProductModal";
+export function SaleHistoryList({
   outlets,
   receipts,
   selectedOutletId,
   timeFilter,
-  warrantyFilter,
   currentPage,
   totalPages,
   totalItems,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
   const [searchKeyword, setSearchKeyword] = useState(
     searchParams.get("search") ?? "",
   );
@@ -70,13 +68,6 @@ export function ReceiptHistoryList({
     });
   }
 
-  function handleWarrantyFilterChange(value) {
-    updateQuery({
-      warrantyFilter: value,
-      page: 1,
-    });
-  }
-
   function handlePageChange(page) {
     updateQuery({ page });
   }
@@ -96,42 +87,35 @@ export function ReceiptHistoryList({
   return (
     <section className="space-y-5">
       <div className="flex gap-3 items-center">
-        <ClipboardClock size={30} />
-        <h1 className="text-2xl font-bold">Daftar Riwayat Servis</h1>
+        <ShoppingBag size={30} />
+        <h1 className="text-2xl font-bold">Daftar Riwayat Transaksi</h1>
       </div>
-
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
       <div className="flex space-x-5">
         <TimeFilter
           timeFilter={timeFilter}
           setTimeFilter={handleTimeFilterChange}
         />
-        <WarrantyFilter
-          warrantyFilter={warrantyFilter}
-          setWarrantyFilter={handleWarrantyFilterChange}
-        />
         <Separator orientation="vertical" />
         <SearchBar
           keyword={searchKeyword}
           onKeywordChange={setSearchKeyword}
           onSearch={handleSearch}
-          placeholder="Cari nama pelanggan..."
+          placeholder="Cari nota..."
         />
       </div>
       <Table>
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar nota servis" className="min-w-250">
             <Table.Header>
-              <Table.Column isRowHeader className="w-[18%]">
+              <Table.Column isRowHeader className="w-[20%]">
                 Kode Nota
               </Table.Column>
-              <Table.Column className="w-[17%]">Pelanggan</Table.Column>
-              <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
-              <Table.Column className="w-[8%]">Garansi</Table.Column>
-              <Table.Column className="w-[10%]">Status Garansi</Table.Column>
-              <Table.Column className="w-[13%]">Status Pengerjaan</Table.Column>
-              <Table.Column className="w-[16%]">Status Barang</Table.Column>
-              <Table.Column className="w-[8%]"></Table.Column>
+              <Table.Column className="w-[20%]">Produk</Table.Column>
+              <Table.Column className="w-[20%]">Total Transaksi</Table.Column>
+              <Table.Column className="w-[10%]">Staff</Table.Column>
+              <Table.Column className="w-[20%]">Tanggal</Table.Column>
+              <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
@@ -140,95 +124,36 @@ export function ReceiptHistoryList({
                   <Table.Cell className="whitespace-nowrap">
                     {receipt.invoiceNumber}
                   </Table.Cell>
-
                   <Table.Cell>
-                    <p className="text-md font-bold">{receipt.customerName}</p>
-                    <p className="text-sm text-muted">
-                      Nomor : {receipt.customerPhone}
-                    </p>
-                    <p className="text-sm text-muted">
-                      Device : {receipt.device}
-                    </p>
-                  </Table.Cell>
-
-                  <Table.Cell>
-                    {receipt.createdAt.toLocaleDateString("id-ID")}
-                  </Table.Cell>
-
-                  <Table.Cell>
-                    {receipt.warrantyDays === 0
-                      ? "Tidak Bergaransi"
-                      : `${receipt.warrantyDays} hari`}
-                  </Table.Cell>
-
-                  <Table.Cell>
-                    {receipt.warrantyDays === 0 ? (
-                      "Tidak Bergaransi"
-                    ) : !receipt.warrantyUntil ? (
-                      "-"
-                    ) : (
-                      <p
-                        className={
-                          today <= new Date(receipt.warrantyUntil)
-                            ? "text-success"
-                            : "text-danger"
-                        }
+                    <div className="space-y-1">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedReceipt(receipt)}
+                        className="text-blue-600 hover:underline text-left"
                       >
-                        {today <= new Date(receipt.warrantyUntil)
-                          ? `Aktif hingga : ${new Date(receipt.warrantyUntil).toLocaleDateString("id-ID")}`
-                          : `Expired : ${new Date(receipt.warrantyUntil).toLocaleDateString("id-ID")}`}
-                      </p>
-                    )}
+                        Lihat {receipt.saleItems.length} produk
+                      </button>
+                    </div>
                   </Table.Cell>
-
-                  <Table.Cell>
-                    <Switch
-                      isSelected={receipt.processStatus}
-                      onChange={(value) =>
-                        handleStatusChange(receipt.id, "processStatus", value)
-                      }
-                    >
-                      <Switch.Content
-                        className={
-                          receipt.processStatus ? "text-success" : "text-danger"
-                        }
-                      >
-                        <Switch.Control
-                          className={
-                            receipt.processStatus ? "bg-success" : "bg-danger"
-                          }
-                        >
-                          <Switch.Thumb />
-                        </Switch.Control>
-                        {receipt.processStatus ? "Selesai" : "Diproses"}
-                      </Switch.Content>
-                    </Switch>
+                  <Table.Cell className="whitespace-nowrap">
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      maximumFractionDigits: 0,
+                    }).format(receipt.totalAmount)}
                   </Table.Cell>
 
                   <Table.Cell className="whitespace-nowrap">
-                    <Switch
-                      isSelected={receipt.pickupStatus}
-                      onChange={(value) =>
-                        handleStatusChange(receipt.id, "pickupStatus", value)
-                      }
-                    >
-                      <Switch.Content
-                        className={
-                          receipt.pickupStatus ? "text-success" : "text-danger"
-                        }
-                      >
-                        <Switch.Control
-                          className={
-                            receipt.pickupStatus ? "bg-success" : "bg-danger"
-                          }
-                        >
-                          <Switch.Thumb />
-                        </Switch.Control>
-                        {receipt.pickupStatus
-                          ? "Sudah Diambil"
-                          : "Belum Diambil"}
-                      </Switch.Content>
-                    </Switch>
+                    {receipt.user.name}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {new Date(receipt.createdAt).toLocaleString("id-ID", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
                   </Table.Cell>
 
                   <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">
@@ -248,7 +173,7 @@ export function ReceiptHistoryList({
                               textValue="Cetak Nota"
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                               onAction={() =>
-                                router.push(`/receipt/${receipt.id}`)
+                                router.push(`/saleReceipt/${receipt.id}`)
                               }
                             >
                               <Printer />
@@ -265,6 +190,11 @@ export function ReceiptHistoryList({
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+      <ListProductModal
+        isOpen={!!selectedReceipt}
+        receipt={selectedReceipt}
+        onClose={() => setSelectedReceipt(null)}
+      />
       <PaginationUi
         currentPage={currentPage}
         totalPages={totalPages}

@@ -10,6 +10,7 @@ import {
   ReceiptText,
   ClipboardClock,
   Calculator,
+  ShoppingBag,
 } from "lucide-react";
 
 export function Sidebar({ user }) {
@@ -24,11 +25,15 @@ export function Sidebar({ user }) {
 
   const cashierHref = outletId ? `/cashier?outletId=${outletId}` : "/cashier";
 
+  const saleHistoryHref = outletId
+    ? `/sale-history?outletId=${outletId}`
+    : "/sale-history";
+
   const receiptHref = outletId ? `/order?outletId=${outletId}` : "/order";
 
   const receiptHistoryHref = outletId
-    ? `/receipt-history?outletId=${outletId}`
-    : "/receipt-history";
+    ? `/service-history?outletId=${outletId}`
+    : "/service-history";
 
   return (
     <aside>
@@ -47,6 +52,17 @@ export function Sidebar({ user }) {
             <Boxes />
             Inventaris
           </Link>
+
+          <Link
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
+            href={productHistoryHref}
+          >
+            <RefreshCw />
+            Mutasi Stok
+          </Link>
+
+          <Separator variant="default" />
+
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={cashierHref}
@@ -56,10 +72,10 @@ export function Sidebar({ user }) {
           </Link>
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
-            href={productHistoryHref}
+            href={saleHistoryHref}
           >
-            <RefreshCw />
-            Mutasi Stok
+            <ShoppingBag />
+            Riwayat Transaksi
           </Link>
 
           <Separator variant="default" />

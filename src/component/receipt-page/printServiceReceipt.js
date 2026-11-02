@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { FileDown, Printer } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function PrintServiceReceipt({ receipt, user }) {
+export function PrintServiceReceipt({ receipt }) {
   const receiptRef = useRef(null);
   const router = useRouter();
   const subtotal = receipt.serviceItems.reduce(
@@ -14,8 +14,6 @@ export function PrintServiceReceipt({ receipt, user }) {
   );
 
   const total = subtotal - receipt.discount;
-
-  const formatRupiah = (value) => `Rp${value.toLocaleString("id-ID")}`;
 
   const formatDate = (date) =>
     new Date(date).toLocaleDateString("id-ID", {
@@ -92,7 +90,7 @@ export function PrintServiceReceipt({ receipt, user }) {
             <div>
               <p>No. Nota: {receipt.invoiceNumber}</p>
               <p>Tanggal: {formatDate(receipt.createdAt)}</p>
-              <p>Staff: {user.name}</p>
+              <p>Staff: {receipt.user.name}</p>
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>
@@ -119,9 +117,19 @@ export function PrintServiceReceipt({ receipt, user }) {
               <h2 className="font-bold">Rincian Servis</h2>
 
               {receipt.serviceItems.map((service) => (
-                <div key={service.id} className="flex justify-between gap-4">
-                  <span>{service.description}</span>
-                  <span>
+                <div
+                  key={service.id}
+                  className="grid grid-cols-[1fr_auto] items-start gap-4"
+                >
+                  <div className="flex gap-1 min-w-0">
+                    <span className="shrink-0">-</span>
+                    <span className="wrap-break-words">
+                      {service.description}
+                    </span>
+                  </div>
+
+                  {/* Kolom Kanan: Harga (Terkunci rata kanan dan sejajar) */}
+                  <span className="shrink-0 text-right font-medium">
                     {new Intl.NumberFormat("id-ID", {
                       style: "currency",
                       currency: "IDR",
@@ -130,18 +138,18 @@ export function PrintServiceReceipt({ receipt, user }) {
                   </span>
                 </div>
               ))}
-
-              <div className="flex justify-between font-bold mt-3">
-                <span>Potongan</span>
-                <span>
-                  {new Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                    maximumFractionDigits: 0,
-                  }).format(receipt.discount)}
-                </span>
-              </div>
-
+              {receipt.discount != 0 && (
+                <div className="flex justify-between font-bold mt-3">
+                  <span>Potongan</span>
+                  <span>
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      maximumFractionDigits: 0,
+                    }).format(receipt.discount)}
+                  </span>
+                </div>
+              )}
               <div className="mt-1 w-full border-t-2 border-solid border-black" />
 
               <div className="flex justify-between font-bold">

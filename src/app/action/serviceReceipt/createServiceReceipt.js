@@ -246,7 +246,7 @@ export async function createServiceReceipt(prevState, formData) {
         pickupStatus: false,
 
         outletId: outlet.id,
-
+        userId: session.userId,
         serviceItems: {
           create: serviceItems.map((service) => ({
             description: service.description,
@@ -256,7 +256,6 @@ export async function createServiceReceipt(prevState, formData) {
       },
     });
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       error: "Gagal membuat nota",

@@ -115,7 +115,6 @@ export function ProductSearchResult({
               <div>
                 <p className="text-sm text-muted">Total Harga</p>
                 <p className="text-xl font-semibold">
-                  {" "}
                   {new Intl.NumberFormat("id-ID", {
                     style: "currency",
                     currency: "IDR",
@@ -140,7 +139,7 @@ export function ProductSearchResult({
                 isDisabled={isPending || isSearching}
                 className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
               >
-                {isPending ? "Mengambil Stok..." : "Ambil Stok"}
+                {isPending ? "Memproses..." : "Proses Pembayaran"}
               </Button>
             </div>
           </>

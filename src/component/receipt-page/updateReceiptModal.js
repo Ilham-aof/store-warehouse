@@ -8,6 +8,7 @@ import {
   Button,
   Select,
   ListBox,
+  Separator,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateReceiptData } from "@/app/action/serviceReceipt/updateReceiptData";
@@ -45,6 +46,10 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
     String(selectedReceipt?.customerPhone ?? ""),
   );
 
+  const [discount, setDiscount] = useState(
+    String(selectedReceipt?.discount ?? ""),
+  );
+
   const [selectedDeviceInclusions, setSelectedDeviceInclusions] = useState(() =>
     getAccessoryIds(selectedReceipt?.deviceInclusions),
   );
@@ -52,10 +57,15 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
   const [showDeviceInclusionsError, setShowDeviceInclusionsError] =
     useState(false);
 
+  const totalService = (selectedReceipt?.serviceItems ?? []).reduce(
+    (total, service) => total + service.price,
+    0,
+  );
+
   const [state, action, isPending] = useActionState(updateReceiptData, null);
 
   return (
-    <main>
+    <>
       <Modal.Backdrop
         isOpen={isOpen}
         onOpenChange={(isOpen) => {
@@ -65,8 +75,8 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
         }}
         isDismissable={false}
       >
-        <Modal.Container>
-          <Modal.Dialog className="max-w-5xl max-h-xl space-y-5">
+        <Modal.Container size="lg">
+          <Modal.Dialog className="space-y-2">
             <Modal.CloseTrigger />
 
             <Modal.Header>
@@ -78,10 +88,61 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
-              <Modal.Body className="space-y-5">
-                <p className="text-lg text-black">
-                  Kode Nota: {selectedReceipt?.invoiceNumber}
+              <Modal.Body className="space-y-2">
+                <p>Detail Nota</p>
+                <p className="text-lg font-bold text-black">
+                  {selectedReceipt?.invoiceNumber}
                 </p>
+                <Separator />
+                <div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Nama</span>
+                    <span className="text-black">
+                      {selectedReceipt?.customerName}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">No HP / WA</span>
+                    <span className="text-black">
+                      {selectedReceipt?.customerPhone}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Device</span>
+                    <span className="text-black">
+                      {selectedReceipt?.device}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Garansi</span>
+                    <span className="text-black">
+                      {selectedReceipt?.warrantyDays} Hari
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Total Biaya</span>
+                    <span className="text-black">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(totalService)}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-muted">Potongan</span>
+                    <span className="text-black">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(selectedReceipt?.discount)}
+                    </span>
+                  </div>
+                </div>
+                <Separator />
+
                 <input
                   type="hidden"
                   name="receiptId"
@@ -94,7 +155,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   defaultValue={selectedReceipt?.outletId ?? ""}
                 />
 
-                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                <div className="grid grid-cols-2 gap-x-5">
                   <TextField
                     name="customerName"
                     aria-label="Customer Name"
@@ -122,10 +183,10 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     aria-label="Customer Phone"
                     variant="secondary"
                     type="text"
-                    defaultValue={String(selectedReceipt?.customerPhone ?? "")}
+                    defaultValue={selectedReceipt?.customerPhone ?? ""}
                     value={customerPhone}
                     onChange={(value) => {
-                      setCustomerPhone(value.replace(/\D/g, ""));
+                      setCustomerPhone(String(value ?? "").replace(/\D/g, ""));
                     }}
                     validate={(value) => {
                       if (!value) {
@@ -285,10 +346,33 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                         )}
                     </div>
                   </Select>
+
+                  <TextField
+                    name="discount"
+                    aria-label="Potongan Harga"
+                    variant="secondary"
+                    type="text"
+                    defaultValue={selectedReceipt?.discount ?? ""}
+                    value={discount}
+                    onChange={(value) => {
+                      setDiscount(String(value ?? "").replace(/\D/g, ""));
+                    }}
+                  >
+                    <Label>Potongan Harga (Rp)</Label>
+                    <Input
+                      placeholder="Masukkan potongan"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
+                    />
+                    <div className="min-h-6">
+                      <FieldError />
+                    </div>
+                  </TextField>
                 </div>
                 <div className="text-center">
                   {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
+
+                <div className="space-x-3"></div>
               </Modal.Body>
 
               <Modal.Footer className="space-x-3">
@@ -312,6 +396,6 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>
-    </main>
+    </>
   );
 }
