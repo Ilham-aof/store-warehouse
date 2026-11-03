@@ -94,12 +94,12 @@ export function PrintServiceReceipt({ receipt }) {
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>
-              <h2 className="font-bold  border-black">Informasi Customer</h2>
+              <h2 className="font-bold  border-black">Informasi Pelanggan</h2>
 
               <div>
-                <p>Customer: {receipt.customerName}</p>
-                <p>No. HP: {receipt.customerPhone}</p>
-                <p>Perangkat: {receipt.device}</p>
+                <p>Nama: {receipt.customerName}</p>
+                <p>No. HP/WA: {receipt.customerPhone}</p>
+                <p>Tipe HP: {receipt.device}</p>
                 <div>
                   <p>Kelengkapan:</p>
                   {receipt.deviceInclusions?.length > 0 ? (
@@ -123,19 +123,36 @@ export function PrintServiceReceipt({ receipt }) {
                 >
                   <div className="flex gap-1 min-w-0">
                     <span className="shrink-0">-</span>
-                    <span className="wrap-break-words">
-                      {service.description}
-                    </span>
+                    <div className="flex flex-col">
+                      <span className="wrap-break-words">
+                        {service.description}
+                      </span>
+                      {receipt.processStatus === false ? (
+                        <span className="wrap-break-words">Garansi: -</span>
+                      ) : (
+                        <span className="wrap-break-words">
+                          Garansi: {service.warrantyDays} Hari
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Kolom Kanan: Harga (Terkunci rata kanan dan sejajar) */}
-                  <span className="shrink-0 text-right font-medium">
-                    {new Intl.NumberFormat("id-ID", {
-                      style: "currency",
-                      currency: "IDR",
-                      maximumFractionDigits: 0,
-                    }).format(service.price)}
-                  </span>
+                  <div className="flex flex-col">
+                    <span className="shrink-0 text-right font-medium">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(service.price)}
+                    </span>
+                    {service.warrantyUntil === null ? (
+                      ""
+                    ) : (
+                      <span className="shrink-0 text-right font-medium">
+                        s/d {formatDate(service.warrantyUntil)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               ))}
               {receipt.discount != 0 && (
@@ -162,24 +179,6 @@ export function PrintServiceReceipt({ receipt }) {
                   }).format(total)}
                 </span>
               </div>
-            </div>
-            <div className="h-0.5 w-full bg-black mt-3" />
-            <div>
-              <h2 className="font-bold">Informasi Garansi</h2>
-              <p>
-                {receipt.warrantyDays === 0
-                  ? "Garansi: Tidak Bergaransi"
-                  : receipt.warrantyDays > 0 && !receipt.warrantyUntil
-                    ? "Garansi: -"
-                    : `Garansi: ${receipt.warrantyDays} hari`}
-              </p>
-              <p>
-                {receipt.warrantyDays === 0
-                  ? ""
-                  : receipt.warrantyDays > 0 && !receipt.warrantyUntil
-                    ? "Berlaku Hingga: Belum ditentukan"
-                    : `Berlaku Hingga: ${formatDate(receipt.warrantyUntil)}`}
-              </p>
             </div>
           </section>
 
@@ -222,7 +221,7 @@ export function PrintServiceReceipt({ receipt }) {
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
 
-            <p className="text-center">Terima kasih atas kepercayaan Anda.</p>
+            <p className="text-center">Terima kasih atas kepercayaan anda</p>
           </footer>
         </div>
       </div>

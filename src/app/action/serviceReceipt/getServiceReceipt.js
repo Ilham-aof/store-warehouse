@@ -38,8 +38,6 @@ export async function getDataServiceReceipt(outletId, search, page, pageSize) {
           customerPhone: true,
           device: true,
           deviceInclusions: true,
-          warrantyDays: true,
-          warrantyUntil: true,
           discount: true,
           processStatus: true,
           pickupStatus: true,
@@ -52,7 +50,11 @@ export async function getDataServiceReceipt(outletId, search, page, pageSize) {
           },
           serviceItems: {
             select: {
+              id: true,
+              description: true,
               price: true,
+              warrantyDays: true,
+              warrantyUntil: true,
             },
           },
         },

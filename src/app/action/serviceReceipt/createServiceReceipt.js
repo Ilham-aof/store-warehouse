@@ -38,7 +38,6 @@ export async function createServiceReceipt(prevState, formData) {
     softcase: "Soft Case",
   };
 
-  const serviceWarranty = formData.get("serviceWarranty")?.trim();
   const rawDiscount = formData.get("discount");
   const discount = typeof rawDiscount === "string" ? rawDiscount.trim() : "";
 
@@ -82,18 +81,6 @@ export async function createServiceReceipt(prevState, formData) {
     errors.discount = "Discount harus berupa angka yang valid";
   }
 
-  const warrantyDays = Number(serviceWarranty);
-
-  if (
-    serviceWarranty === undefined ||
-    serviceWarranty === null ||
-    serviceWarranty === "" ||
-    !Number.isInteger(warrantyDays) ||
-    warrantyDays < 0
-  ) {
-    errors.serviceWarranty = "Garansi harus berupa jumlah hari yang valid";
-  }
-
   if (Object.keys(errors).length > 0) {
     return {
       success: false,
@@ -128,8 +115,8 @@ export async function createServiceReceipt(prevState, formData) {
     const descriptionMatch = key.match(
       /^phoneDamageType\[(\d+)\]\[description\]$/,
     );
-
     const priceMatch = key.match(/^servicePrice\[(\d+)\]\[price\]$/);
+    const warrantyMatch = key.match(/^serviceWarranty\[(\d+)\]\[warranty\]$/);
 
     if (descriptionMatch) {
       const index = Number(descriptionMatch[1]);
@@ -150,6 +137,16 @@ export async function createServiceReceipt(prevState, formData) {
 
       services[index].price = value?.toString().trim();
     }
+
+    if (warrantyMatch) {
+      const index = Number(warrantyMatch[1]);
+
+      if (!services[index]) {
+        services[index] = {};
+      }
+
+      services[index].warranty = value.toString().trim();
+    }
   }
 
   const serviceItems = services.filter(Boolean);
@@ -168,14 +165,27 @@ export async function createServiceReceipt(prevState, formData) {
   serviceItems.forEach((service, index) => {
     const description = service.description;
     const price = Number(service.price);
+    const warranty = Number(service.warranty);
 
     if (!description) {
-      serviceErrors[index] = "Jenis kerusakan wajib diisi";
+      serviceErrors[index] ??= {};
+      serviceErrors[index].description = "Jenis kerusakan wajib diisi";
       return;
     }
 
     if (!service.price || !Number.isInteger(price) || price < 0) {
-      serviceErrors[index] = "Biaya servis tidak valid";
+      serviceErrors[index] ??= {};
+      serviceErrors[index].price = "Biaya servis tidak valid";
+    }
+
+    if (
+      service.warranty === undefined ||
+      service.warranty === "" ||
+      !Number.isSafeInteger(warranty) ||
+      warranty < 0
+    ) {
+      serviceErrors[index] ??= {};
+      serviceErrors[index].warranty = "Garansi tidak valid";
     }
   });
 
@@ -225,8 +235,8 @@ export async function createServiceReceipt(prevState, formData) {
   });
 
   const sequence = String(receiptCount + 1).padStart(4, "0");
-
   const invoiceNumber = `SRV-${outlet.code}-${dateString}-${sequence}`;
+
   try {
     await prisma.serviceReceipt.create({
       data: {
@@ -236,10 +246,6 @@ export async function createServiceReceipt(prevState, formData) {
         customerPhone,
         device,
         deviceInclusions: inclusionNames,
-
-        warrantyDays,
-        warrantyUntil: null,
-
         discount: discountAmount,
 
         processStatus: false,
@@ -251,6 +257,8 @@ export async function createServiceReceipt(prevState, formData) {
           create: serviceItems.map((service) => ({
             description: service.description,
             price: Number(service.price),
+            warrantyDays: Number(service.warranty),
+            warrantyUntil: null,
           })),
         },
       },

@@ -108,15 +108,9 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted">Device</span>
+                    <span className="text-muted">Tipe HP</span>
                     <span className="text-black">
                       {selectedReceipt?.device}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-muted">Garansi</span>
-                    <span className="text-black">
-                      {selectedReceipt?.warrantyDays} Hari
                     </span>
                   </div>
                   <div className="flex justify-between">
@@ -220,28 +214,6 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     <Label>Tipe HP</Label>
                     <Input
                       placeholder="Tipe HP Pelanggan"
-                      className="hover:bg-gray-200 focus:ring-slate-800"
-                    />
-                    <div className="min-h-6">
-                      <FieldError />
-                    </div>
-                  </TextField>
-
-                  <TextField
-                    name="warranty"
-                    aria-label="Warranty"
-                    variant="secondary"
-                    type="number"
-                    defaultValue={String(selectedReceipt?.warrantyDays ?? "")}
-                    validate={(value) => {
-                      if (!value) {
-                        return "Garansi wajib diisi";
-                      }
-                    }}
-                  >
-                    <Label>Garansi</Label>
-                    <Input
-                      placeholder="Masa Garansi (Hari)"
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">

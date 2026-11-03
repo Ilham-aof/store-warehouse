@@ -17,6 +17,7 @@ import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
 import { TimeFilter } from "@/component/timeFilter";
 import { WarrantyFilter } from "@/component/warrantyFilter";
+import { ListWarrantyModal } from "@/component/receipt-page/listWarrantyModal";
 
 export function ServiceHistoryList({
   outlets,
@@ -30,6 +31,7 @@ export function ServiceHistoryList({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
 
   const [searchKeyword, setSearchKeyword] = useState(
     searchParams.get("search") ?? "",
@@ -122,20 +124,19 @@ export function ServiceHistoryList({
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar nota servis" className="min-w-250">
             <Table.Header>
-              <Table.Column isRowHeader className="w-[18%]">
+              <Table.Column isRowHeader className="w-[15%]">
                 Kode Nota
               </Table.Column>
-              <Table.Column className="w-[17%]">Pelanggan</Table.Column>
+              <Table.Column className="w-[20%]">Pelanggan</Table.Column>
               <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
-              <Table.Column className="w-[8%]">Garansi</Table.Column>
-              <Table.Column className="w-[10%]">Status Garansi</Table.Column>
-              <Table.Column className="w-[13%]">Status Pengerjaan</Table.Column>
-              <Table.Column className="w-[16%]">Status Barang</Table.Column>
-              <Table.Column className="w-[8%]"></Table.Column>
+              <Table.Column className="w-[15%]">Garansi</Table.Column>
+              <Table.Column className="w-[15%]">Status Pengerjaan</Table.Column>
+              <Table.Column className="w-[15%]">Status Barang</Table.Column>
+              <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
-              {receipts.map((receipt) => (
+              {receipts?.map((receipt) => (
                 <Table.Row key={receipt.id}>
                   <Table.Cell className="whitespace-nowrap">
                     {receipt.invoiceNumber}
@@ -144,10 +145,10 @@ export function ServiceHistoryList({
                   <Table.Cell>
                     <p className="text-md font-bold">{receipt.customerName}</p>
                     <p className="text-sm text-muted">
-                      Nomor : {receipt.customerPhone}
+                      No. HP/WA : {receipt.customerPhone}
                     </p>
                     <p className="text-sm text-muted">
-                      Device : {receipt.device}
+                      Tipe HP : {receipt.device}
                     </p>
                   </Table.Cell>
 
@@ -156,29 +157,15 @@ export function ServiceHistoryList({
                   </Table.Cell>
 
                   <Table.Cell>
-                    {receipt.warrantyDays === 0
-                      ? "Tidak Bergaransi"
-                      : `${receipt.warrantyDays} hari`}
-                  </Table.Cell>
-
-                  <Table.Cell>
-                    {receipt.warrantyDays === 0 ? (
-                      "Tidak Bergaransi"
-                    ) : !receipt.warrantyUntil ? (
-                      "-"
-                    ) : (
-                      <p
-                        className={
-                          today <= new Date(receipt.warrantyUntil)
-                            ? "text-success"
-                            : "text-danger"
-                        }
+                    <div className="space-y-1">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedReceipt(receipt)}
+                        className="text-blue-600 hover:underline text-left"
                       >
-                        {today <= new Date(receipt.warrantyUntil)
-                          ? `Aktif hingga : ${new Date(receipt.warrantyUntil).toLocaleDateString("id-ID")}`
-                          : `Expired : ${new Date(receipt.warrantyUntil).toLocaleDateString("id-ID")}`}
-                      </p>
-                    )}
+                        Lihat {receipt.serviceItems.length} garansi
+                      </button>
+                    </div>
                   </Table.Cell>
 
                   <Table.Cell>
@@ -265,6 +252,13 @@ export function ServiceHistoryList({
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+
+      <ListWarrantyModal
+        isOpen={!!selectedReceipt}
+        receipt={selectedReceipt}
+        onClose={() => setSelectedReceipt(null)}
+      />
+
       <PaginationUi
         currentPage={currentPage}
         totalPages={totalPages}

@@ -137,9 +137,6 @@ model ServiceReceipt {
   device            String
   deviceInclusions  String[]      @default([])
 
-  warrantyDays      Int
-  warrantyUntil     DateTime?
-
   discount          Int           @default(0)
 
   processStatus     Boolean       @default(false)
@@ -163,6 +160,9 @@ model ServiceItem {
 
   description String
   price       Int
+
+  warrantyDays      Int
+  warrantyUntil     DateTime?
 
   receipt     ServiceReceipt @relation(fields: [receiptId], references: [id], onDelete: Cascade)
 }
