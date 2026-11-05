@@ -2,7 +2,7 @@
 
 import { Button, Separator } from "@heroui/react";
 import { ScanBarcode, LoaderCircle, PackageSearch } from "lucide-react";
-import { useActionState, useState } from "react";
+import { useActionState } from "react";
 import { createSaleReceiptAction } from "@/app/action/saleReceipt/createSaleReceipt";
 
 export function ProductSearchResult({
@@ -148,6 +148,3 @@ export function ProductSearchResult({
     </div>
   );
 }
-
-//filter waktu di perbaiki dan buat & range date picker spesifik filter
-//ngubah input garansi

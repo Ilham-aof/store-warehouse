@@ -6,6 +6,8 @@ export async function getProductHistory(
   activityFilter,
   page,
   pageSize,
+  customStartDate,
+  customEndDate,
 ) {
   if (!outletId) {
     return { history: [], totalItems: 0, totalPages: 0, currentPage: 1 };
@@ -15,7 +17,9 @@ export async function getProductHistory(
   const safePageSize = Math.max(1, Number(pageSize) || 20);
 
   const now = new Date();
+
   let startDate = null;
+  let endDate = now;
 
   if (timeFilter === "today") {
     startDate = new Date(now);
@@ -25,15 +29,23 @@ export async function getProductHistory(
     startDate.setDate(startDate.getDate() - 7);
     startDate.setHours(0, 0, 0, 0);
   } else if (timeFilter === "month") {
-    startDate = new Date(now);
-    startDate.setMonth(startDate.getMonth() - 1);
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (timeFilter === "custom" && customStartDate && customEndDate) {
+    startDate = new Date(customStartDate);
     startDate.setHours(0, 0, 0, 0);
+
+    endDate = new Date(customEndDate);
+    endDate.setDate(endDate.getDate() + 1);
+    endDate.setHours(0, 0, 0, 0);
   }
 
   const where = {
     product: { outletId },
     ...(startDate && {
-      createdAt: { gte: startDate },
+      createdAt: {
+        gte: startDate,
+        lte: endDate,
+      },
     }),
   };
   const [stockIns, stockOuts] = await Promise.all([

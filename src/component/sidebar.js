@@ -108,7 +108,7 @@ export function Sidebar({ user }) {
           )}
         </div>
 
-        <div className="flex items-center px-3 py-2 space-x-3 rounded-full shadow-[2px_2px_4px,inset_0_0_4px_rgba(0,0,0,0.2)] shadow-yellow-100 w-full h-fit mt-auto">
+        <div className="flex items-center px-3 py-2 space-x-3 rounded-full border-2 border-yellow-100 w-full h-fit mt-auto">
           <Avatar className="bg-slate-800">
             <CircleUserRound size={40} className="text-yellow-100" />
           </Avatar>

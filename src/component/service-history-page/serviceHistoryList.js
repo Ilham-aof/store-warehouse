@@ -18,6 +18,7 @@ import { SearchBar } from "@/component/searchBar";
 import { TimeFilter } from "@/component/timeFilter";
 import { WarrantyFilter } from "@/component/warrantyFilter";
 import { ListWarrantyModal } from "@/component/receipt-page/listWarrantyModal";
+import { parseDate } from "@internationalized/date";
 
 export function ServiceHistoryList({
   outlets,
@@ -28,11 +29,20 @@ export function ServiceHistoryList({
   currentPage,
   totalPages,
   totalItems,
+  customStartDate,
+  customEndDate,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [dateRange, setDateRange] = useState(() => {
+    if (!customStartDate || !customEndDate) return null;
 
+    return {
+      start: parseDate(customStartDate),
+      end: parseDate(customEndDate),
+    };
+  });
   const [searchKeyword, setSearchKeyword] = useState(
     searchParams.get("search") ?? "",
   );
@@ -40,6 +50,18 @@ export function ServiceHistoryList({
   useEffect(() => {
     setSearchKeyword(searchParams.get("search") ?? "");
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!customStartDate || !customEndDate) {
+      setDateRange(null);
+      return;
+    }
+
+    setDateRange({
+      start: parseDate(customStartDate),
+      end: parseDate(customEndDate),
+    });
+  }, [customStartDate, customEndDate]);
 
   function updateQuery(params) {
     const query = new URLSearchParams(searchParams.toString());
@@ -66,8 +88,32 @@ export function ServiceHistoryList({
   }
 
   function handleTimeFilterChange(value) {
+    setDateRange(null);
+
     updateQuery({
       timeFilter: value,
+      startDate: null,
+      endDate: null,
+      page: 1,
+    });
+  }
+
+  function handleDateRangeChange(value) {
+    setDateRange(value);
+
+    if (!value) {
+      updateQuery({
+        startDate: null,
+        endDate: null,
+        page: 1,
+      });
+      return;
+    }
+
+    updateQuery({
+      timeFilter: "custom",
+      startDate: value.start.toString(),
+      endDate: value.end.toString(),
       page: 1,
     });
   }
@@ -93,7 +139,6 @@ export function ServiceHistoryList({
 
     router.refresh();
   }
-  const today = new Date();
 
   return (
     <section className="space-y-5">
@@ -107,6 +152,8 @@ export function ServiceHistoryList({
         <TimeFilter
           timeFilter={timeFilter}
           setTimeFilter={handleTimeFilterChange}
+          dateRange={dateRange}
+          setDateRange={handleDateRangeChange}
         />
         <WarrantyFilter
           warrantyFilter={warrantyFilter}

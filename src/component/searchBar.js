@@ -1,6 +1,6 @@
 "use client";
 
-import { SearchField, Button, Separator } from "@heroui/react";
+import { SearchField, Button } from "@heroui/react";
 import { ScanBarcode } from "lucide-react";
 
 export function SearchBar({

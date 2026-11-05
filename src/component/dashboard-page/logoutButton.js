@@ -18,7 +18,6 @@ export function LogoutButton() {
           className="border-2 border-yellow-100 bg-slate-800 text-yellow-100 hover:bg-danger hover:border-danger hover:text-white "
         >
           <LogOut />
-          {isPending ? "" : ""}
         </Button>
       </form>
     </>

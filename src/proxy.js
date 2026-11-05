@@ -13,9 +13,16 @@ export function proxy(request) {
 export const config = {
   matcher: [
     "/",
-    "/product-history/:path*",
-    "/receipt/:path*",
     "/add-product/:path*",
+    "/add-product-stock/:path*",
     "/admin/:path*",
+    "/cashier/:path*",
+    "/order/:path*",
+    "/product-history/:path*",
+    "/sale-history/:path*",
+    "/service-history/:path*",
+    "/take-product-stock/:path*",
+    "/saleReceipt/:path*",
+    "/serviceReceipt/:path*",
   ],
 };

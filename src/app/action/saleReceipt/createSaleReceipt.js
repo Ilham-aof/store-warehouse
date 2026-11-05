@@ -23,7 +23,6 @@ export async function createSaleReceiptAction(prevState, formData) {
   }
 
   const outlet = formData.get("outletId");
-  const redirectTo = formData.get("redirectTo");
   const rawItems = formData.get("items");
 
   if (!outlet) {

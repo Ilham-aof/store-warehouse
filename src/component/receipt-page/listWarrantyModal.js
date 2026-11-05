@@ -1,5 +1,5 @@
 "use client";
-import { Modal, Separator } from "@heroui/react";
+import { Modal } from "@heroui/react";
 import { ShieldCogCorner, Shield } from "lucide-react";
 
 export function ListWarrantyModal({ isOpen, receipt, onClose }) {

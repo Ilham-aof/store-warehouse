@@ -8,11 +8,14 @@ export default async function page({ searchParams }) {
 
   const outletId = params.outletId ?? outlets[0]?.id ?? null;
 
-  const timeFilter = ["all", "today", "week", "month"].includes(
+  const timeFilter = ["all", "today", "week", "month", "custom"].includes(
     params.timeFilter,
   )
     ? params.timeFilter
     : "all";
+
+  const customStartDate = params.startDate ?? null;
+  const customEndDate = params.endDate ?? null;
 
   const activityFilter = ["all", "masuk", "keluar"].includes(
     params.activityFilter,
@@ -27,6 +30,8 @@ export default async function page({ searchParams }) {
     activityFilter,
     pageNumber,
     pageSize,
+    customStartDate,
+    customEndDate,
   );
 
   return (
@@ -40,6 +45,8 @@ export default async function page({ searchParams }) {
         currentPage={historyList.currentPage}
         totalPages={historyList.totalPages}
         totalItems={historyList.totalItems}
+        customStartDate={customStartDate}
+        customEndDate={customEndDate}
       />
     </main>
   );

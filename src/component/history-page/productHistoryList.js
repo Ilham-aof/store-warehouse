@@ -6,6 +6,8 @@ import { ActivityFilter } from "@/component/activityFilter";
 import { PaginationUi } from "@/component/pagination";
 import { RefreshCw } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { parseDate } from "@internationalized/date";
 
 export function ProductHistoryList({
   outlets,
@@ -16,9 +18,33 @@ export function ProductHistoryList({
   currentPage,
   totalPages,
   totalItems,
+  customStartDate,
+  customEndDate,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const [dateRange, setDateRange] = useState(() => {
+    if (!customStartDate || !customEndDate) return null;
+
+    return {
+      start: parseDate(customStartDate),
+      end: parseDate(customEndDate),
+    };
+  });
+
+  useEffect(() => {
+    if (!customStartDate || !customEndDate) {
+      setDateRange(null);
+      return;
+    }
+
+    setDateRange({
+      start: parseDate(customStartDate),
+      end: parseDate(customEndDate),
+    });
+  }, [customStartDate, customEndDate]);
+
   function updateQuery(params) {
     const query = new URLSearchParams(searchParams.toString());
 
@@ -35,11 +61,36 @@ export function ProductHistoryList({
   }
 
   function handleTimeFilterChange(value) {
+    setDateRange(null);
+
     updateQuery({
-      timeFilter: value === "all" ? null : value,
+      timeFilter: value,
+      startDate: null,
+      endDate: null,
       page: 1,
     });
   }
+
+  function handleDateRangeChange(value) {
+    setDateRange(value);
+
+    if (!value) {
+      updateQuery({
+        startDate: null,
+        endDate: null,
+        page: 1,
+      });
+      return;
+    }
+
+    updateQuery({
+      timeFilter: "custom",
+      startDate: value.start.toString(),
+      endDate: value.end.toString(),
+      page: 1,
+    });
+  }
+
   function handleActivityChange(value) {
     updateQuery({
       activityFilter: value === "all" ? null : value,
@@ -61,6 +112,8 @@ export function ProductHistoryList({
         <TimeFilter
           timeFilter={timeFilter}
           setTimeFilter={handleTimeFilterChange}
+          dateRange={dateRange}
+          setDateRange={handleDateRangeChange}
         />
         <ActivityFilter
           activityFilter={activityFilter}

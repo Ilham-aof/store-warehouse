@@ -1,22 +1,16 @@
 "use client";
-import {
-  Table,
-  Switch,
-  Dropdown,
-  Label,
-  Separator,
-  Button,
-} from "@heroui/react";
+import { Table, Dropdown, Label, Separator, Button } from "@heroui/react";
 import { EllipsisVertical, ShoppingBag, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
-import { updateServiceReceiptStatus } from "@/app/action/serviceReceipt/updateServiceReceiptStatus";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
 import { TimeFilter } from "@/component/timeFilter";
 import { ListProductModal } from "@/component/sale-history-page/listProductModal";
+import { parseDate } from "@internationalized/date";
+
 export function SaleHistoryList({
   outlets,
   receipts,
@@ -25,10 +19,20 @@ export function SaleHistoryList({
   currentPage,
   totalPages,
   totalItems,
+  customStartDate,
+  customEndDate,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [dateRange, setDateRange] = useState(() => {
+    if (!customStartDate || !customEndDate) return null;
+
+    return {
+      start: parseDate(customStartDate),
+      end: parseDate(customEndDate),
+    };
+  });
   const [searchKeyword, setSearchKeyword] = useState(
     searchParams.get("search") ?? "",
   );
@@ -36,6 +40,18 @@ export function SaleHistoryList({
   useEffect(() => {
     setSearchKeyword(searchParams.get("search") ?? "");
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!customStartDate || !customEndDate) {
+      setDateRange(null);
+      return;
+    }
+
+    setDateRange({
+      start: parseDate(customStartDate),
+      end: parseDate(customEndDate),
+    });
+  }, [customStartDate, customEndDate]);
 
   function updateQuery(params) {
     const query = new URLSearchParams(searchParams.toString());
@@ -62,8 +78,32 @@ export function SaleHistoryList({
   }
 
   function handleTimeFilterChange(value) {
+    setDateRange(null);
+
     updateQuery({
       timeFilter: value,
+      startDate: null,
+      endDate: null,
+      page: 1,
+    });
+  }
+
+  function handleDateRangeChange(value) {
+    setDateRange(value);
+
+    if (!value) {
+      updateQuery({
+        startDate: null,
+        endDate: null,
+        page: 1,
+      });
+      return;
+    }
+
+    updateQuery({
+      timeFilter: "custom",
+      startDate: value.start.toString(),
+      endDate: value.end.toString(),
       page: 1,
     });
   }
@@ -71,18 +111,6 @@ export function SaleHistoryList({
   function handlePageChange(page) {
     updateQuery({ page });
   }
-
-  async function handleStatusChange(receiptId, status, value) {
-    const result = await updateServiceReceiptStatus(receiptId, status, value);
-
-    if (!result.success) {
-      console.error(result.error);
-      return;
-    }
-
-    router.refresh();
-  }
-  const today = new Date();
 
   return (
     <section className="space-y-5">
@@ -95,6 +123,8 @@ export function SaleHistoryList({
         <TimeFilter
           timeFilter={timeFilter}
           setTimeFilter={handleTimeFilterChange}
+          dateRange={dateRange}
+          setDateRange={handleDateRangeChange}
         />
         <Separator orientation="vertical" />
         <SearchBar

@@ -6,6 +6,8 @@ export async function getDataSaleReceipt(
   timeFilter,
   page,
   pageSize,
+  customStartDate,
+  customEndDate,
 ) {
   if (!outletId) {
     return {
@@ -21,7 +23,9 @@ export async function getDataSaleReceipt(
   const safePageSize = Math.max(1, Number(pageSize) || 20);
 
   const now = new Date();
+
   let startDate = null;
+  let endDate = now;
 
   if (timeFilter === "today") {
     startDate = new Date(now);
@@ -31,9 +35,14 @@ export async function getDataSaleReceipt(
     startDate.setDate(startDate.getDate() - 7);
     startDate.setHours(0, 0, 0, 0);
   } else if (timeFilter === "month") {
-    startDate = new Date(now);
-    startDate.setMonth(startDate.getMonth() - 1);
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (timeFilter === "custom" && customStartDate && customEndDate) {
+    startDate = new Date(customStartDate);
     startDate.setHours(0, 0, 0, 0);
+
+    endDate = new Date(customEndDate);
+    endDate.setDate(endDate.getDate() + 1);
+    endDate.setHours(0, 0, 0, 0);
   }
 
   const where = {
@@ -48,7 +57,7 @@ export async function getDataSaleReceipt(
     ...(startDate && {
       createdAt: {
         gte: startDate,
-        lte: now,
+        lte: endDate,
       },
     }),
   };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Table, Button, Dropdown, Label, Separator } from "@heroui/react";
+import { Table, Button, Dropdown, Label } from "@heroui/react";
 import { useState } from "react";
 import { UserRoundX, EllipsisVertical } from "lucide-react";
 import { DeleteUserModal } from "@/component/admin-page/deleteUserModal";

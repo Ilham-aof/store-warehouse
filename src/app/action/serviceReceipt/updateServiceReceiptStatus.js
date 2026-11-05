@@ -86,7 +86,6 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
         },
       });
 
-      // Garansi mulai dihitung saat barang diambil
       if (newProcessStatus && newPickupStatus) {
         const pickupDate = new Date();
         pickupDate.setHours(0, 0, 0, 0);

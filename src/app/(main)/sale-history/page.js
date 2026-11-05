@@ -8,7 +8,7 @@ export default async function page({ searchParams }) {
 
   const outletId = params.outletId ?? outlets[0]?.id ?? null;
   const search = params.search ?? "";
-  const timeFilter = ["all", "today", "week", "month"].includes(
+  const timeFilter = ["all", "today", "week", "month", "custom"].includes(
     params.timeFilter,
   )
     ? params.timeFilter
@@ -17,12 +17,17 @@ export default async function page({ searchParams }) {
   const pageNumber = Math.max(1, Number(params.page) || 1);
   const pageSize = 20;
 
+  const customStartDate = params.startDate ?? null;
+  const customEndDate = params.endDate ?? null;
+
   const saleReceiptList = await getDataSaleReceipt(
     outletId,
     search,
     timeFilter,
     pageNumber,
     pageSize,
+    customStartDate,
+    customEndDate,
   );
 
   return (
@@ -35,6 +40,8 @@ export default async function page({ searchParams }) {
         currentPage={saleReceiptList.currentPage}
         totalPages={saleReceiptList.totalPages}
         totalItems={saleReceiptList.totalItems}
+        customStartDate={customStartDate}
+        customEndDate={customEndDate}
       />
     </main>
   );

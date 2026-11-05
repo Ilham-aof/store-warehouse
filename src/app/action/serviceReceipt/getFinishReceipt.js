@@ -7,6 +7,8 @@ export async function getFinishReceipt(
   warrantyFilter,
   pageNumber,
   pageSize,
+  customStartDate,
+  customEndDate,
 ) {
   if (!outletId) {
     return {
@@ -22,7 +24,12 @@ export async function getFinishReceipt(
   const safePageSize = Math.max(1, Number(pageSize) || 20);
 
   const now = new Date();
+
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+
   let startDate = null;
+  let endDate = now;
 
   if (timeFilter === "today") {
     startDate = new Date(now);
@@ -32,9 +39,14 @@ export async function getFinishReceipt(
     startDate.setDate(startDate.getDate() - 7);
     startDate.setHours(0, 0, 0, 0);
   } else if (timeFilter === "month") {
-    startDate = new Date(now);
-    startDate.setMonth(startDate.getMonth() - 1);
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (timeFilter === "custom" && customStartDate && customEndDate) {
+    startDate = new Date(customStartDate);
     startDate.setHours(0, 0, 0, 0);
+
+    endDate = new Date(customEndDate);
+    endDate.setDate(endDate.getDate() + 1);
+    endDate.setHours(0, 0, 0, 0);
   }
 
   const where = {
@@ -52,26 +64,38 @@ export async function getFinishReceipt(
     ...(startDate && {
       createdAt: {
         gte: startDate,
-        lte: now,
+        lt: endDate,
       },
     }),
 
     ...(warrantyFilter === "active" && {
-      warrantyDays: { gt: 0 },
-      warrantyUntil: {
-        gte: now,
+      serviceItems: {
+        some: {
+          warrantyDays: { gt: 0 },
+          warrantyUntil: {
+            gte: startOfToday,
+          },
+        },
       },
     }),
 
     ...(warrantyFilter === "expired" && {
-      warrantyDays: { gt: 0 },
-      warrantyUntil: {
-        lt: now,
+      serviceItems: {
+        some: {
+          warrantyDays: { gt: 0 },
+          warrantyUntil: {
+            lt: startOfToday,
+          },
+        },
       },
     }),
 
     ...(warrantyFilter === "noWarranty" && {
-      warrantyDays: 0,
+      serviceItems: {
+        some: {
+          warrantyDays: 0,
+        },
+      },
     }),
   };
 

@@ -8,11 +8,14 @@ export default async function page({ searchParams }) {
 
   const outletId = params.outletId ?? outlets[0]?.id ?? null;
   const search = params.search ?? "";
-  const timeFilter = ["all", "today", "week", "month"].includes(
+  const timeFilter = ["all", "today", "week", "month", "custom"].includes(
     params.timeFilter,
   )
     ? params.timeFilter
     : "all";
+
+  const customStartDate = params.startDate ?? null;
+  const customEndDate = params.endDate ?? null;
 
   const warrantyFilter = ["all", "active", "expired", "noWarranty"].includes(
     params.warrantyFilter,
@@ -29,6 +32,8 @@ export default async function page({ searchParams }) {
     warrantyFilter,
     pageNumber,
     pageSize,
+    customStartDate,
+    customEndDate,
   );
 
   return (
@@ -42,6 +47,8 @@ export default async function page({ searchParams }) {
         currentPage={finishReceiptList.currentPage}
         totalPages={finishReceiptList.totalPages}
         totalItems={finishReceiptList.totalItems}
+        customStartDate={customStartDate}
+        customEndDate={customEndDate}
       />
     </main>
   );

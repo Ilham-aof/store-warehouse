@@ -4,7 +4,7 @@ import { ListBox, Select, Header } from "@heroui/react";
 
 export function WarrantyFilter({ warrantyFilter, setWarrantyFilter }) {
   return (
-    <div className="flex items-center space-x-3">
+    <div className="flex items-center space-x-5">
       <p>Garansi</p>
       <Select
         variant="secondary"

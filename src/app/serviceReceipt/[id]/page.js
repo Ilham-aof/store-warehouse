@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/app/action/user/getCurrentUser";
 import { PrintServiceReceipt } from "@/component/receipt-page/printServiceReceipt";
 import React from "react";
 

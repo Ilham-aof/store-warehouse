@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { getCurrentUser } from "@/app/action/user/getCurrentUser";
 import { PrintSaleReceipt } from "@/component/sale-history-page/printSaleReceipt";
 import React from "react";
 
