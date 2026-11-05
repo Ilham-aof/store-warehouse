@@ -1,10 +1,16 @@
 "use client";
 
 import { ListBox, Select, Header } from "@heroui/react";
+import { CustomFilter } from "@/component/customTimeFilter";
 
-export function TimeFilter({ timeFilter, setTimeFilter }) {
+export function TimeFilter({
+  timeFilter,
+  setTimeFilter,
+  dateRange,
+  setDateRange,
+}) {
   return (
-    <div className="flex items-center space-x-3">
+    <div className="flex items-center space-x-5">
       <p>Waktu</p>
       <Select
         variant="secondary"
@@ -55,9 +61,23 @@ export function TimeFilter({ timeFilter, setTimeFilter }) {
               Bulan Ini
               <ListBox.ItemIndicator />
             </ListBox.Item>
+
+            <ListBox.Item
+              id="custom"
+              textValue="Kustom"
+              className="ring-0 outline-none shadow-none ring-offset-0"
+            >
+              Kustom
+              <ListBox.ItemIndicator />
+            </ListBox.Item>
           </ListBox>
         </Select.Popover>
       </Select>
+      {timeFilter === "custom" ? (
+        <CustomFilter dateRange={dateRange} setDateRange={setDateRange} />
+      ) : (
+        ""
+      )}
     </div>
   );
 }

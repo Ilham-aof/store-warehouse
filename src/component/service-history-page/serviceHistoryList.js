@@ -17,8 +17,10 @@ import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
 import { TimeFilter } from "@/component/timeFilter";
 import { WarrantyFilter } from "@/component/warrantyFilter";
+import { ListWarrantyModal } from "@/component/receipt-page/listWarrantyModal";
+import { parseDate } from "@internationalized/date";
 
-export function ReceiptHistoryList({
+export function ServiceHistoryList({
   outlets,
   receipts,
   selectedOutletId,
@@ -27,10 +29,20 @@ export function ReceiptHistoryList({
   currentPage,
   totalPages,
   totalItems,
+  customStartDate,
+  customEndDate,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [selectedReceipt, setSelectedReceipt] = useState(null);
+  const [dateRange, setDateRange] = useState(() => {
+    if (!customStartDate || !customEndDate) return null;
 
+    return {
+      start: parseDate(customStartDate),
+      end: parseDate(customEndDate),
+    };
+  });
   const [searchKeyword, setSearchKeyword] = useState(
     searchParams.get("search") ?? "",
   );
@@ -38,6 +50,18 @@ export function ReceiptHistoryList({
   useEffect(() => {
     setSearchKeyword(searchParams.get("search") ?? "");
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!customStartDate || !customEndDate) {
+      setDateRange(null);
+      return;
+    }
+
+    setDateRange({
+      start: parseDate(customStartDate),
+      end: parseDate(customEndDate),
+    });
+  }, [customStartDate, customEndDate]);
 
   function updateQuery(params) {
     const query = new URLSearchParams(searchParams.toString());
@@ -64,8 +88,32 @@ export function ReceiptHistoryList({
   }
 
   function handleTimeFilterChange(value) {
+    setDateRange(null);
+
     updateQuery({
       timeFilter: value,
+      startDate: null,
+      endDate: null,
+      page: 1,
+    });
+  }
+
+  function handleDateRangeChange(value) {
+    setDateRange(value);
+
+    if (!value) {
+      updateQuery({
+        startDate: null,
+        endDate: null,
+        page: 1,
+      });
+      return;
+    }
+
+    updateQuery({
+      timeFilter: "custom",
+      startDate: value.start.toString(),
+      endDate: value.end.toString(),
       page: 1,
     });
   }
@@ -91,7 +139,6 @@ export function ReceiptHistoryList({
 
     router.refresh();
   }
-  const today = new Date();
 
   return (
     <section className="space-y-5">
@@ -105,6 +152,8 @@ export function ReceiptHistoryList({
         <TimeFilter
           timeFilter={timeFilter}
           setTimeFilter={handleTimeFilterChange}
+          dateRange={dateRange}
+          setDateRange={handleDateRangeChange}
         />
         <WarrantyFilter
           warrantyFilter={warrantyFilter}
@@ -122,20 +171,19 @@ export function ReceiptHistoryList({
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar nota servis" className="min-w-250">
             <Table.Header>
-              <Table.Column isRowHeader className="w-[18%]">
+              <Table.Column isRowHeader className="w-[15%]">
                 Kode Nota
               </Table.Column>
-              <Table.Column className="w-[17%]">Pelanggan</Table.Column>
+              <Table.Column className="w-[20%]">Pelanggan</Table.Column>
               <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
-              <Table.Column className="w-[8%]">Garansi</Table.Column>
-              <Table.Column className="w-[10%]">Status Garansi</Table.Column>
-              <Table.Column className="w-[13%]">Status Pengerjaan</Table.Column>
-              <Table.Column className="w-[16%]">Status Barang</Table.Column>
-              <Table.Column className="w-[8%]"></Table.Column>
+              <Table.Column className="w-[15%]">Garansi</Table.Column>
+              <Table.Column className="w-[15%]">Status Pengerjaan</Table.Column>
+              <Table.Column className="w-[15%]">Status Barang</Table.Column>
+              <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
-              {receipts.map((receipt) => (
+              {receipts?.map((receipt) => (
                 <Table.Row key={receipt.id}>
                   <Table.Cell className="whitespace-nowrap">
                     {receipt.invoiceNumber}
@@ -144,10 +192,10 @@ export function ReceiptHistoryList({
                   <Table.Cell>
                     <p className="text-md font-bold">{receipt.customerName}</p>
                     <p className="text-sm text-muted">
-                      Nomor : {receipt.customerPhone}
+                      No. HP/WA : {receipt.customerPhone}
                     </p>
                     <p className="text-sm text-muted">
-                      Device : {receipt.device}
+                      Tipe HP : {receipt.device}
                     </p>
                   </Table.Cell>
 
@@ -156,29 +204,15 @@ export function ReceiptHistoryList({
                   </Table.Cell>
 
                   <Table.Cell>
-                    {receipt.warrantyDays === 0
-                      ? "Tidak Bergaransi"
-                      : `${receipt.warrantyDays} hari`}
-                  </Table.Cell>
-
-                  <Table.Cell>
-                    {receipt.warrantyDays === 0 ? (
-                      "Tidak Bergaransi"
-                    ) : !receipt.warrantyUntil ? (
-                      "-"
-                    ) : (
-                      <p
-                        className={
-                          today <= new Date(receipt.warrantyUntil)
-                            ? "text-success"
-                            : "text-danger"
-                        }
+                    <div className="space-y-1">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedReceipt(receipt)}
+                        className="text-blue-600 hover:underline text-left"
                       >
-                        {today <= new Date(receipt.warrantyUntil)
-                          ? `Aktif hingga : ${new Date(receipt.warrantyUntil).toLocaleDateString("id-ID")}`
-                          : `Expired : ${new Date(receipt.warrantyUntil).toLocaleDateString("id-ID")}`}
-                      </p>
-                    )}
+                        Lihat {receipt.serviceItems.length} garansi
+                      </button>
+                    </div>
                   </Table.Cell>
 
                   <Table.Cell>
@@ -248,7 +282,7 @@ export function ReceiptHistoryList({
                               textValue="Cetak Nota"
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                               onAction={() =>
-                                router.push(`/receipt/${receipt.id}`)
+                                router.push(`/serviceReceipt/${receipt.id}`)
                               }
                             >
                               <Printer />
@@ -265,6 +299,13 @@ export function ReceiptHistoryList({
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+
+      <ListWarrantyModal
+        isOpen={!!selectedReceipt}
+        receipt={selectedReceipt}
+        onClose={() => setSelectedReceipt(null)}
+      />
+
       <PaginationUi
         currentPage={currentPage}
         totalPages={totalPages}

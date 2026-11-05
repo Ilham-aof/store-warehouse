@@ -1,6 +1,14 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getProductHistory(outletId, timeFilter, page, pageSize) {
+export async function getProductHistory(
+  outletId,
+  timeFilter,
+  activityFilter,
+  page,
+  pageSize,
+  customStartDate,
+  customEndDate,
+) {
   if (!outletId) {
     return { history: [], totalItems: 0, totalPages: 0, currentPage: 1 };
   }
@@ -9,7 +17,9 @@ export async function getProductHistory(outletId, timeFilter, page, pageSize) {
   const safePageSize = Math.max(1, Number(pageSize) || 20);
 
   const now = new Date();
+
   let startDate = null;
+  let endDate = now;
 
   if (timeFilter === "today") {
     startDate = new Date(now);
@@ -19,66 +29,73 @@ export async function getProductHistory(outletId, timeFilter, page, pageSize) {
     startDate.setDate(startDate.getDate() - 7);
     startDate.setHours(0, 0, 0, 0);
   } else if (timeFilter === "month") {
-    startDate = new Date(now);
-    startDate.setMonth(startDate.getMonth() - 1);
+    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+  } else if (timeFilter === "custom" && customStartDate && customEndDate) {
+    startDate = new Date(customStartDate);
     startDate.setHours(0, 0, 0, 0);
+
+    endDate = new Date(customEndDate);
+    endDate.setDate(endDate.getDate() + 1);
+    endDate.setHours(0, 0, 0, 0);
   }
 
   const where = {
     product: { outletId },
     ...(startDate && {
-      createdAt: { gte: startDate },
+      createdAt: {
+        gte: startDate,
+        lte: endDate,
+      },
     }),
   };
   const [stockIns, stockOuts] = await Promise.all([
-    prisma.stockIn.findMany({
-      where,
-      select: {
-        id: true,
-        quantity: true,
-        type: true,
-        getFrom: true,
-        createdAt: true,
-        product: {
+    activityFilter !== "keluar"
+      ? prisma.stockIn.findMany({
+          where,
           select: {
-            name: true,
-            category: true,
-            brand: true,
-            outletId: true,
+            id: true,
+            quantity: true,
+            type: true,
+            createdAt: true,
+            product: {
+              select: {
+                name: true,
+                category: true,
+                brand: true,
+                outletId: true,
+              },
+            },
+            user: { select: { name: true } },
+            sourceOutlet: {
+              select: { name: true },
+            },
           },
-        },
-        user: { select: { name: true } },
-        sourceOutlet: {
+        })
+      : Promise.resolve([]),
+
+    activityFilter !== "masuk"
+      ? prisma.stockOut.findMany({
+          where,
           select: {
-            name: true,
+            id: true,
+            quantity: true,
+            type: true,
+            createdAt: true,
+            product: {
+              select: {
+                name: true,
+                category: true,
+                brand: true,
+                outletId: true,
+              },
+            },
+            user: { select: { name: true } },
+            destinationOutlet: {
+              select: { name: true },
+            },
           },
-        },
-      },
-    }),
-    prisma.stockOut.findMany({
-      where,
-      select: {
-        id: true,
-        quantity: true,
-        type: true,
-        sendTo: true,
-        createdAt: true,
-        product: {
-          select: {
-            name: true,
-            category: true,
-            brand: true,
-            outletId: true,
-          },
-        },
-        user: { select: { name: true } },
-        destinationOutlet: {
-          select: {
-            name: true,
-          },
-        },
-      },
-    }),
+        })
+      : Promise.resolve([]),
   ]);
 
   const history = [

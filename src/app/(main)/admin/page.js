@@ -4,11 +4,16 @@ import { UserList } from "@/component/admin-page/userList";
 import { AddOutlet } from "@/component/admin-page/addOutlet";
 import { getOutlet } from "@/app/action/outlet/getOutlet";
 import { getUser } from "@/app/action/user/getUser";
+import { getCurrentUser } from "@/app/action/user/getCurrentUser";
 import { BuildingComplex, UserRoundGroup } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function page({ searchParams }) {
   const params = await searchParams;
-
+  const staff = await getCurrentUser();
+  if (!staff || staff.role !== "Admin") {
+    redirect("/");
+  }
   const pageNumber = Math.max(1, Number(params.page) || 1);
   const pageSize = 10;
   const outlets = await getOutlet();

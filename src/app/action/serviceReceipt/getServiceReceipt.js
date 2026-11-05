@@ -38,12 +38,25 @@ export async function getDataServiceReceipt(outletId, search, page, pageSize) {
           customerPhone: true,
           device: true,
           deviceInclusions: true,
-          warrantyDays: true,
-          warrantyUntil: true,
+          discount: true,
           processStatus: true,
           pickupStatus: true,
           outletId: true,
           createdAt: true,
+          user: {
+            select: {
+              name: true,
+            },
+          },
+          serviceItems: {
+            select: {
+              id: true,
+              description: true,
+              price: true,
+              warrantyDays: true,
+              warrantyUntil: true,
+            },
+          },
         },
         orderBy: {
           createdAt: "desc",

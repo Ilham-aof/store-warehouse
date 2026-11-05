@@ -1,6 +1,6 @@
 import { getOutlet } from "@/app/action/outlet/getOutlet";
-import { ReceiptHistoryList } from "@/component/receipt-history-page/receiptHistoryList";
-import { getFinishReceipt } from "@/app/action/serviceReceipt/getFinishReceipt";
+import { SaleHistoryList } from "@/component/sale-history-page/saleHistoryList";
+import { getDataSaleReceipt } from "@/app/action/saleReceipt/getSaleReceipt";
 
 export default async function page({ searchParams }) {
   const params = await searchParams;
@@ -8,40 +8,40 @@ export default async function page({ searchParams }) {
 
   const outletId = params.outletId ?? outlets[0]?.id ?? null;
   const search = params.search ?? "";
-  const timeFilter = ["all", "today", "week", "month"].includes(
+  const timeFilter = ["all", "today", "week", "month", "custom"].includes(
     params.timeFilter,
   )
     ? params.timeFilter
     : "all";
 
-  const warrantyFilter = ["all", "active", "expired", "noWarranty"].includes(
-    params.warrantyFilter,
-  )
-    ? params.warrantyFilter
-    : "all";
   const pageNumber = Math.max(1, Number(params.page) || 1);
   const pageSize = 20;
 
-  const finishReceiptList = await getFinishReceipt(
+  const customStartDate = params.startDate ?? null;
+  const customEndDate = params.endDate ?? null;
+
+  const saleReceiptList = await getDataSaleReceipt(
     outletId,
     search,
     timeFilter,
-    warrantyFilter,
     pageNumber,
     pageSize,
+    customStartDate,
+    customEndDate,
   );
 
   return (
     <main className="bg-white rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 w-full space-y-5">
-      <ReceiptHistoryList
+      <SaleHistoryList
         outlets={outlets}
-        receipts={finishReceiptList.receipts}
+        receipts={saleReceiptList.receipts}
         selectedOutletId={outletId}
         timeFilter={timeFilter}
-        warrantyFilter={warrantyFilter}
-        currentPage={finishReceiptList.currentPage}
-        totalPages={finishReceiptList.totalPages}
-        totalItems={finishReceiptList.totalItems}
+        currentPage={saleReceiptList.currentPage}
+        totalPages={saleReceiptList.totalPages}
+        totalItems={saleReceiptList.totalItems}
+        customStartDate={customStartDate}
+        customEndDate={customEndDate}
       />
     </main>
   );

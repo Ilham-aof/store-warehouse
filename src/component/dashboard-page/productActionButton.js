@@ -8,7 +8,7 @@ export function ProductActionButton({ selectedOutletId }) {
   const router = useRouter();
 
   return (
-    <div className="space-x-3">
+    <div className="space-x-5">
       <Button
         onClick={() => router.push(`/add-product?outletId=${selectedOutletId}`)}
         className="bg-slate-800 text-yellow-100 hover:bg-slate-600"

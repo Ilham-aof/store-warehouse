@@ -56,13 +56,6 @@ export function TakeProductStockModal({
                   </p>
                   <Separator />
                   <div className="flex justify-between">
-                    <span className="text-muted">Cabang</span>
-                    <span className="text-black">
-                      {selectedProduct?.outlet.name}
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between">
                     <span className="text-muted">Barcode</span>
                     <span className="text-black">
                       {selectedProduct?.barcode}
@@ -95,6 +88,8 @@ export function TakeProductStockModal({
                     </span>
                   </div>
                 </div>
+                <Separator />
+
                 <input
                   type="hidden"
                   name="productId"

@@ -53,8 +53,13 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
         id: true,
         processStatus: true,
         pickupStatus: true,
-        warrantyDays: true,
         createdAt: true,
+        serviceItems: {
+          select: {
+            id: true,
+            warrantyDays: true,
+          },
+        },
       },
     });
 
@@ -71,26 +76,51 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
     const newPickupStatus =
       status === "pickupStatus" ? value : receipt.pickupStatus;
 
-    let warrantyUntil = null;
+    await prisma.$transaction(async (tx) => {
+      await tx.serviceReceipt.update({
+        where: {
+          id: receiptId,
+        },
+        data: {
+          [status]: value,
+        },
+      });
 
-    if (newProcessStatus && newPickupStatus) {
-      if (receipt.warrantyDays > 0) {
-        warrantyUntil = new Date();
+      if (newProcessStatus && newPickupStatus) {
+        const pickupDate = new Date();
+        pickupDate.setHours(0, 0, 0, 0);
 
-        warrantyUntil.setDate(warrantyUntil.getDate() + receipt.warrantyDays);
+        await Promise.all(
+          receipt.serviceItems.map((item) => {
+            let warrantyUntil = null;
+
+            if (item.warrantyDays > 0) {
+              warrantyUntil = new Date(pickupDate);
+              warrantyUntil.setDate(
+                warrantyUntil.getDate() + item.warrantyDays,
+              );
+            }
+
+            return tx.serviceItem.update({
+              where: {
+                id: item.id,
+              },
+              data: {
+                warrantyUntil,
+              },
+            });
+          }),
+        );
       } else {
-        warrantyUntil = null;
+        await tx.serviceItem.updateMany({
+          where: {
+            receiptId,
+          },
+          data: {
+            warrantyUntil: null,
+          },
+        });
       }
-    }
-
-    await prisma.serviceReceipt.update({
-      where: {
-        id: receiptId,
-      },
-      data: {
-        [status]: value,
-        warrantyUntil,
-      },
     });
 
     revalidatePath("/receipt");

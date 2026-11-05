@@ -72,7 +72,7 @@ export function ProductStock({
           <h1 className="text-2xl font-bold">Stok Produk</h1>
         </div>
 
-        <div className="flex space-x-3">
+        <div className="flex space-x-5">
           <SearchBar
             keyword={searchKeyword}
             onKeywordChange={setSearchKeyword}

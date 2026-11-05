@@ -17,6 +17,7 @@ import { CreateReceiptButton } from "@/component/receipt-page/createReceiptButto
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
 import { UpdateReceiptModal } from "@/component/receipt-page/updateReceiptModal";
+import { ListWarrantyModal } from "@/component/receipt-page/listWarrantyModal";
 
 export function ReceiptList({
   outlets,
@@ -65,12 +66,9 @@ export function ReceiptList({
     updateQuery({ page });
   }
 
-  function handleAction(key, receipt) {
-    setSelectedReceipt(receipt);
-    setActiveModal(key);
-  }
-
   async function handleStatusChange(receiptId, statusType, value) {
+    console.log("Switch ditekan:", { receiptId, statusType, value });
+
     const result = await updateServiceReceiptStatus(
       receiptId,
       statusType,
@@ -104,20 +102,19 @@ export function ReceiptList({
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar nota servis" className="min-w-250">
             <Table.Header>
-              <Table.Column isRowHeader className="w-[18%]">
+              <Table.Column isRowHeader className="w-[15%]">
                 Kode Nota
               </Table.Column>
-              <Table.Column className="w-[17%]">Pelanggan</Table.Column>
+              <Table.Column className="w-[20%]">Pelanggan</Table.Column>
               <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
-              <Table.Column className="w-[8%]">Garansi</Table.Column>
-              <Table.Column className="w-[10%]">Status Garansi</Table.Column>
-              <Table.Column className="w-[13%]">Status Pengerjaan</Table.Column>
-              <Table.Column className="w-[16%]">Status Barang</Table.Column>
-              <Table.Column className="w-[8%]"></Table.Column>
+              <Table.Column className="w-[15%]">Garansi</Table.Column>
+              <Table.Column className="w-[15%]">Status Pengerjaan</Table.Column>
+              <Table.Column className="w-[15%]">Status Barang</Table.Column>
+              <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
-              {receipts.map((receipt) => (
+              {receipts?.map((receipt) => (
                 <Table.Row key={receipt.id}>
                   <Table.Cell className="whitespace-nowrap">
                     {receipt.invoiceNumber}
@@ -126,10 +123,10 @@ export function ReceiptList({
                   <Table.Cell>
                     <p className="text-md font-bold">{receipt.customerName}</p>
                     <p className="text-sm text-muted">
-                      Nomor : {receipt.customerPhone}
+                      No. HP/WA : {receipt.customerPhone}
                     </p>
                     <p className="text-sm text-muted">
-                      Device : {receipt.device}
+                      Tipe HP : {receipt.device}
                     </p>
                   </Table.Cell>
 
@@ -138,23 +135,18 @@ export function ReceiptList({
                   </Table.Cell>
 
                   <Table.Cell>
-                    {receipt.warrantyDays === 0
-                      ? "Tidak Bergaransi"
-                      : `${receipt.warrantyDays} hari`}
-                  </Table.Cell>
-
-                  <Table.Cell>
-                    {receipt.warrantyDays === 0 ? (
-                      "Tidak Bergaransi"
-                    ) : receipt.warrantyUntil ? (
-                      <>
-                        <p>
-                          {receipt.warrantyUntil.toLocaleDateString("id-ID")}
-                        </p>
-                      </>
-                    ) : (
-                      "-"
-                    )}
+                    <div className="space-y-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedReceipt(receipt);
+                          setActiveModal("warranty");
+                        }}
+                        className="text-blue-600 hover:underline text-left"
+                      >
+                        Lihat {receipt.serviceItems.length} garansi
+                      </button>
+                    </div>
                   </Table.Cell>
 
                   <Table.Cell>
@@ -218,17 +210,14 @@ export function ReceiptList({
                           <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
-                          <Dropdown.Menu
-                            onAction={(key) => handleAction(key, receipt)}
-                            className="space-y-3"
-                          >
+                          <Dropdown.Menu className="space-y-3">
                             <Dropdown.Item
                               id="cetak"
                               textValue="Cetak Nota"
-                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
-                              onAction={() =>
-                                router.push(`/receipt/${receipt.id}`)
-                              }
+                              className="flex items-center"
+                              onAction={() => {
+                                router.push(`/serviceReceipt/${receipt.id}`);
+                              }}
                             >
                               <Printer />
                               <Label>Cetak Nota</Label>
@@ -237,6 +226,10 @@ export function ReceiptList({
                               id="edit"
                               textValue="Edit Nota"
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
+                              onAction={() => {
+                                setSelectedReceipt(receipt);
+                                setActiveModal("edit");
+                              }}
                             >
                               <Pencil />
                               <Label>Ubah Nota</Label>
@@ -252,6 +245,16 @@ export function ReceiptList({
           </Table.Content>
         </Table.ScrollContainer>
       </Table>
+
+      <ListWarrantyModal
+        isOpen={activeModal === "warranty"}
+        receipt={selectedReceipt}
+        onClose={() => {
+          setActiveModal(null);
+          setSelectedReceipt(null);
+        }}
+      />
+
       <PaginationUi
         currentPage={currentPage}
         totalPages={totalPages}

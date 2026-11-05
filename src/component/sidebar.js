@@ -5,12 +5,12 @@ import { LogoutButton } from "@/component/dashboard-page/logoutButton";
 import {
   CircleUserRound,
   Boxes,
-  ChartLine,
   RefreshCw,
-  Wrench,
   Settings,
   ReceiptText,
   ClipboardClock,
+  Calculator,
+  ShoppingBag,
 } from "lucide-react";
 
 export function Sidebar({ user }) {
@@ -23,11 +23,17 @@ export function Sidebar({ user }) {
 
   const stockHref = outletId ? `/?outletId=${outletId}` : "/";
 
+  const cashierHref = outletId ? `/cashier?outletId=${outletId}` : "/cashier";
+
+  const saleHistoryHref = outletId
+    ? `/sale-history?outletId=${outletId}`
+    : "/sale-history";
+
   const receiptHref = outletId ? `/order?outletId=${outletId}` : "/order";
 
   const receiptHistoryHref = outletId
-    ? `/receipt-history?outletId=${outletId}`
-    : "/receipt-history";
+    ? `/service-history?outletId=${outletId}`
+    : "/service-history";
 
   return (
     <aside>
@@ -46,12 +52,30 @@ export function Sidebar({ user }) {
             <Boxes />
             Inventaris
           </Link>
+
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={productHistoryHref}
           >
             <RefreshCw />
             Mutasi Stok
+          </Link>
+
+          <Separator variant="default" />
+
+          <Link
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
+            href={cashierHref}
+          >
+            <Calculator />
+            Kasir
+          </Link>
+          <Link
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
+            href={saleHistoryHref}
+          >
+            <ShoppingBag />
+            Riwayat Transaksi
           </Link>
 
           <Separator variant="default" />
@@ -84,7 +108,7 @@ export function Sidebar({ user }) {
           )}
         </div>
 
-        <div className="flex items-center px-3 py-2 space-x-3 rounded-full shadow-[2px_2px_4px,inset_0_0_4px_rgba(0,0,0,0.2)] shadow-yellow-100 w-full h-fit mt-auto">
+        <div className="flex items-center px-3 py-2 space-x-3 rounded-full border-2 border-yellow-100 w-full h-fit mt-auto">
           <Avatar className="bg-slate-800">
             <CircleUserRound size={40} className="text-yellow-100" />
           </Avatar>

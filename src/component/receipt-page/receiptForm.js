@@ -9,6 +9,7 @@ import {
   Label,
   ListBox,
   Select,
+  Separator,
 } from "@heroui/react";
 import { Plus, Trash, FilePlus } from "lucide-react";
 import { useState, useActionState } from "react";
@@ -56,13 +57,18 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
     setServices((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const totalService = services.reduce(
+    (total, service) => total + (Number(service.price) || 0),
+    0,
+  );
+
   const [state, action, isPending] = useActionState(createServiceReceipt, {
     success: false,
     errors: {},
   });
 
   return (
-    <div className="bg-white flex flex-col rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 space-y-5">
+    <section className="bg-white flex flex-col rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 space-y-5">
       <div className="flex space-x-3 items-center">
         <FilePlus size={30} />
         <h1 className="text-2xl font-bold">Tambah Servis Baru</h1>
@@ -89,7 +95,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
           value={selectedOutletId ?? ""}
           readOnly
         />
-        <div className="grid grid-cols-[2fr_3fr] gap-5">
+        <div className="grid grid-cols-[1.2fr_3fr] gap-5">
           <div className="rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 h-fit">
             <div className="flex flex-col space-y-3">
               <h2 className="text-xl font-bold">Data Pelanggan</h2>
@@ -294,31 +300,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     )}
                 </div>
               </Select>
-
-              <TextField
-                name="serviceWarranty"
-                aria-label="Service Warranty"
-                variant="secondary"
-                type="number"
-                validate={(value) => {
-                  if (!value) {
-                    return "Garansi wajib diisi";
-                  }
-                }}
-              >
-                <Label>Garansi</Label>
-                <Input
-                  placeholder="Masa Garansi (Hari)"
-                  className="hover:bg-gray-200 focus:ring-slate-800"
-                />
-                <div className="min-h-6">
-                  {state.errors?.serviceWarranty ? (
-                    <ErrorMessage>{state.errors.serviceWarranty}</ErrorMessage>
-                  ) : (
-                    <FieldError />
-                  )}
-                </div>
-              </TextField>
             </div>
           </div>
 
@@ -328,7 +309,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
               {services.map((item, index) => (
                 <div
                   key={index}
-                  className="grid grid-cols-[1fr_1fr_0.4fr] gap-5"
+                  className="grid grid-cols-[1fr_0.4fr_0.4fr_0.4fr] gap-5"
                 >
                   <TextField
                     name={`phoneDamageType[${index}][description]`}
@@ -360,9 +341,9 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     />
 
                     <div className="min-h-6">
-                      {state.errors?.service?.[index] ? (
+                      {state.errors?.service?.[index]?.description ? (
                         <ErrorMessage>
-                          {state.errors.service[index]}
+                          {state.errors.service[index].description}
                         </ErrorMessage>
                       ) : (
                         <FieldError />
@@ -401,15 +382,42 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     />
 
                     <div className="min-h-6">
-                      {state.errors?.servicePrice?.[index] ? (
+                      {state.errors?.service?.[index]?.price ? (
                         <ErrorMessage>
-                          {state.errors.servicePrice[index]}
+                          {state.errors.service[index].price}
                         </ErrorMessage>
                       ) : (
                         <FieldError />
                       )}
                     </div>
                   </TextField>
+                  <TextField
+                    name={`serviceWarranty[${index}][warranty]`}
+                    aria-label="Service Warranty"
+                    variant="secondary"
+                    type="number"
+                    validate={(value) => {
+                      if (!value) {
+                        return "Garansi wajib diisi";
+                      }
+                    }}
+                  >
+                    <Label>Garansi</Label>
+                    <Input
+                      placeholder="Masa Garansi (Hari)"
+                      className="hover:bg-gray-200 focus:ring-slate-800"
+                    />
+                    <div className="min-h-6">
+                      {state.errors?.service?.[index]?.warranty ? (
+                        <ErrorMessage>
+                          {state.errors.service[index].warranty}
+                        </ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
+                    </div>
+                  </TextField>
+
                   <div className="pt-6">
                     {services.length > 1 && (
                       <Button
@@ -433,6 +441,17 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 <Plus />
                 Tambah Kerusakan
               </Button>
+              <Separator />
+              <div className="flex justify-between">
+                <span className="font-bold">Total</span>
+                <span className="font-bold">
+                  {new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    maximumFractionDigits: 0,
+                  }).format(totalService)}
+                </span>
+              </div>
               <div className="grid grid-cols-[1fr_1fr_0.4fr] gap-5">
                 <TextField
                   name="discount"
@@ -488,6 +507,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
           </div>
         </div>
       </form>
-    </div>
+    </section>
   );
 }

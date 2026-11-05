@@ -178,8 +178,8 @@ export async function bulkStockOutAction(prevState, formData) {
 
   const destination =
     redirectTo === "/take-product-stock"
-      ? `/take-product-stock?outletId=${encodeURIComponent(outletId)}`
-      : `/?outletId=${encodeURIComponent(outletId)}`;
+      ? `/take-product-stock?outletId=${outletId}`
+      : `/?outletId=${outletId}`;
 
   revalidatePath("/add-product-stock");
   revalidatePath("/");

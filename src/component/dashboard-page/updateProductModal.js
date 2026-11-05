@@ -6,6 +6,7 @@ import {
   FieldError,
   Label,
   Button,
+  Separator,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateProductAction } from "@/app/action/product/updateProduct";
@@ -17,7 +18,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
   const [state, action, isPending] = useActionState(updateProductAction, null);
 
   return (
-    <main>
+    <>
       <Modal.Backdrop
         isOpen={isOpen}
         onOpenChange={(isOpen) => {
@@ -27,8 +28,8 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
         }}
         isDismissable={false}
       >
-        <Modal.Container>
-          <Modal.Dialog className="max-w-5xl max-h-xl space-y-5">
+        <Modal.Container size="lg">
+          <Modal.Dialog className="space-y-3">
             <Modal.CloseTrigger />
 
             <Modal.Header>
@@ -40,10 +41,43 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
-              <Modal.Body className="space-y-3">
-                <p className="text-lg text-black">
-                  Nama Produk: {selectedProduct?.name}
+              <Modal.Body className="space-y-3  ">
+                <p>Detail Produk</p>
+                <p className="text-lg font-bold text-black">
+                  {selectedProduct?.name}
                 </p>
+                <Separator />
+                <div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Barcode</span>
+                    <span className="text-black">
+                      {selectedProduct?.barcode}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Kategori</span>
+                    <span className="text-black">
+                      {selectedProduct?.category}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Merek</span>
+                    <span className="text-black">{selectedProduct?.brand}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted">Harga</span>
+                    <span className="text-black">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(selectedProduct?.price)}
+                    </span>
+                  </div>
+                </div>
+
+                <Separator />
+
                 <input
                   type="hidden"
                   name="productId"
@@ -56,7 +90,7 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                   defaultValue={selectedProduct?.outletId ?? ""}
                 />
 
-                <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                <div className="grid grid-cols-2 gap-x-5">
                   <TextField
                     name="productName"
                     aria-label="productName"
@@ -174,6 +208,6 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>
-    </main>
+    </>
   );
 }

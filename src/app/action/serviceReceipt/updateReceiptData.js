@@ -30,7 +30,7 @@ export async function updateReceiptData(prevState, formData) {
   const customerPhone = formData.get("customerPhone");
   const device = formData.get("device");
   const deviceInclusions = formData.getAll("deviceInclusions");
-
+  const discount = Number(formData.get("discount"));
   const inclusionLabels = {
     handphone: "Handphone",
     simcard: "SIM Card",
@@ -88,6 +88,13 @@ export async function updateReceiptData(prevState, formData) {
     errors.deviceInclusions = "Data kelengkapan tidak valid";
   }
 
+  if (!Number.isInteger(discount) || discount < 0) {
+    return {
+      success: false,
+      error: "discount tidak valid",
+    };
+  }
+
   const warrantyDays = Number(warranty);
 
   if (!warranty || !Number.isInteger(warrantyDays) || warrantyDays < 0) {
@@ -109,6 +116,11 @@ export async function updateReceiptData(prevState, formData) {
         createdAt: true,
         processStatus: true,
         pickupStatus: true,
+        serviceItems: {
+          select: {
+            price: true,
+          },
+        },
       },
     });
 
@@ -116,6 +128,18 @@ export async function updateReceiptData(prevState, formData) {
       return {
         success: false,
         error: "Nota tidak ditemukan",
+      };
+    }
+
+    const totalService = receipt.serviceItems.reduce(
+      (total, item) => total + item.price,
+      0,
+    );
+
+    if (discount > totalService) {
+      return {
+        success: false,
+        error: "Potongan tidak boleh melebihi total biaya servis",
       };
     }
 
@@ -138,6 +162,7 @@ export async function updateReceiptData(prevState, formData) {
         deviceInclusions: inclusionNames,
         warrantyDays,
         warrantyUntil,
+        discount,
       },
     });
   } catch (error) {

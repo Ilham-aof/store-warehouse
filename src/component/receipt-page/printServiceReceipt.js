@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { FileDown, Printer } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function PrintServiceReceipt({ receipt, user }) {
+export function PrintServiceReceipt({ receipt }) {
   const receiptRef = useRef(null);
   const router = useRouter();
   const subtotal = receipt.serviceItems.reduce(
@@ -14,8 +14,6 @@ export function PrintServiceReceipt({ receipt, user }) {
   );
 
   const total = subtotal - receipt.discount;
-
-  const formatRupiah = (value) => `Rp${value.toLocaleString("id-ID")}`;
 
   const formatDate = (date) =>
     new Date(date).toLocaleDateString("id-ID", {
@@ -92,16 +90,16 @@ export function PrintServiceReceipt({ receipt, user }) {
             <div>
               <p>No. Nota: {receipt.invoiceNumber}</p>
               <p>Tanggal: {formatDate(receipt.createdAt)}</p>
-              <p>Staff: {user.name}</p>
+              <p>Staff: {receipt.user.name}</p>
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>
-              <h2 className="font-bold  border-black">Informasi Customer</h2>
+              <h2 className="font-bold  border-black">Informasi Pelanggan</h2>
 
               <div>
-                <p>Customer: {receipt.customerName}</p>
-                <p>No. HP: {receipt.customerPhone}</p>
-                <p>Perangkat: {receipt.device}</p>
+                <p>Nama: {receipt.customerName}</p>
+                <p>No. HP/WA: {receipt.customerPhone}</p>
+                <p>Tipe HP: {receipt.device}</p>
                 <div>
                   <p>Kelengkapan:</p>
                   {receipt.deviceInclusions?.length > 0 ? (
@@ -119,29 +117,56 @@ export function PrintServiceReceipt({ receipt, user }) {
               <h2 className="font-bold">Rincian Servis</h2>
 
               {receipt.serviceItems.map((service) => (
-                <div key={service.id} className="flex justify-between gap-4">
-                  <span>{service.description}</span>
+                <div
+                  key={service.id}
+                  className="grid grid-cols-[1fr_auto] items-start gap-4"
+                >
+                  <div className="flex gap-1 min-w-0">
+                    <span className="shrink-0">-</span>
+                    <div className="flex flex-col">
+                      <span className="wrap-break-words">
+                        {service.description}
+                      </span>
+                      {receipt.processStatus === false ? (
+                        <span className="wrap-break-words">Garansi: -</span>
+                      ) : (
+                        <span className="wrap-break-words">
+                          Garansi: {service.warrantyDays} Hari
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col">
+                    <span className="shrink-0 text-right font-medium">
+                      {new Intl.NumberFormat("id-ID", {
+                        style: "currency",
+                        currency: "IDR",
+                        maximumFractionDigits: 0,
+                      }).format(service.price)}
+                    </span>
+                    {service.warrantyUntil === null ? (
+                      ""
+                    ) : (
+                      <span className="shrink-0 text-right font-medium">
+                        s/d {formatDate(service.warrantyUntil)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+              {receipt.discount != 0 && (
+                <div className="flex justify-between font-bold mt-3">
+                  <span>Potongan</span>
                   <span>
                     {new Intl.NumberFormat("id-ID", {
                       style: "currency",
                       currency: "IDR",
                       maximumFractionDigits: 0,
-                    }).format(service.price)}
+                    }).format(receipt.discount)}
                   </span>
                 </div>
-              ))}
-
-              <div className="flex justify-between font-bold mt-3">
-                <span>Potongan</span>
-                <span>
-                  {new Intl.NumberFormat("id-ID", {
-                    style: "currency",
-                    currency: "IDR",
-                    maximumFractionDigits: 0,
-                  }).format(receipt.discount)}
-                </span>
-              </div>
-
+              )}
               <div className="mt-1 w-full border-t-2 border-solid border-black" />
 
               <div className="flex justify-between font-bold">
@@ -154,24 +179,6 @@ export function PrintServiceReceipt({ receipt, user }) {
                   }).format(total)}
                 </span>
               </div>
-            </div>
-            <div className="h-0.5 w-full bg-black mt-3" />
-            <div>
-              <h2 className="font-bold">Informasi Garansi</h2>
-              <p>
-                {receipt.warrantyDays === 0
-                  ? "Garansi: Tidak Bergaransi"
-                  : receipt.warrantyDays > 0 && !receipt.warrantyUntil
-                    ? "Garansi: -"
-                    : `Garansi: ${receipt.warrantyDays} hari`}
-              </p>
-              <p>
-                {receipt.warrantyDays === 0
-                  ? ""
-                  : receipt.warrantyDays > 0 && !receipt.warrantyUntil
-                    ? "Berlaku Hingga: Belum ditentukan"
-                    : `Berlaku Hingga: ${formatDate(receipt.warrantyUntil)}`}
-              </p>
             </div>
           </section>
 
@@ -214,7 +221,7 @@ export function PrintServiceReceipt({ receipt, user }) {
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
 
-            <p className="text-center">Terima kasih atas kepercayaan Anda.</p>
+            <p className="text-center">Terima kasih atas kepercayaan anda</p>
           </footer>
         </div>
       </div>
@@ -249,6 +256,3 @@ export function PrintServiceReceipt({ receipt, user }) {
     </section>
   );
 }
-
-//buat print function
-// ubah penamaan UI dan styling

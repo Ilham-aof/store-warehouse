@@ -66,7 +66,7 @@ export function AddProductStockForm({ outlets, selectedOutletId, mode }) {
     });
   }
   return (
-    <main className="space-y-5">
+    <div className="space-y-5">
       <section className="bg-white items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
         <div className="flex space-x-3 items-center">
           {mode === "in" ? (
@@ -105,6 +105,6 @@ export function AddProductStockForm({ outlets, selectedOutletId, mode }) {
           mode={mode}
         />
       </section>
-    </main>
+    </div>
   );
 }
