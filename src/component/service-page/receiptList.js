@@ -6,18 +6,27 @@ import {
   Label,
   Separator,
   Button,
+  toast,
 } from "@heroui/react";
-import { Pencil, EllipsisVertical, ReceiptText, Printer } from "lucide-react";
+import {
+  Pencil,
+  EllipsisVertical,
+  ReceiptText,
+  Printer,
+  Check,
+  X,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
+import { updateProcessStatus } from "@/app/action/serviceReceipt/updateProcessStatus";
 import { updateServiceReceiptStatus } from "@/app/action/serviceReceipt/updateServiceReceiptStatus";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CreateReceiptButton } from "@/component/receipt-page/createReceiptButton";
+import { CreateReceiptButton } from "@/component/service-page/createReceiptButton";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
-import { UpdateReceiptModal } from "@/component/receipt-page/updateReceiptModal";
-import { ListWarrantyModal } from "@/component/receipt-page/listWarrantyModal";
+import { UpdateReceiptModal } from "@/component/service-page/updateReceiptModal";
+import { ServiceDetailModal } from "@/component/service-page/ServiceDetailModal";
 
 export function ReceiptList({
   outlets,
@@ -62,18 +71,43 @@ export function ReceiptList({
     });
   }
 
+  const handleReceiptStatusChange = async (receiptId, newStatus) => {
+    try {
+      const result = await updateServiceReceiptStatus(receiptId, newStatus);
+
+      if (!result.success) {
+        toast(result.error || "Gagal memperbarui status nota", {
+          variant: "danger",
+        });
+
+        return;
+      }
+
+      toast(
+        newStatus === "Sukses"
+          ? "Nota servis berhasil diselesaikan"
+          : "Nota servis telah dibatalkan",
+        {
+          variant: "success",
+        },
+      );
+
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+
+      toast("Terjadi kesalahan saat memperbarui status nota", {
+        variant: "danger",
+      });
+    }
+  };
+
   function handlePageChange(page) {
     updateQuery({ page });
   }
 
-  async function handleStatusChange(receiptId, statusType, value) {
-    console.log("Switch ditekan:", { receiptId, statusType, value });
-
-    const result = await updateServiceReceiptStatus(
-      receiptId,
-      statusType,
-      value,
-    );
+  async function handleProcessStatusChange(receiptId, processStatus, value) {
+    const result = await updateProcessStatus(receiptId, processStatus, value);
 
     if (result?.success) {
       router.refresh();
@@ -107,7 +141,7 @@ export function ReceiptList({
               </Table.Column>
               <Table.Column className="w-[20%]">Pelanggan</Table.Column>
               <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
-              <Table.Column className="w-[15%]">Garansi</Table.Column>
+              <Table.Column className="w-[15%]">Detail Servis</Table.Column>
               <Table.Column className="w-[15%]">Status Pengerjaan</Table.Column>
               <Table.Column className="w-[15%]">Status Barang</Table.Column>
               <Table.Column className="w-[10%]"></Table.Column>
@@ -140,11 +174,11 @@ export function ReceiptList({
                         type="button"
                         onClick={() => {
                           setSelectedReceipt(receipt);
-                          setActiveModal("warranty");
+                          setActiveModal("serviceDetail");
                         }}
                         className="text-blue-600 hover:underline text-left"
                       >
-                        Lihat {receipt.serviceItems.length} garansi
+                        Lihat {receipt.serviceItems.length} perbaikan
                       </button>
                     </div>
                   </Table.Cell>
@@ -153,7 +187,11 @@ export function ReceiptList({
                     <Switch
                       isSelected={receipt.processStatus}
                       onChange={(value) =>
-                        handleStatusChange(receipt.id, "processStatus", value)
+                        handleProcessStatusChange(
+                          receipt.id,
+                          "processStatus",
+                          value,
+                        )
                       }
                     >
                       <Switch.Content
@@ -177,7 +215,7 @@ export function ReceiptList({
                     <Switch
                       isSelected={receipt.pickupStatus}
                       onChange={(value) =>
-                        handleStatusChange(receipt.id, "pickupStatus", value)
+                        updateProcessStatus(receipt.id, "pickupStatus", value)
                       }
                     >
                       <Switch.Content
@@ -210,11 +248,32 @@ export function ReceiptList({
                           <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
-                          <Dropdown.Menu className="space-y-3">
+                          <Dropdown.Menu className="space-y-2">
+                            <Dropdown.Item
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
+                              onAction={() =>
+                                handleReceiptStatusChange(receipt.id, "Sukses")
+                              }
+                            >
+                              <Check />
+                              <Label>Selesai</Label>
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
+                              onAction={() =>
+                                handleReceiptStatusChange(receipt.id, "Cancel")
+                              }
+                            >
+                              <X />
+                              <Label>Batal Servis</Label>
+                            </Dropdown.Item>
+
+                            <Separator />
+
                             <Dropdown.Item
                               id="cetak"
                               textValue="Cetak Nota"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                               onAction={() => {
                                 router.push(`/serviceReceipt/${receipt.id}`);
                               }}
@@ -222,6 +281,7 @@ export function ReceiptList({
                               <Printer />
                               <Label>Cetak Nota</Label>
                             </Dropdown.Item>
+
                             <Dropdown.Item
                               id="edit"
                               textValue="Edit Nota"
@@ -246,8 +306,8 @@ export function ReceiptList({
         </Table.ScrollContainer>
       </Table>
 
-      <ListWarrantyModal
-        isOpen={activeModal === "warranty"}
+      <ServiceDetailModal
+        isOpen={activeModal === "serviceDetail"}
         receipt={selectedReceipt}
         onClose={() => {
           setActiveModal(null);

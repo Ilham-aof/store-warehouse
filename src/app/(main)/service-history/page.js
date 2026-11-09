@@ -8,6 +8,13 @@ export default async function page({ searchParams }) {
 
   const outletId = params.outletId ?? outlets[0]?.id ?? null;
   const search = params.search ?? "";
+
+  const receiptStatusFilter = ["all", "sukses", "cancel"].includes(
+    params.receiptStatusFilter,
+  )
+    ? params.receiptStatusFilter
+    : "all";
+
   const timeFilter = ["all", "today", "week", "month", "custom"].includes(
     params.timeFilter,
   )
@@ -28,6 +35,7 @@ export default async function page({ searchParams }) {
   const finishReceiptList = await getFinishReceipt(
     outletId,
     search,
+    receiptStatusFilter,
     timeFilter,
     warrantyFilter,
     pageNumber,
@@ -42,6 +50,7 @@ export default async function page({ searchParams }) {
         outlets={outlets}
         receipts={finishReceiptList.receipts}
         selectedOutletId={outletId}
+        receiptStatusFilter={receiptStatusFilter}
         timeFilter={timeFilter}
         warrantyFilter={warrantyFilter}
         currentPage={finishReceiptList.currentPage}

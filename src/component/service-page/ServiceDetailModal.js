@@ -1,8 +1,8 @@
 "use client";
 import { Modal } from "@heroui/react";
-import { ShieldCogCorner, Shield } from "lucide-react";
+import { Wrench, Shield } from "lucide-react";
 
-export function ListWarrantyModal({ isOpen, receipt, onClose }) {
+export function ServiceDetailModal({ isOpen, receipt, onClose }) {
   function getWarrantyStatus(warrantyUntil) {
     if (!warrantyUntil) return "Belum Aktif";
 
@@ -29,8 +29,8 @@ export function ListWarrantyModal({ isOpen, receipt, onClose }) {
             <Modal.Header>
               <Modal.Heading>
                 <div className="flex space-x-3 items-center">
-                  <ShieldCogCorner size={30} />
-                  <h1 className="text-2xl font-bold">Daftar Garansi</h1>
+                  <Wrench size={30} />
+                  <h1 className="text-2xl font-bold">Detail Servis</h1>
                 </div>
               </Modal.Heading>
             </Modal.Header>
@@ -60,9 +60,13 @@ export function ListWarrantyModal({ isOpen, receipt, onClose }) {
                       <div className="text-right">
                         <p
                           className={`font-bold ${
-                            getWarrantyStatus(item.warrantyUntil) === "Aktif"
-                              ? "text-success"
-                              : "text-danger"
+                            item.warrantyDays === 0 ||
+                            item.warrantyUntil === null
+                              ? "text-muted"
+                              : getWarrantyStatus(item.warrantyUntil) ===
+                                  "Aktif"
+                                ? "text-success"
+                                : "text-danger"
                           }`}
                         >
                           {item.warrantyDays === 0

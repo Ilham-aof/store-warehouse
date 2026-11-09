@@ -270,6 +270,6 @@ export async function createServiceReceipt(prevState, formData) {
     };
   }
 
-  revalidatePath("/order");
-  redirect(`/order?outletId=${outletId}`);
+  revalidatePath("/service");
+  redirect(`/service?outletId=${outletId}`);
 }

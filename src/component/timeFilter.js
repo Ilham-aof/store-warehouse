@@ -2,6 +2,7 @@
 
 import { ListBox, Select, Header } from "@heroui/react";
 import { CustomFilter } from "@/component/customTimeFilter";
+import { Clock } from "lucide-react";
 
 export function TimeFilter({
   timeFilter,
@@ -11,10 +12,14 @@ export function TimeFilter({
 }) {
   return (
     <div className="flex items-center space-x-5">
-      <p>Waktu</p>
+      <div className="flex space-x-3 items-center">
+        <Clock />
+        <p>Waktu</p>
+      </div>
+
       <Select
         variant="secondary"
-        className="w-32"
+        className="w-36"
         aria-label="Filter waktu"
         value={timeFilter}
         onChange={setTimeFilter}

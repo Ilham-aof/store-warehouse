@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 export async function getFinishReceipt(
   outletId,
   search,
+  receiptStatusFilter,
   timeFilter,
   warrantyFilter,
   pageNumber,
@@ -31,6 +32,17 @@ export async function getFinishReceipt(
   let startDate = null;
   let endDate = now;
 
+  const receiptStatusCondition =
+    receiptStatusFilter === "sukses"
+      ? { receiptStatus: "Sukses" }
+      : receiptStatusFilter === "cancel"
+        ? { receiptStatus: "Cancel" }
+        : {
+            receiptStatus: {
+              in: ["Sukses", "Cancel"],
+            },
+          };
+
   if (timeFilter === "today") {
     startDate = new Date(now);
     startDate.setHours(0, 0, 0, 0);
@@ -51,8 +63,7 @@ export async function getFinishReceipt(
 
   const where = {
     outletId,
-    processStatus: true,
-    pickupStatus: true,
+    ...receiptStatusCondition,
 
     ...(keyword.length >= 2 && {
       customerName: {
@@ -127,6 +138,10 @@ export async function getFinishReceipt(
     };
   } catch (error) {
     return {
+      receipts: [],
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 1,
       success: false,
       error: "Gagal mengambil data nota",
     };

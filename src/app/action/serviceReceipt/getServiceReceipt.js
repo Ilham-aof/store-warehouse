@@ -16,10 +16,9 @@ export async function getDataServiceReceipt(outletId, search, page, pageSize) {
 
   const where = {
     outletId,
-    NOT: {
-      processStatus: true,
-      pickupStatus: true,
-    },
+
+    receiptStatus: "Diproses",
+
     ...(keyword.length > 0 && {
       customerName: {
         contains: keyword,
@@ -78,6 +77,10 @@ export async function getDataServiceReceipt(outletId, search, page, pageSize) {
     };
   } catch (error) {
     return {
+      receipts: [],
+      totalItems: 0,
+      totalPages: 0,
+      currentPage: 1,
       success: false,
       error: "Gagal mengambil data nota",
     };

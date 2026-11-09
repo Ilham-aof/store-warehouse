@@ -1,5 +1,5 @@
 import { getOutlet } from "@/app/action/outlet/getOutlet";
-import { ReceiptList } from "@/component/receipt-page/receiptList";
+import { ReceiptList } from "@/component/service-page/receiptList";
 import { getDataServiceReceipt } from "@/app/action//serviceReceipt/getServiceReceipt";
 
 export default async function page({ searchParams }) {

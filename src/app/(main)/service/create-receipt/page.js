@@ -1,5 +1,5 @@
 import { getOutlet } from "@/app/action/outlet/getOutlet";
-import { ReceiptForm } from "@/component/receipt-page/receiptForm";
+import { ReceiptForm } from "@/component/service-page/receiptForm";
 
 export default async function page({ searchParams }) {
   const params = await searchParams;

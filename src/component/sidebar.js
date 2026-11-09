@@ -29,7 +29,7 @@ export function Sidebar({ user }) {
     ? `/sale-history?outletId=${outletId}`
     : "/sale-history";
 
-  const receiptHref = outletId ? `/order?outletId=${outletId}` : "/order";
+  const serviceHref = outletId ? `/service?outletId=${outletId}` : "/service";
 
   const receiptHistoryHref = outletId
     ? `/service-history?outletId=${outletId}`
@@ -82,7 +82,7 @@ export function Sidebar({ user }) {
 
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
-            href={receiptHref}
+            href={serviceHref}
           >
             <ReceiptText />
             Servis

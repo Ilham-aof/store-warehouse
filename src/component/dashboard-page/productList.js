@@ -23,6 +23,18 @@ export function ProductList({ products, outlets }) {
     setActiveModal(key);
   }
 
+  function stockIndicator(product) {
+    if (product.quantity === 0) {
+      return "bg-danger";
+    }
+
+    if (product.quantity <= 5) {
+      return "bg-warning";
+    }
+
+    return "bg-success";
+  }
+
   return (
     <section>
       <Table>
@@ -52,7 +64,14 @@ export function ProductList({ products, outlets }) {
                   <Table.Cell>{product.name}</Table.Cell>
                   <Table.Cell>{product.category}</Table.Cell>
                   <Table.Cell>{product.brand}</Table.Cell>
-                  <Table.Cell>{product.quantity}</Table.Cell>
+                  <Table.Cell>
+                    <div className="flex justify-between items-center">
+                      {product.quantity}
+                      <span
+                        className={`w-2.5 h-2.5 rounded-full ${stockIndicator(product)}`}
+                      />
+                    </div>
+                  </Table.Cell>
                   <Table.Cell>
                     {new Intl.NumberFormat("id-ID", {
                       style: "currency",
@@ -85,7 +104,7 @@ export function ProductList({ products, outlets }) {
                         <Dropdown.Popover className="p-1">
                           <Dropdown.Menu
                             onAction={(key) => handleAction(key, product)}
-                            className="space-y-3"
+                            className="space-y-2"
                           >
                             <Dropdown.Item
                               id="add-stock"

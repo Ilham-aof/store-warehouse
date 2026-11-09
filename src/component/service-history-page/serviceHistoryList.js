@@ -6,24 +6,27 @@ import {
   Label,
   Separator,
   Button,
+  Chip,
 } from "@heroui/react";
 import { EllipsisVertical, ClipboardClock, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
 
 import { PaginationUi } from "@/component/pagination";
-import { updateServiceReceiptStatus } from "@/app/action/serviceReceipt/updateServiceReceiptStatus";
+import { updateProcessStatus } from "@/app/action/serviceReceipt/updateProcessStatus";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
 import { TimeFilter } from "@/component/timeFilter";
 import { WarrantyFilter } from "@/component/warrantyFilter";
-import { ListWarrantyModal } from "@/component/receipt-page/listWarrantyModal";
+import { ServiceDetailModal } from "@/component/service-page/ServiceDetailModal";
 import { parseDate } from "@internationalized/date";
+import { ReceiptStatusFilter } from "@/component/receiptStatusFilter";
 
 export function ServiceHistoryList({
   outlets,
   receipts,
   selectedOutletId,
+  receiptStatusFilter,
   timeFilter,
   warrantyFilter,
   currentPage,
@@ -87,6 +90,13 @@ export function ServiceHistoryList({
     });
   }
 
+  function handleReceiptStatusFilterChange(value) {
+    updateQuery({
+      receiptStatusFilter: value,
+      page: 1,
+    });
+  }
+
   function handleTimeFilterChange(value) {
     setDateRange(null);
 
@@ -129,11 +139,10 @@ export function ServiceHistoryList({
     updateQuery({ page });
   }
 
-  async function handleStatusChange(receiptId, status, value) {
-    const result = await updateServiceReceiptStatus(receiptId, status, value);
+  async function handleProcessStatusChange(receiptId, processStatus, value) {
+    const result = await updateProcessStatus(receiptId, processStatus, value);
 
     if (!result.success) {
-      console.error(result.error);
       return;
     }
 
@@ -148,7 +157,18 @@ export function ServiceHistoryList({
       </div>
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
+      <SearchBar
+        keyword={searchKeyword}
+        onKeywordChange={setSearchKeyword}
+        onSearch={handleSearch}
+        placeholder="Cari nama pelanggan..."
+      />
+
       <div className="flex space-x-5">
+        <ReceiptStatusFilter
+          receiptStatusFilter={receiptStatusFilter}
+          setReceiptStatusFilter={handleReceiptStatusFilterChange}
+        />
         <TimeFilter
           timeFilter={timeFilter}
           setTimeFilter={handleTimeFilterChange}
@@ -159,26 +179,18 @@ export function ServiceHistoryList({
           warrantyFilter={warrantyFilter}
           setWarrantyFilter={handleWarrantyFilterChange}
         />
-        <Separator orientation="vertical" />
-        <SearchBar
-          keyword={searchKeyword}
-          onKeywordChange={setSearchKeyword}
-          onSearch={handleSearch}
-          placeholder="Cari nama pelanggan..."
-        />
       </div>
       <Table>
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar nota servis" className="min-w-250">
             <Table.Header>
-              <Table.Column isRowHeader className="w-[15%]">
+              <Table.Column isRowHeader className="w-[20%]">
                 Kode Nota
               </Table.Column>
-              <Table.Column className="w-[20%]">Pelanggan</Table.Column>
-              <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
-              <Table.Column className="w-[15%]">Garansi</Table.Column>
-              <Table.Column className="w-[15%]">Status Pengerjaan</Table.Column>
-              <Table.Column className="w-[15%]">Status Barang</Table.Column>
+              <Table.Column className="w-[25%]">Pelanggan</Table.Column>
+              <Table.Column className="w-[15%]">Detail Servis</Table.Column>
+              <Table.Column className="w-[15%]">Status Nota</Table.Column>
+              <Table.Column className="w-[15%]">Tanggal Nota</Table.Column>
               <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
@@ -200,69 +212,31 @@ export function ServiceHistoryList({
                   </Table.Cell>
 
                   <Table.Cell>
-                    {receipt.createdAt.toLocaleDateString("id-ID")}
-                  </Table.Cell>
-
-                  <Table.Cell>
                     <div className="space-y-1">
                       <button
                         type="button"
                         onClick={() => setSelectedReceipt(receipt)}
                         className="text-blue-600 hover:underline text-left"
                       >
-                        Lihat {receipt.serviceItems.length} garansi
+                        Lihat {receipt.serviceItems.length} perbaikan
                       </button>
                     </div>
                   </Table.Cell>
 
                   <Table.Cell>
-                    <Switch
-                      isSelected={receipt.processStatus}
-                      onChange={(value) =>
-                        handleStatusChange(receipt.id, "processStatus", value)
+                    <Label
+                      className={
+                        receipt.receiptStatus === "Cancel"
+                          ? "rounded-2xl px-4 py-2 bg-danger/20 text-danger font-bold"
+                          : "rounded-2xl px-4 py-2 bg-success/20 text-success font-bold"
                       }
                     >
-                      <Switch.Content
-                        className={
-                          receipt.processStatus ? "text-success" : "text-danger"
-                        }
-                      >
-                        <Switch.Control
-                          className={
-                            receipt.processStatus ? "bg-success" : "bg-danger"
-                          }
-                        >
-                          <Switch.Thumb />
-                        </Switch.Control>
-                        {receipt.processStatus ? "Selesai" : "Diproses"}
-                      </Switch.Content>
-                    </Switch>
+                      {receipt.receiptStatus}
+                    </Label>
                   </Table.Cell>
 
-                  <Table.Cell className="whitespace-nowrap">
-                    <Switch
-                      isSelected={receipt.pickupStatus}
-                      onChange={(value) =>
-                        handleStatusChange(receipt.id, "pickupStatus", value)
-                      }
-                    >
-                      <Switch.Content
-                        className={
-                          receipt.pickupStatus ? "text-success" : "text-danger"
-                        }
-                      >
-                        <Switch.Control
-                          className={
-                            receipt.pickupStatus ? "bg-success" : "bg-danger"
-                          }
-                        >
-                          <Switch.Thumb />
-                        </Switch.Control>
-                        {receipt.pickupStatus
-                          ? "Sudah Diambil"
-                          : "Belum Diambil"}
-                      </Switch.Content>
-                    </Switch>
+                  <Table.Cell>
+                    {receipt.createdAt.toLocaleDateString("id-ID")}
                   </Table.Cell>
 
                   <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">
@@ -276,7 +250,7 @@ export function ServiceHistoryList({
                           <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
-                          <Dropdown.Menu className="space-y-3">
+                          <Dropdown.Menu className="space-y-2">
                             <Dropdown.Item
                               id="cetak"
                               textValue="Cetak Nota"
@@ -300,7 +274,7 @@ export function ServiceHistoryList({
         </Table.ScrollContainer>
       </Table>
 
-      <ListWarrantyModal
+      <ServiceDetailModal
         isOpen={!!selectedReceipt}
         receipt={selectedReceipt}
         onClose={() => setSelectedReceipt(null)}

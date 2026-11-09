@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { PrintServiceReceipt } from "@/component/receipt-page/printServiceReceipt";
+import { PrintServiceReceipt } from "@/component/service-page/printServiceReceipt";
 import React from "react";
 
 export default async function page({ params }) {

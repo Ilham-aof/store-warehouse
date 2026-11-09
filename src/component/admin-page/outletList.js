@@ -63,7 +63,7 @@ export function OutletList({ outlets }) {
                         <Dropdown.Popover className="p-1">
                           <Dropdown.Menu
                             onAction={(key) => handleAction(key, outlet)}
-                            className="space-y-3"
+                            className="space-y-2"
                           >
                             <Dropdown.Item
                               id="edit"

@@ -79,9 +79,9 @@ export function PrintServiceReceipt({ receipt }) {
             <p>{receipt.outlet.address}</p>
             <p>Telp: {receipt.outlet.phone}</p>
             <p className="font-bold">
-              {receipt.processStatus
-                ? "NOTA SERVIS HP"
-                : "NOTA SEMENTARA SERVIS HP"}
+              {receipt.receiptStatus === "Diproses"
+                ? "NOTA SEMENTARA SERVIS HP"
+                : "NOTA SERVIS HP"}
             </p>
           </header>
 
@@ -91,6 +91,7 @@ export function PrintServiceReceipt({ receipt }) {
               <p>No. Nota: {receipt.invoiceNumber}</p>
               <p>Tanggal: {formatDate(receipt.createdAt)}</p>
               <p>Staff: {receipt.user.name}</p>
+              <p>Status: {receipt.receiptStatus}</p>
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>

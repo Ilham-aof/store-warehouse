@@ -197,7 +197,7 @@ export function SaleHistoryList({
                           <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
-                          <Dropdown.Menu className="space-y-3">
+                          <Dropdown.Menu className="space-y-2">
                             <Dropdown.Item
                               id="cetak"
                               textValue="Cetak Nota"

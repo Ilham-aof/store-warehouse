@@ -10,7 +10,7 @@ export function CreateReceiptButton({ selectedOutletId }) {
   return (
     <Button
       onClick={() =>
-        router.push(`/order/create-receipt?outletId=${selectedOutletId}`)
+        router.push(`/service/create-receipt?outletId=${selectedOutletId}`)
       }
       className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
     >

@@ -1,6 +1,12 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getDataProduct(outletId, search, page, pageSize) {
+export async function getDataProduct(
+  outletId,
+  search,
+  stockFilter,
+  page,
+  pageSize,
+) {
   if (!outletId) {
     return {
       products: [],
@@ -30,6 +36,17 @@ export async function getDataProduct(outletId, search, page, pageSize) {
           },
         },
       ],
+    }),
+
+    ...(stockFilter === "lowStock" && {
+      quantity: {
+        gt: 0,
+        lte: 5,
+      },
+    }),
+
+    ...(stockFilter === "outOfStock" && {
+      quantity: 0,
     }),
   };
 

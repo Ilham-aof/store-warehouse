@@ -70,7 +70,7 @@ export function UserList({ users, currentPage, totalPages, totalItems }) {
                         <Dropdown.Popover className="p-1">
                           <Dropdown.Menu
                             onAction={(key) => handleAction(key, user)}
-                            className="space-y-3"
+                            className="space-y-2"
                           >
                             <Dropdown.Item
                               id="delete"

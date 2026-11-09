@@ -1,14 +1,19 @@
 "use client";
 
 import { ListBox, Select, Header } from "@heroui/react";
+import { SlidersHorizontal } from "lucide-react";
 
 export function ActivityFilter({ activityFilter, setActivityFilter }) {
   return (
     <div className="flex items-center space-x-3">
-      <p>Aktivitas</p>
+      <div className="flex space-x-3 items-center">
+        <SlidersHorizontal />
+        <p>Aktivitas</p>
+      </div>
+
       <Select
         variant="secondary"
-        className="w-40"
+        className="w-42"
         aria-label="Filter waktu"
         value={activityFilter}
         onChange={setActivityFilter}
