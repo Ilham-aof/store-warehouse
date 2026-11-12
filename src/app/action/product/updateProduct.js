@@ -92,5 +92,8 @@ export async function updateProductAction(prevState, formData) {
   }
 
   revalidatePath("/");
-  redirect(`/?outletId=${outletId}`);
+  return {
+    success: true,
+    error: null,
+  };
 }

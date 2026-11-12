@@ -7,12 +7,14 @@ import {
   Label,
   Button,
   Separator,
+  toast,
 } from "@heroui/react";
 import { useActionState, useState } from "react";
 import { stockOutAction } from "@/app/action/product/takeStockProduct";
 import { PackageMinus } from "lucide-react";
 import { StockOutSelection } from "@/component/stockOutSelection";
 import { OutletInputForm } from "@/component/outletInputForm";
+import { useRouter } from "next/navigation";
 
 export function TakeProductStockModal({
   isOpen,
@@ -21,7 +23,30 @@ export function TakeProductStockModal({
   outlets,
   label,
 }) {
-  const [state, action, isPending] = useActionState(stockOutAction, null);
+  const router = useRouter();
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await stockOutAction(prevState, formData);
+      if (result.success) {
+        toast.success("Stok berhasil diambil");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal mengambil stok produk", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
   const [stockOutSelection, setStockOutSelection] = useState("SERVIS");
 
   return (
@@ -104,6 +129,12 @@ export function TakeProductStockModal({
                 <StockOutSelection
                   stockOutSelection={stockOutSelection}
                   setStockOutSelection={setStockOutSelection}
+                />
+
+                <input
+                  type="hidden"
+                  name="mutationOutType"
+                  value={stockOutSelection}
                 />
 
                 {stockOutSelection === "TRANSFER" && (

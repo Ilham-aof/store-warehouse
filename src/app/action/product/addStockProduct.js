@@ -55,12 +55,14 @@ export async function stockInAction(prevState, formData) {
   if (mutationType === "TRANSFER") {
     if (!targetOutlet) {
       return {
+        success: false,
         error: "Cabang tujuan wajib dipilih untuk transfer.",
       };
     }
 
     if (outletId === targetOutlet) {
       return {
+        success: false,
         error: "Cabang tujuan tidak boleh sama dengan cabang asal.",
       };
     }
@@ -127,5 +129,8 @@ export async function stockInAction(prevState, formData) {
       : `/?outletId=${outletId}`;
 
   revalidatePath(destination);
-  redirect(destination);
+  return {
+    success: true,
+    error: null,
+  };
 }

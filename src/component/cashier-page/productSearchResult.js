@@ -1,20 +1,43 @@
 "use client";
 
-import { Button, Separator } from "@heroui/react";
+import { Button, Separator, toast } from "@heroui/react";
 import { ScanBarcode, LoaderCircle, PackageSearch } from "lucide-react";
 import { useActionState } from "react";
 import { createSaleReceiptAction } from "@/app/action/saleReceipt/createSaleReceipt";
+import { useRouter } from "next/navigation";
 
 export function ProductSearchResult({
   items,
   message,
   hasSearched,
+  onSubmitSuccess,
   isSearching,
   selectedOutletId,
 }) {
+  const router = useRouter();
   const [state, action, isPending] = useActionState(
-    createSaleReceiptAction,
-    null,
+    async (prevState, formData) => {
+      const result = await createSaleReceiptAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Nota Penjualan berhasil dibuat");
+
+        onSubmitSuccess();
+        router.push(result.redirectUrl);
+      } else if (result.error) {
+        toast.danger("Gagal membuat nota penjualan", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
   );
 
   const totalHarga = items.reduce(

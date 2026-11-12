@@ -9,10 +9,13 @@ import {
   Select,
   ListBox,
   Separator,
+  toast,
+  ErrorMessage,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateReceiptData } from "@/app/action/serviceReceipt/updateReceiptData";
 import { Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const accessoryLabels = {
   handphone: "Handphone",
@@ -42,6 +45,7 @@ function getAccessoryIds(items) {
 }
 
 export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
+  const router = useRouter();
   const [customerPhone, setCustomerPhone] = useState(
     String(selectedReceipt?.customerPhone ?? ""),
   );
@@ -62,7 +66,30 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
     0,
   );
 
-  const [state, action, isPending] = useActionState(updateReceiptData, null);
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await updateReceiptData(prevState, formData);
+
+      if (result.success) {
+        toast.success("Perubahan data nota berhasil disimpan");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal mengubah data nota servis", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
 
   return (
     <>
@@ -341,10 +368,12 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                   </TextField>
                 </div>
                 <div className="text-center">
-                  {state?.error && <p className="text-danger">{state.error}</p>}
+                  {typeof state?.error === "string" && (
+                    <ErrorMessage slot="description">
+                      {state.error}
+                    </ErrorMessage>
+                  )}
                 </div>
-
-                <div className="space-x-3"></div>
               </Modal.Body>
 
               <Modal.Footer className="space-x-3">

@@ -28,20 +28,17 @@ export async function bulkStockOutAction(prevState, formData) {
   const redirectTo = formData.get("redirectTo");
   const rawItems = formData.get("items");
 
-  console.log(mutationType);
-  console.log(targetOutlet);
-
   if (!outletId) {
     return {
       success: false,
-      error: "Cabang tidak ditemukan.",
+      error: "Cabang tidak ditemukan",
     };
   }
 
   if (!rawItems) {
     return {
       success: false,
-      error: "Daftar produk masih kosong.",
+      error: "Daftar produk masih kosong",
     };
   }
 
@@ -52,14 +49,14 @@ export async function bulkStockOutAction(prevState, formData) {
   } catch {
     return {
       success: false,
-      error: "Format daftar produk tidak valid.",
+      error: "Format daftar produk tidak valid",
     };
   }
 
   if (!Array.isArray(items) || items.length === 0) {
     return {
       success: false,
-      error: "Daftar produk masih kosong.",
+      error: "Daftar produk masih kosong",
     };
   }
 
@@ -69,14 +66,14 @@ export async function bulkStockOutAction(prevState, formData) {
     if (typeof item.productId !== "string" || !item.productId.trim()) {
       return {
         success: false,
-        error: "Terdapat produk yang tidak valid.",
+        error: "Terdapat produk yang tidak valid",
       };
     }
 
     if (seenProductIds.has(item.productId)) {
       return {
         success: false,
-        error: "Terdapat produk duplikat dalam daftar.",
+        error: "Terdapat produk duplikat dalam daftar",
       };
     }
 
@@ -85,7 +82,7 @@ export async function bulkStockOutAction(prevState, formData) {
     if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
       return {
         success: false,
-        error: "Jumlah setiap produk harus berupa bilangan bulat lebih dari 0.",
+        error: "Jumlah setiap produk harus berupa bilangan bulat lebih dari 0",
       };
     }
   }
@@ -94,14 +91,14 @@ export async function bulkStockOutAction(prevState, formData) {
     if (!targetOutlet) {
       return {
         success: false,
-        error: "Cabang asal wajib dipilih untuk transfer.",
+        error: "Cabang asal wajib dipilih untuk transfer",
       };
     }
 
     if (outletId === targetOutlet) {
       return {
         success: false,
-        error: "Cabang asal tidak boleh sama dengan cabang penerima.",
+        error: "Cabang asal tidak boleh sama dengan cabang penerima",
       };
     }
   }
@@ -115,11 +112,22 @@ export async function bulkStockOutAction(prevState, formData) {
         },
         select: {
           id: true,
+          quantity: true,
         },
       });
 
       if (products.length !== items.length) {
         throw new Error("PRODUCT_NOT_FOUND");
+      }
+
+      for (const item of items) {
+        const product = products.find(
+          (product) => product.id === item.productId,
+        );
+
+        if (product.quantity < item.quantity) {
+          throw new Error("INSUFFICIENT_STOCK");
+        }
       }
 
       if (mutationType === "TRANSFER") {
@@ -159,20 +167,27 @@ export async function bulkStockOutAction(prevState, formData) {
     if (error.message === "PRODUCT_NOT_FOUND") {
       return {
         success: false,
-        error: "Ada produk yang tidak ditemukan di outlet terpilih.",
+        error: "Ada produk yang tidak ditemukan di outlet terpilih",
+      };
+    }
+
+    if (error.message === "INSUFFICIENT_STOCK") {
+      return {
+        success: false,
+        error: "Stok produk tidak mencukupi",
       };
     }
 
     if (error.message === "SOURCE_OUTLET_NOT_FOUND") {
       return {
         success: false,
-        error: "Outlet asal tidak ditemukan.",
+        error: "Outlet asal tidak ditemukan",
       };
     }
 
     return {
       success: false,
-      error: "Gagal menambahkan stok.",
+      error: "Gagal mengambil stok produk",
     };
   }
 
@@ -181,7 +196,9 @@ export async function bulkStockOutAction(prevState, formData) {
       ? `/take-product-stock?outletId=${outletId}`
       : `/?outletId=${outletId}`;
 
-  revalidatePath("/add-product-stock");
-  revalidatePath("/");
-  redirect(destination);
+  revalidatePath(destination);
+  return {
+    success: true,
+    error: null,
+  };
 }

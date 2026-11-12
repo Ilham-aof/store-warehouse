@@ -7,14 +7,41 @@ import {
   Label,
   Button,
   Separator,
+  toast,
+  ErrorMessage,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateOutletAction } from "@/app/action/outlet/updateOutletAction";
 import { BuildingComplexPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
+  const router = useRouter();
   const [outletCode, setOutletCode] = useState(selectedOutlet?.code ?? "");
-  const [state, action, isPending] = useActionState(updateOutletAction, null);
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await updateOutletAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Perubahan cabang berhasil disimpan");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal mengubah data cabang", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
   const [phone, setPhone] = useState(selectedOutlet?.phone ?? "");
   return (
     <>
@@ -178,7 +205,9 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                   </TextField>
                 </div>
                 <div className="text-center">
-                  {state?.error && <p className="text-danger">{state.error}</p>}
+                  {typeof state?.error === "string" && (
+                    <ErrorMessage>{state.error}</ErrorMessage>
+                  )}
                 </div>
               </Modal.Body>
 

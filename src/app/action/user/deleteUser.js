@@ -59,5 +59,8 @@ export async function deleteUserAction(prevState, formData) {
   }
 
   revalidatePath("/admin");
-  redirect("/admin");
+  return {
+    success: true,
+    error: null,
+  };
 }

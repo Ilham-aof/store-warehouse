@@ -133,5 +133,8 @@ export async function updateOutletAction(prevState, formData) {
     };
   }
   revalidatePath("/admin");
-  redirect("/admin");
+  return {
+    success: true,
+    error: null,
+  };
 }

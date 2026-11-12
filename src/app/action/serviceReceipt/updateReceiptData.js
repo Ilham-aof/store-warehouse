@@ -40,8 +40,6 @@ export async function updateReceiptData(prevState, formData) {
     softcase: "Soft Case",
   };
 
-  const warranty = formData.get("warranty");
-
   if (!receiptId) {
     return {
       success: false,
@@ -77,7 +75,10 @@ export async function updateReceiptData(prevState, formData) {
   }
 
   if (deviceInclusions.length === 0) {
-    errors.deviceInclusions = "Pilih minimal satu kelengkapan HP";
+    return {
+      success: false,
+      error: "Pilih minimal satu kelengkapan HP",
+    };
   } else if (
     deviceInclusions.some(
       (item) =>
@@ -85,22 +86,16 @@ export async function updateReceiptData(prevState, formData) {
         !Object.prototype.hasOwnProperty.call(inclusionLabels, item),
     )
   ) {
-    errors.deviceInclusions = "Data kelengkapan tidak valid";
+    return {
+      success: false,
+      error: "Data kelengkapan tidak valid",
+    };
   }
 
   if (!Number.isInteger(discount) || discount < 0) {
     return {
       success: false,
       error: "discount tidak valid",
-    };
-  }
-
-  const warrantyDays = Number(warranty);
-
-  if (!warranty || !Number.isInteger(warrantyDays) || warrantyDays < 0) {
-    return {
-      success: false,
-      error: "Garansi harus berupa jumlah hari yang valid",
     };
   }
 
@@ -143,14 +138,6 @@ export async function updateReceiptData(prevState, formData) {
       };
     }
 
-    let warrantyUntil = null;
-
-    if (receipt.processStatus && receipt.pickupStatus) {
-      warrantyUntil = new Date(receipt.createdAt);
-
-      warrantyUntil.setDate(warrantyUntil.getDate() + warrantyDays);
-    }
-
     await prisma.serviceReceipt.update({
       where: {
         id: receiptId,
@@ -160,18 +147,19 @@ export async function updateReceiptData(prevState, formData) {
         customerPhone: customerPhone.trim(),
         device: device.trim(),
         deviceInclusions: inclusionNames,
-        warrantyDays,
-        warrantyUntil,
         discount,
       },
     });
   } catch (error) {
     return {
       success: false,
-      error: "Gagal memperbarui nota",
+      error: "Gagal memperbarui data nota",
     };
   }
 
   revalidatePath("/order");
-  redirect(`/order?outletId=${outletId}`);
+  return {
+    success: true,
+    error: {},
+  };
 }

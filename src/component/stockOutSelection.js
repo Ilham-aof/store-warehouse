@@ -5,7 +5,6 @@ import { Label, ListBox, Select } from "@heroui/react";
 export function StockOutSelection({ stockOutSelection, setStockOutSelection }) {
   return (
     <Select
-      name="mutationOutType"
       variant="secondary"
       aria-label="Jenis Mutasi Stok"
       placeholder="Pilih jenis mutasi"

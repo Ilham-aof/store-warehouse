@@ -10,6 +10,7 @@ import {
   ListBox,
   Select,
   Separator,
+  toast,
 } from "@heroui/react";
 import { Plus, Trash, FilePlus } from "lucide-react";
 import { useState, useActionState } from "react";
@@ -62,10 +63,29 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
     0,
   );
 
-  const [state, action, isPending] = useActionState(createServiceReceipt, {
-    success: false,
-    errors: {},
-  });
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await createServiceReceipt(prevState, formData);
+
+      if (result.success) {
+        toast.success("Nota servis berhasil dibuat");
+
+        router.push(`/service?outletId=${selectedOutletId}`);
+      } else if (result.errors?.general) {
+        toast.danger("Gagal membuat nota servis", {
+          description: result.errors.general,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      errors: null,
+    },
+  );
 
   return (
     <section className="bg-white flex flex-col rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 space-y-5">
@@ -491,7 +511,9 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
             <Button
               type="button"
               variant="secondary"
-              onClick={() => router.push(`/order?outletId=${selectedOutletId}`)}
+              onClick={() =>
+                router.push(`/service?outletId=${selectedOutletId}`)
+              }
               className="text-slate-800"
             >
               Kembali

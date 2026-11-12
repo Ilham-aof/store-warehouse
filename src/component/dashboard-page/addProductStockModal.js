@@ -7,12 +7,15 @@ import {
   Label,
   Button,
   Separator,
+  toast,
+  ErrorMessage,
 } from "@heroui/react";
 import { useActionState, useState } from "react";
 import { stockInAction } from "@/app/action/product/addStockProduct";
 import { PackagePlus } from "lucide-react";
 import { StockInSelection } from "@/component/stockInSelection";
 import { OutletInputForm } from "@/component/outletInputForm";
+import { useRouter } from "next/navigation";
 
 export function AddProductStockModal({
   isOpen,
@@ -21,7 +24,30 @@ export function AddProductStockModal({
   outlets,
   label,
 }) {
-  const [state, action, isPending] = useActionState(stockInAction, null);
+  const router = useRouter();
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await stockInAction(prevState, formData);
+      if (result.success) {
+        toast.success("Stok berhasil ditambahkan");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal menambahkan stok produk", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
   const [stockInSelection, setStockInSelection] = useState("PEMBELIAN");
   return (
     <>
@@ -107,6 +133,12 @@ export function AddProductStockModal({
                   setStockInSelection={setStockInSelection}
                 />
 
+                <input
+                  type="hidden"
+                  name="mutationInType"
+                  value={stockInSelection}
+                />
+
                 {stockInSelection === "TRANSFER" && (
                   <OutletInputForm outlets={outlets} label={label} />
                 )}
@@ -132,8 +164,10 @@ export function AddProductStockModal({
                   </div>
                 </TextField>
                 <div className="text-center">
-                  {state?.error && (
-                    <p className="text-danger text-center">{state.error}</p>
+                  {typeof state?.error === "string" && (
+                    <ErrorMessage slot="description">
+                      {state.error}
+                    </ErrorMessage>
                   )}
                 </div>
               </Modal.Body>

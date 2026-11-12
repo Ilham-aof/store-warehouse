@@ -1,11 +1,36 @@
 "use client";
-import { Modal, Button } from "@heroui/react";
+import { Modal, Button, toast } from "@heroui/react";
 import { TriangleAlert, Trash } from "lucide-react";
 import { useActionState } from "react";
 import { deleteProductAction } from "@/app/action/product/deleteProduct";
+import { useRouter } from "next/navigation";
 
 export function DeleteProductModal({ isOpen, selectedProduct, onClose }) {
-  const [state, action, isPending] = useActionState(deleteProductAction, null);
+  const router = useRouter();
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await deleteProductAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Produk berhasil dihapus");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal menghapus produk", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Terjadi kesalahan pada server");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
 
   return (
     <>

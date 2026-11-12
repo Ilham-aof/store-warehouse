@@ -53,7 +53,9 @@ export function ProductList({ products, outlets }) {
 
               <Table.Column className="w-[14%]">Harga</Table.Column>
 
-              <Table.Column className="w-[15%]">Tanggal Masuk</Table.Column>
+              <Table.Column className="w-[15%]">
+                Tanggal Stok Masuk
+              </Table.Column>
 
               <Table.Column className="w-[8%]"></Table.Column>
             </Table.Header>

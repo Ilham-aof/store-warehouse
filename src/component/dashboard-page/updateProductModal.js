@@ -7,15 +7,41 @@ import {
   Label,
   Button,
   Separator,
+  toast,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateProductAction } from "@/app/action/product/updateProduct";
 import { Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
+  const router = useRouter();
   const [price, setPrice] = useState(String(selectedProduct?.price ?? ""));
 
-  const [state, action, isPending] = useActionState(updateProductAction, null);
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await updateProductAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Perubahan data produk berhasil disimpan");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal mengubah data produk", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
 
   return (
     <>

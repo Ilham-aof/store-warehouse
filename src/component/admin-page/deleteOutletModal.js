@@ -1,11 +1,37 @@
 "use client";
-import { Modal, Button } from "@heroui/react";
+import { Modal, Button, toast, ErrorMessage } from "@heroui/react";
 import { TriangleAlert } from "lucide-react";
 import { useActionState } from "react";
 import { deleteOutletAction } from "@/app/action/outlet/deleteOutletAction";
+import { useRouter } from "next/navigation";
 
 export function DeleteOutletModal({ isOpen, selectedOutlet, onClose }) {
-  const [state, action, isPending] = useActionState(deleteOutletAction, null);
+  const router = useRouter();
+
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await deleteOutletAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Cabang berhasil dihapus");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal menghapus cabang", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Terjadi kesalahan pada server");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
 
   return (
     <>
@@ -40,15 +66,19 @@ export function DeleteOutletModal({ isOpen, selectedOutlet, onClose }) {
                   strokeWidth={1.5}
                   className="text-danger"
                 />
-                <p className="text-lg">
+                <p className="text-lg text-center">
                   Apa anda yakin akan menghapus cabang{" "}
                   <span className="font-bold text-black">
                     {selectedOutlet?.name}
                   </span>{" "}
                   ?
                 </p>
-                <div className="min-h-6">
-                  {state?.error && <p className="text-danger">{state.error}</p>}
+                <div className="text-center">
+                  {typeof state?.error === "string" && (
+                    <ErrorMessage slot="description">
+                      {state.error}
+                    </ErrorMessage>
+                  )}
                 </div>
               </Modal.Body>
               <Modal.Footer>

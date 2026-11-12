@@ -3,9 +3,9 @@
 import { Label, ListBox, Select } from "@heroui/react";
 
 export function StockInSelection({ stockInSelection, setStockInSelection }) {
+  console.log("error :", stockInSelection);
   return (
     <Select
-      name="mutationInType"
       variant="secondary"
       aria-label="Jenis Mutasi Stok"
       placeholder="Pilih jenis mutasi"

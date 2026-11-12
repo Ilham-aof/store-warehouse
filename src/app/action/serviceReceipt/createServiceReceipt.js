@@ -266,10 +266,15 @@ export async function createServiceReceipt(prevState, formData) {
   } catch (error) {
     return {
       success: false,
-      error: "Gagal membuat nota",
+      errors: {
+        general: "Gagal membuat nota servis",
+      },
     };
   }
 
   revalidatePath("/service");
-  redirect(`/service?outletId=${outletId}`);
+  return {
+    success: true,
+    errors: null,
+  };
 }

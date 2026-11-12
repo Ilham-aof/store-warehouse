@@ -1,11 +1,37 @@
 "use client";
-import { Modal, Button } from "@heroui/react";
+import { Modal, Button, toast } from "@heroui/react";
 import { TriangleAlert } from "lucide-react";
 import { useActionState } from "react";
 import { deleteUserAction } from "@/app/action/user/deleteUser";
+import { useRouter } from "next/navigation";
 
 export function DeleteUserModal({ isOpen, selectedUser, onClose }) {
-  const [state, action, isPending] = useActionState(deleteUserAction, null);
+  const router = useRouter();
+
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await deleteUserAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Staff berhasil dihapus");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal menghapus staff", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Terjadi kesalahan pada server");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
 
   return (
     <>
@@ -46,8 +72,12 @@ export function DeleteUserModal({ isOpen, selectedUser, onClose }) {
                   </span>{" "}
                   ?
                 </p>
-                <div className="min-h-6">
-                  {state?.error && <p className="text-danger">{state.error}</p>}
+                <div className="text-center">
+                  {typeof state?.error === "string" && (
+                    <ErrorMessage slot="description">
+                      {state.error}
+                    </ErrorMessage>
+                  )}
                 </div>
               </Modal.Body>
               <Modal.Footer>

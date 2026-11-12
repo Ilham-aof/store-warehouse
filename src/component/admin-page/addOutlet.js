@@ -8,24 +8,48 @@ import {
   FieldError,
   Label,
   Modal,
+  toast,
 } from "@heroui/react";
 import { useActionState, useState } from "react";
 import { addOutletAction } from "@/app/action/outlet/addOutletAction";
 import { Plus, BuildingComplexPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function AddOutlet() {
+  const router = useRouter();
   const [outletCode, setOutletCode] = useState("");
-  const [state, action, isPending] = useActionState(addOutletAction, {
-    success: false,
-    errors: {},
-  });
+  const [isOpen, setIsOpen] = useState(false);
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await addOutletAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Cabang baru berhasil ditambahkan");
+        setIsOpen(false);
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal menambahkan cabang", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
   const [phone, setPhone] = useState("");
   return (
     <>
-      <Modal>
+      <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
         <Button
           type="submit"
           isDisabled={isPending}
+          onPress={() => setIsOpen(true)}
           className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
         >
           <Plus />
@@ -146,7 +170,7 @@ export function AddOutlet() {
                     </TextField>
                   </div>
                   <div className="text-center">
-                    {state?.error && (
+                    {typeof state?.error === "string" && (
                       <ErrorMessage slot="description">
                         {state.error}
                       </ErrorMessage>

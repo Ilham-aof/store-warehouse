@@ -28,14 +28,14 @@ export async function createSaleReceiptAction(prevState, formData) {
   if (!outlet) {
     return {
       success: false,
-      error: "Cabang tidak ditemukan.",
+      error: "Cabang tidak ditemukan",
     };
   }
 
   if (!rawItems) {
     return {
       success: false,
-      error: "Daftar produk masih kosong.",
+      error: "Daftar produk masih kosong",
     };
   }
 
@@ -46,14 +46,14 @@ export async function createSaleReceiptAction(prevState, formData) {
   } catch {
     return {
       success: false,
-      error: "Format daftar produk tidak valid.",
+      error: "Format daftar produk tidak valid",
     };
   }
 
   if (!Array.isArray(items) || items.length === 0) {
     return {
       success: false,
-      error: "Daftar produk masih kosong.",
+      error: "Daftar produk masih kosong",
     };
   }
 
@@ -63,13 +63,13 @@ export async function createSaleReceiptAction(prevState, formData) {
     if (!item || typeof item !== "object" || Array.isArray(item)) {
       return {
         success: false,
-        error: "Format produk tidak valid.",
+        error: "Format produk tidak valid",
       };
     }
     if (seenProductIds.has(item.productId)) {
       return {
         success: false,
-        error: "Terdapat produk duplikat dalam daftar.",
+        error: "Terdapat produk duplikat dalam daftar",
       };
     }
 
@@ -213,30 +213,34 @@ export async function createSaleReceiptAction(prevState, formData) {
     if (error.message === "OUTLET_NOT_FOUND") {
       return {
         success: false,
-        error: "Cabang tidak ditemukan.",
+        error: "Cabang tidak ditemukan",
       };
     }
 
     if (error.message === "PRODUCT_NOT_FOUND") {
       return {
         success: false,
-        error: "Produk tidak ditemukan.",
+        error: "Produk tidak ditemukan",
       };
     }
 
     if (error.message === "INSUFFICIENT_STOCK") {
       return {
         success: false,
-        error: "Stok produk tidak mencukupi.",
+        error: "Stok produk tidak mencukupi",
       };
     }
     return {
       success: false,
-      error: "Gagal menambahkan stok.",
+      error: "Gagal membuat nota penjualan",
     };
   }
 
   revalidatePath("/cashier");
   revalidatePath("/");
-  redirect(`/saleReceipt/${receiptId}`);
+  return {
+    success: true,
+    errors: null,
+    redirectUrl: `/saleReceipt/${receiptId}`,
+  };
 }

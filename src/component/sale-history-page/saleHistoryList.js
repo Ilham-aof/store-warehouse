@@ -116,7 +116,7 @@ export function SaleHistoryList({
     <section className="space-y-5">
       <div className="flex gap-3 items-center">
         <ShoppingBag size={30} />
-        <h1 className="text-2xl font-bold">Daftar Riwayat Transaksi</h1>
+        <h1 className="text-2xl font-bold">Daftar Riwayat Penjualan</h1>
       </div>
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
       <div className="flex space-x-5">

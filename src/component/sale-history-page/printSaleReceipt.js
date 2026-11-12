@@ -72,7 +72,7 @@ export function PrintSaleReceipt({ receipt }) {
 
             <p>{receipt.outlet.address}</p>
             <p>Telp: {receipt.outlet.phone}</p>
-            <p className="font-bold">NOTA TRANSAKSI</p>
+            <p className="font-bold">NOTA PENJUALAN</p>
           </header>
 
           <section>

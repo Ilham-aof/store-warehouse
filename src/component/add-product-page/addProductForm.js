@@ -7,6 +7,7 @@ import {
   TextField,
   ErrorMessage,
   FieldError,
+  toast,
 } from "@heroui/react";
 import { Plus, BadgePlus } from "lucide-react";
 import { useState, useActionState } from "react";
@@ -21,10 +22,28 @@ export function AddProductForm({ outlets, selectedOutletId }) {
   const [quantity, setQuantity] = useState({});
   const [price, setPrice] = useState({});
 
-  const [state, action, isPending] = useActionState(addProductAction, {
-    success: false,
-    errors: {},
-  });
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await addProductAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Produk baru berhasil ditambahkan");
+        router.refresh();
+      } else if (result.errors.general) {
+        toast.danger("Gagal menambahkan produk", {
+          description: result.errors.general,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      errors: {},
+    },
+  );
 
   return (
     <div className="bg-white  items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
@@ -260,8 +279,8 @@ export function AddProductForm({ outlets, selectedOutletId }) {
         </div>
 
         <div className="text-center">
-          {state.errors?.general && (
-            <ErrorMessage>{state.errors.general}</ErrorMessage>
+          {typeof state?.error === "string" && (
+            <ErrorMessage slot="description">{state.error}</ErrorMessage>
           )}
         </div>
 

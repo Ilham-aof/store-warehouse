@@ -140,10 +140,10 @@ export function ReceiptList({
                 Kode Nota
               </Table.Column>
               <Table.Column className="w-[20%]">Pelanggan</Table.Column>
-              <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
               <Table.Column className="w-[15%]">Detail Servis</Table.Column>
               <Table.Column className="w-[15%]">Status Pengerjaan</Table.Column>
               <Table.Column className="w-[15%]">Status Barang</Table.Column>
+              <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
               <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
@@ -162,10 +162,6 @@ export function ReceiptList({
                     <p className="text-sm text-muted">
                       Tipe HP : {receipt.device}
                     </p>
-                  </Table.Cell>
-
-                  <Table.Cell>
-                    {receipt.createdAt.toLocaleDateString("id-ID")}
                   </Table.Cell>
 
                   <Table.Cell>
@@ -235,6 +231,10 @@ export function ReceiptList({
                           : "Belum Diambil"}
                       </Switch.Content>
                     </Switch>
+                  </Table.Cell>
+
+                  <Table.Cell>
+                    {receipt.createdAt.toLocaleDateString("id-ID")}
                   </Table.Cell>
 
                   <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">

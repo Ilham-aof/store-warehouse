@@ -7,7 +7,7 @@ import { OutletSelection } from "@/component/outletSelection";
 import { searchProduct } from "@/app/action/product/searchProduct";
 import { ProductSearchResult } from "@/component/add-product-stock-page/productSearchResult";
 
-export function AddProductStockForm({ outlets, selectedOutletId, mode }) {
+export function ProductStockForm({ outlets, selectedOutletId, mode }) {
   const [searchKeyword, setSearchKeyword] = useState("");
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -65,6 +65,14 @@ export function AddProductStockForm({ outlets, selectedOutletId, mode }) {
       });
     });
   }
+
+  function handleResetAfterSubmit() {
+    setItems([]);
+    setMessage("");
+    setHasSearched(false);
+
+    searchInputRef.current?.focus();
+  }
   return (
     <div className="space-y-5">
       <section className="bg-white items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
@@ -99,6 +107,7 @@ export function AddProductStockForm({ outlets, selectedOutletId, mode }) {
           items={items}
           message={message}
           hasSearched={hasSearched}
+          onSubmitSuccess={handleResetAfterSubmit}
           isSearching={isPending}
           selectedOutletId={selectedOutletId}
           outlets={outlets}

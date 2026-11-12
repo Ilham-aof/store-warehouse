@@ -75,7 +75,7 @@ export function Sidebar({ user }) {
             href={saleHistoryHref}
           >
             <ShoppingBag />
-            Riwayat Transaksi
+            Riwayat Penjualan
           </Link>
 
           <Separator variant="default" />

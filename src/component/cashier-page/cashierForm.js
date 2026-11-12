@@ -65,6 +65,14 @@ export function CashierForm({ outlets, selectedOutletId }) {
       });
     });
   }
+
+  function handleResetAfterSubmit() {
+    setItems([]);
+    setMessage("");
+    setHasSearched(false);
+
+    searchInputRef.current?.focus();
+  }
   return (
     <div className="space-y-5">
       <section className="bg-white items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
@@ -93,6 +101,7 @@ export function CashierForm({ outlets, selectedOutletId }) {
           items={items}
           message={message}
           hasSearched={hasSearched}
+          onSubmitSuccess={handleResetAfterSubmit}
           isSearching={isPending}
           selectedOutletId={selectedOutletId}
           outlets={outlets}
