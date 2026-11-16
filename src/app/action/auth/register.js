@@ -3,12 +3,20 @@ import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
+function formatName(name) {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (char) => char.toUpperCase());
+}
+
 export async function registerAction(prevState, formData) {
   const nameValue = formData.get("name");
   const emailValue = formData.get("email");
   const phoneValue = formData.get("phone");
   const passwordValue = formData.get("password");
-  const cleanName = typeof nameValue === "string" ? nameValue.trim() : "";
+
+  const cleanName = typeof nameValue === "string" ? formatName(nameValue) : "";
   const email =
     typeof emailValue === "string" ? emailValue.trim().toLowerCase() : "";
   const phone = typeof phoneValue === "string" ? phoneValue.trim() : "";
@@ -81,6 +89,11 @@ export async function registerAction(prevState, formData) {
         password: hashedPassword,
       },
     });
+
+    return {
+      success: true,
+      error: {},
+    };
   } catch (error) {
     if (error?.code === "P2002") {
       return {
@@ -98,5 +111,4 @@ export async function registerAction(prevState, formData) {
       },
     };
   }
-  redirect("/login");
 }

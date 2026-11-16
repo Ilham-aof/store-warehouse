@@ -189,7 +189,6 @@ export async function addProductAction(prevState, formData) {
       }
     });
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       errors: {

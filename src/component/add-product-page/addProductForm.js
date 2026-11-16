@@ -28,6 +28,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
 
       if (result.success) {
         toast.success("Produk baru berhasil ditambahkan");
+        setForms([0]);
         router.refresh();
       } else if (result.errors.general) {
         toast.danger("Gagal menambahkan produk", {

@@ -110,5 +110,6 @@ export function ProductStock({
   );
 }
 
-//pindah register hanya untuk admin
-//buat forgot password
+//timestamp negatif di logout karena terlalu cepat transisinya
+//timestamp negatif di login karena terlalu cepat transisinya
+//buat grafik penjualan & servis

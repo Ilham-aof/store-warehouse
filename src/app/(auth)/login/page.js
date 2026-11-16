@@ -1,111 +1,27 @@
-"use client";
-import React from "react";
-import {
-  TextField,
-  Input,
-  Description,
-  FieldError,
-  Button,
-  ErrorMessage,
-} from "@heroui/react";
-import Link from "next/link";
-import { useActionState } from "react";
-import { loginAction } from "@/app/action/auth/login";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
+import { LoginForm } from "@/component/login-page/loginForm";
 
-export default function page() {
-  const [state, action, isPending] = useActionState(loginAction, {
-    success: false,
-    errors: {},
-  });
+export default async function LoginPage() {
+  const cookieStore = await cookies();
+  const sessionId = cookieStore.get("session")?.value;
+
+  if (sessionId) {
+    const session = await prisma.session.findUnique({
+      where: {
+        id: sessionId,
+      },
+    });
+
+    if (session && session.expiresAt > new Date()) {
+      redirect("/");
+    }
+  }
 
   return (
-    <main className="bg-white flex flex-col justify-center items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 w-xl h-fit space-y-5">
-      <h1 className="text-3xl font-bold">Login</h1>
-
-      <form
-        action={action}
-        className="flex flex-col justify-center items-center"
-      >
-        <TextField
-          name="email"
-          aria-label="Email"
-          variant="secondary"
-          type="email"
-          className="w-80"
-          validate={(value) => {
-            if (!value) {
-              return "E-mail wajib diisi";
-            }
-            if (!value.endsWith("@gmail.com")) {
-              return "E-mail wajib menggunakan @gmail.com";
-            }
-          }}
-        >
-          <Input
-            placeholder="E-mail"
-            className="hover:bg-gray-200 focus:ring-slate-800"
-          />
-          <div className="min-h-6">
-            {state.errors?.email ? (
-              <ErrorMessage>{state.errors.email}</ErrorMessage>
-            ) : (
-              <FieldError />
-            )}
-          </div>
-        </TextField>
-
-        <TextField
-          name="password"
-          aria-label="Password"
-          variant="secondary"
-          type="password"
-          className="w-80"
-          validate={(value) => {
-            if (!value) {
-              return "Password wajib diisi";
-            }
-          }}
-        >
-          <Input
-            placeholder="Password"
-            className="hover:bg-gray-200 focus:ring-slate-800"
-          />
-          <div className="min-h-6">
-            {state.errors?.password ? (
-              <ErrorMessage>{state.errors.password}</ErrorMessage>
-            ) : (
-              <FieldError />
-            )}
-          </div>
-        </TextField>
-
-        <Link
-          href="/forget-password"
-          className="self-start text-blue-500 hover:underline"
-        >
-          Lupa password ?
-        </Link>
-
-        <div className="min-h-6">
-          {state.errors?.general && (
-            <ErrorMessage>{state.errors.general}</ErrorMessage>
-          )}
-        </div>
-
-        <Button
-          type="submit"
-          className="w-80 bg-slate-800 text-yellow-100 hover:bg-slate-600"
-          isDisabled={isPending}
-        >
-          {isPending ? "Memproses..." : "Login"}
-        </Button>
-      </form>
-      <p>
-        Tidak punya akun ?{" "}
-        <Link href="/register" className="text-blue-500 hover:underline">
-          Daftar disini
-        </Link>
-      </p>
-    </main>
+    <>
+      <LoginForm />
+    </>
   );
 }

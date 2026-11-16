@@ -1,6 +1,5 @@
 "use server";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export async function logoutAction() {
@@ -15,11 +14,15 @@ export async function logoutAction() {
       });
     }
     cookieStore.delete("session");
+
+    return {
+      success: true,
+      error: null,
+    };
   } catch (error) {
     return {
       success: false,
       error: "Gagal melakukan logout.",
     };
   }
-  redirect("/login");
 }
