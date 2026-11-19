@@ -68,7 +68,7 @@ export function ChangePasswordForm() {
         action={formAction}
         className="flex flex-col justify-center items-center"
       >
-        <input type="" name="token" value={token ?? ""} readOnly />
+        <input type="hidden" name="token" value={token ?? ""} readOnly />
 
         <TextField
           name="password"
@@ -126,7 +126,11 @@ export function ChangePasswordForm() {
             className="hover:bg-gray-200 focus:ring-slate-800"
           />
           <div className="min-h-6">
-            <FieldError />
+            {state.errors?.confirmPassword ? (
+              <ErrorMessage>{state.errors.confirmPassword}</ErrorMessage>
+            ) : (
+              <FieldError />
+            )}
           </div>
         </TextField>
 

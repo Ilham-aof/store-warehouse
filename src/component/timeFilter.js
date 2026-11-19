@@ -9,6 +9,7 @@ export function TimeFilter({
   setTimeFilter,
   dateRange,
   setDateRange,
+  options,
 }) {
   return (
     <div className="flex items-center space-x-5">
@@ -19,7 +20,7 @@ export function TimeFilter({
 
       <Select
         variant="secondary"
-        className="w-36"
+        className="w-48"
         aria-label="Filter waktu"
         value={timeFilter}
         onChange={setTimeFilter}
@@ -28,60 +29,28 @@ export function TimeFilter({
           <Select.Value />
           <Select.Indicator />
         </Select.Trigger>
+
         <Select.Popover className="p-1">
           <ListBox className="space-y-3">
             <Header>Filter Waktu</Header>
-            <ListBox.Item
-              id="all"
-              textValue="Semua"
-              className="ring-0 outline-none shadow-none ring-offset-0"
-            >
-              Semua
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
 
-            <ListBox.Item
-              id="today"
-              textValue="Hari ini"
-              className="ring-0 outline-none shadow-none ring-offset-0"
-            >
-              Hari Ini
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
-
-            <ListBox.Item
-              id="week"
-              textValue="Minggu ini"
-              className="ring-0 outline-none shadow-none ring-offset-0"
-            >
-              Minggu Ini
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
-
-            <ListBox.Item
-              id="month"
-              textValue="Bulan ini"
-              className="ring-0 outline-none shadow-none ring-offset-0"
-            >
-              Bulan Ini
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
-
-            <ListBox.Item
-              id="custom"
-              textValue="Kustom"
-              className="ring-0 outline-none shadow-none ring-offset-0"
-            >
-              Kustom
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
+            {options.map((option) => (
+              <ListBox.Item
+                key={option.id}
+                id={option.id}
+                textValue={option.label}
+                className="ring-0 outline-none shadow-none ring-offset-0"
+              >
+                {option.label}
+                <ListBox.ItemIndicator />
+              </ListBox.Item>
+            ))}
           </ListBox>
         </Select.Popover>
       </Select>
-      {timeFilter === "custom" ? (
+
+      {timeFilter === "custom" && (
         <CustomFilter dateRange={dateRange} setDateRange={setDateRange} />
-      ) : (
-        ""
       )}
     </div>
   );

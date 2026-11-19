@@ -97,6 +97,14 @@ export function ServiceHistoryList({
     });
   }
 
+  const timeOptions = [
+    { id: "all", label: "Semua" },
+    { id: "today", label: "Hari Ini" },
+    { id: "week", label: "Minggu Ini" },
+    { id: "month", label: "Bulan Ini" },
+    { id: "custom", label: "Kustom" },
+  ];
+
   function handleTimeFilterChange(value) {
     setDateRange(null);
 
@@ -139,16 +147,6 @@ export function ServiceHistoryList({
     updateQuery({ page });
   }
 
-  async function handleProcessStatusChange(receiptId, processStatus, value) {
-    const result = await updateProcessStatus(receiptId, processStatus, value);
-
-    if (!result.success) {
-      return;
-    }
-
-    router.refresh();
-  }
-
   return (
     <section className="space-y-5">
       <div className="flex gap-3 items-center">
@@ -174,6 +172,7 @@ export function ServiceHistoryList({
           setTimeFilter={handleTimeFilterChange}
           dateRange={dateRange}
           setDateRange={handleDateRangeChange}
+          options={timeOptions}
         />
         <WarrantyFilter
           warrantyFilter={warrantyFilter}
@@ -204,7 +203,7 @@ export function ServiceHistoryList({
                   <Table.Cell>
                     <p className="text-md font-bold">{receipt.customerName}</p>
                     <p className="text-sm text-muted">
-                      No. HP/WA : {receipt.customerPhone}
+                      No. HP/WA : {receipt.customerPhone || "-"}
                     </p>
                     <p className="text-sm text-muted">
                       Tipe HP : {receipt.device}

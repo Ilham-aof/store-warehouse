@@ -26,32 +26,32 @@ export async function changePasswordAction(prevState, formData) {
   if (!password || !confirmPassword) {
     return {
       success: false,
-      error: "Semua kolom wajib diisi.",
-    };
-  }
-
-  if (password.length < 8) {
-    return {
-      success: false,
-      error: "Password minimal 8 karakter.",
+      errors: {
+        password: "Semua kolom wajib diisi.",
+      },
     };
   }
 
   if (
+    password.length < 8 ||
     !/[a-z]/.test(password) ||
     !/[A-Z]/.test(password) ||
     !/[0-9]/.test(password)
   ) {
     return {
       success: false,
-      error: "Password harus memiliki huruf besar, huruf kecil, dan angka.",
+      errors: {
+        password: "Password tidak memenuhi kriteria.",
+      },
     };
   }
 
   if (password !== confirmPassword) {
     return {
       success: false,
-      error: "Password tidak cocok.",
+      errors: {
+        confirmPassword: "Password tidak cocok.",
+      },
     };
   }
 

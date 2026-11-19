@@ -9,16 +9,30 @@ import {
   toast,
 } from "@heroui/react";
 
-import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 import { resetPasswordAction } from "@/app/action/auth/resetPassword";
+import { useActionState, useEffect, useState } from "react";
 
 export default function Page() {
   const router = useRouter();
 
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+
+    const timer = setInterval(() => {
+      setCooldown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
   const [state, formAction, isPending] = useActionState(
     async (prevState, formData) => {
       const result = await resetPasswordAction(prevState, formData);
+
+      setCooldown(60);
 
       if (result.success) {
         toast.success(
@@ -86,9 +100,13 @@ export default function Page() {
         <Button
           type="submit"
           className="w-80 mt-2 bg-slate-800 text-yellow-100 hover:bg-slate-600"
-          isDisabled={isPending}
+          isDisabled={isPending || cooldown > 0}
         >
-          {isPending ? "Mengirim..." : "Kirim Link Reset"}
+          {isPending
+            ? "Mengirim..."
+            : cooldown > 0
+              ? `Menunggu... (${cooldown} detik)`
+              : "Kirim Link Reset"}
         </Button>
       </form>
 

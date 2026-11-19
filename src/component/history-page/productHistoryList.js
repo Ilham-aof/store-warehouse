@@ -60,6 +60,14 @@ export function ProductHistoryList({
     router.push(queryString ? `?${queryString}` : "?");
   }
 
+  const timeOptions = [
+    { id: "all", label: "Semua" },
+    { id: "today", label: "Hari Ini" },
+    { id: "week", label: "Minggu Ini" },
+    { id: "month", label: "Bulan Ini" },
+    { id: "custom", label: "Kustom" },
+  ];
+
   function handleTimeFilterChange(value) {
     setDateRange(null);
 
@@ -100,6 +108,7 @@ export function ProductHistoryList({
   function handlePageChange(page) {
     updateQuery({ page });
   }
+
   return (
     <>
       <div className="flex gap-3 items-center">
@@ -114,6 +123,7 @@ export function ProductHistoryList({
           setTimeFilter={handleTimeFilterChange}
           dateRange={dateRange}
           setDateRange={handleDateRangeChange}
+          options={timeOptions}
         />
         <ActivityFilter
           activityFilter={activityFilter}

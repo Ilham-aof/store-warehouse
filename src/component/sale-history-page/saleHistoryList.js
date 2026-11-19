@@ -77,6 +77,14 @@ export function SaleHistoryList({
     });
   }
 
+  const timeOptions = [
+    { id: "all", label: "Semua" },
+    { id: "today", label: "Hari Ini" },
+    { id: "week", label: "Minggu Ini" },
+    { id: "month", label: "Bulan Ini" },
+    { id: "custom", label: "Kustom" },
+  ];
+
   function handleTimeFilterChange(value) {
     setDateRange(null);
 
@@ -125,6 +133,7 @@ export function SaleHistoryList({
           setTimeFilter={handleTimeFilterChange}
           dateRange={dateRange}
           setDateRange={handleDateRangeChange}
+          options={timeOptions}
         />
         <Separator orientation="vertical" />
         <SearchBar

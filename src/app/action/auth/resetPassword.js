@@ -43,7 +43,7 @@ export async function resetPasswordAction(prevState, formData) {
     const resetToken = crypto.randomBytes(32).toString("hex");
     const hashedToken = createHash("sha256").update(resetToken).digest("hex");
 
-    const expiresAt = new Date(Date.now() + 1 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
     await prisma.passwordResetToken.deleteMany({
       where: {

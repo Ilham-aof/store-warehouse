@@ -153,10 +153,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 value={cusPhone}
                 onChange={(value) => setCusPhone(value.replace(/\D/g, ""))}
                 validate={(value) => {
-                  if (!value) {
-                    return "Nomor pelanggan wajib diisi";
-                  }
-                  if (!/^08\d{8,11}$/.test(value)) {
+                  if (value && !/^08\d{8,11}$/.test(value)) {
                     return "Nomor HP tidak valid";
                   }
                 }}

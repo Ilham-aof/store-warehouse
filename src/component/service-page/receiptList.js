@@ -157,7 +157,7 @@ export function ReceiptList({
                   <Table.Cell>
                     <p className="text-md font-bold">{receipt.customerName}</p>
                     <p className="text-sm text-muted">
-                      No. HP/WA : {receipt.customerPhone}
+                      No. HP/WA : {receipt.customerPhone || "-"}
                     </p>
                     <p className="text-sm text-muted">
                       Tipe HP : {receipt.device}

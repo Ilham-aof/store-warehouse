@@ -1,0 +1,9 @@
+timestamp negatif di logout karena terlalu cepat transisinya
+timestamp negatif di login karena terlalu cepat transisinya
+buat grafik penjualan & servis (done)
+fixing time filter (done)
+send email (done ok)
+check reset password (done ok)
+ubah durasi link reset ke 15 menit (done ok)
+page change password jika tidak ada token tendang ke login (done ok)
+add cooldown di reset password(done ok)

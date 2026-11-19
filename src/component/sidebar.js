@@ -11,6 +11,7 @@ import {
   ClipboardClock,
   Calculator,
   ShoppingBag,
+  ChartColumn,
 } from "lucide-react";
 
 export function Sidebar({ user }) {
@@ -20,6 +21,10 @@ export function Sidebar({ user }) {
   const productHistoryHref = outletId
     ? `/product-history?outletId=${outletId}`
     : "/product-history";
+
+  const transactionChartHref = outletId
+    ? `/transaction-chart?outletId=${outletId}`
+    : "/transaction-chart";
 
   const stockHref = outletId ? `/?outletId=${outletId}` : "/";
 
@@ -59,6 +64,14 @@ export function Sidebar({ user }) {
           >
             <RefreshCw />
             Mutasi Stok
+          </Link>
+
+          <Link
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
+            href={transactionChartHref}
+          >
+            <ChartColumn />
+            Grafik Transaksi
           </Link>
 
           <Separator variant="default" />

@@ -53,9 +53,7 @@ export async function createServiceReceipt(prevState, formData) {
     errors.cusname = "Nama customer wajib diisi";
   }
 
-  if (!customerPhone) {
-    errors.cusphone = "Nomor customer wajib diisi";
-  } else if (!/^08\d{8,11}$/.test(customerPhone)) {
+  if (customerPhone && !/^08\d{8,11}$/.test(customerPhone)) {
     errors.cusphone = "Nomor customer tidak valid";
   }
 
