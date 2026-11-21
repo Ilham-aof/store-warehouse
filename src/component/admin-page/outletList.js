@@ -71,7 +71,7 @@ export function OutletList({ outlets }) {
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <Pencil />
-                              <Label>Ubah Outlet</Label>
+                              <Label>Ubah Cabang</Label>
                             </Dropdown.Item>
                             <Separator />
 
@@ -82,7 +82,7 @@ export function OutletList({ outlets }) {
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <Trash className="text-danger" />
-                              <Label>Hapus Outlet</Label>
+                              <Label>Hapus Cabang</Label>
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown.Popover>

@@ -44,7 +44,7 @@ export function UserList({ users, currentPage, totalPages, totalItems }) {
           <Table.Content aria-label="Daftar User">
             <Table.Header>
               <Table.Column isRowHeader className="w-[30%]">
-                Nama User
+                Nama Staf
               </Table.Column>
               <Table.Column className="w-[30%]">Nomor HP</Table.Column>
               <Table.Column className="w-[30%]">E-mail</Table.Column>
@@ -79,7 +79,7 @@ export function UserList({ users, currentPage, totalPages, totalItems }) {
                               className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                             >
                               <UserRoundX className="text-danger" />
-                              <Label>Hapus Staff</Label>
+                              <Label>Hapus Staf</Label>
                             </Dropdown.Item>
                           </Dropdown.Menu>
                         </Dropdown.Popover>

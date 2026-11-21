@@ -40,7 +40,7 @@ export default async function page({ searchParams }) {
         <div className="flex justify-between">
           <div className="flex gap-3 items-center">
             <UserRoundGroup size={30} />
-            <h1 className="font-bold text-2xl">Daftar Staff</h1>
+            <h1 className="font-bold text-2xl">Daftar Staf</h1>
           </div>
           <RegisterButton />
         </div>

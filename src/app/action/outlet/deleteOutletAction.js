@@ -30,7 +30,7 @@ export async function deleteOutletAction(prevState, formData) {
   if (session.user.role !== "Admin") {
     return {
       success: false,
-      error: "Kamu tidak memiliki akses",
+      error: "Kamu tidak memiliki akses.",
     };
   }
 
@@ -39,7 +39,7 @@ export async function deleteOutletAction(prevState, formData) {
   if (!outletId) {
     return {
       success: false,
-      error: "Outlet tidak ditemukan",
+      error: "Outlet tidak ditemukan.",
     };
   }
   try {
@@ -59,14 +59,14 @@ export async function deleteOutletAction(prevState, formData) {
     if (!outlet) {
       return {
         success: false,
-        error: "Outlet tidak ditemukan",
+        error: "Outlet tidak ditemukan.",
       };
     }
 
     if (outlet.products.length > 0) {
       return {
         success: false,
-        error: "Outlet tidak dapat dihapus karena masih memiliki produk",
+        error: "Outlet tidak dapat dihapus karena masih memiliki produk.",
       };
     }
 
@@ -76,11 +76,9 @@ export async function deleteOutletAction(prevState, formData) {
       },
     });
   } catch (error) {
-    console.error("Delete outlet error:", error);
-
     return {
       success: false,
-      error: "Gagal menghapus outlet",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
   revalidatePath("/admin");

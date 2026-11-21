@@ -126,7 +126,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 type="text"
                 validate={(value) => {
                   if (!value) {
-                    return "Nama pelanggan wajib diisi";
+                    return "Nama pelanggan wajib diisi.";
                   }
                 }}
               >
@@ -154,7 +154,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 onChange={(value) => setCusPhone(value.replace(/\D/g, ""))}
                 validate={(value) => {
                   if (value && !/^08\d{8,11}$/.test(value)) {
-                    return "Nomor HP tidak valid";
+                    return "Nomor HP tidak valid.";
                   }
                 }}
               >
@@ -179,7 +179,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 type="text"
                 validate={(value) => {
                   if (!value) {
-                    return "Tipe HP wajib diisi";
+                    return "Tipe HP wajib diisi.";
                   }
                 }}
               >
@@ -313,7 +313,9 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 <div className="min-h-6">
                   {showDeviceInclusionsError &&
                     selectedDeviceInclusions.length === 0 && (
-                      <FieldError>Pilih minimal satu kelengkapan HP</FieldError>
+                      <FieldError>
+                        Pilih minimal satu kelengkapan HP.
+                      </FieldError>
                     )}
                 </div>
               </Select>
@@ -346,7 +348,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     }}
                     validate={(value) => {
                       if (!value) {
-                        return "Jenis kerusakan wajib diisi";
+                        return "Jenis kerusakan wajib diisi.";
                       }
                     }}
                   >
@@ -387,7 +389,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     }}
                     validate={(value) => {
                       if (!value) {
-                        return "Biaya wajib diisi";
+                        return "Biaya wajib diisi.";
                       }
                     }}
                   >
@@ -415,7 +417,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     type="number"
                     validate={(value) => {
                       if (!value) {
-                        return "Garansi wajib diisi";
+                        return "Garansi wajib diisi.";
                       }
                     }}
                   >
@@ -499,11 +501,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
         </div>
 
         <div className="self-center flex flex-col items-center w-full">
-          <div className="min-h-6">
-            {state.errors?.general && (
-              <ErrorMessage>{state.errors.general}</ErrorMessage>
-            )}
-          </div>
           <div className="self-end space-x-5">
             <Button
               type="button"

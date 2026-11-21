@@ -142,7 +142,7 @@ export function ProductHistoryList({
               <Table.Column className="w-[16%]">Mutasi Stok</Table.Column>
               <Table.Column className="w-[13%]">Transfer Produk</Table.Column>
               <Table.Column className="w-[8%]">Jumlah</Table.Column>
-              <Table.Column className="w-[10%]">Staff</Table.Column>
+              <Table.Column className="w-[10%]">Staf</Table.Column>
               <Table.Column className="w-[15%]">Waktu</Table.Column>
             </Table.Header>
 

@@ -173,10 +173,6 @@ export function ProductSearchResult({
               </div>
             </div>
 
-            {state?.error && (
-              <p className="text-center text-danger">{state.error}</p>
-            )}
-
             <div className="flex justify-end space-x-5">
               <Button
                 type="button"

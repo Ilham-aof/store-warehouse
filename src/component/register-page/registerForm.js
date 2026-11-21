@@ -42,10 +42,10 @@ export function RegisterForm() {
       const result = await registerAction(prevState, formData);
 
       if (result.success) {
-        toast.success("Staff baru berhasil ditambahkan");
+        toast.success("Staf baru berhasil ditambahkan");
         router.push("/admin");
       } else if (result.errors.general) {
-        toast.danger("Gagal menambahkan staff", {
+        toast.danger("Gagal menambahkan staf", {
           description: result.errors.general,
         });
       } else {
@@ -75,7 +75,7 @@ export function RegisterForm() {
           className="w-80"
           validate={(value) => {
             if (!value) {
-              return "Nama wajib diisi";
+              return "Nama wajib diisi.";
             }
           }}
         >
@@ -101,7 +101,7 @@ export function RegisterForm() {
           className="w-80"
           validate={(value) => {
             if (!value) {
-              return "E-mail wajib diisi";
+              return "E-mail wajib diisi.";
             }
             if (!value.endsWith("@gmail.com")) {
               return "E-mail wajib menggunakan @gmail.com";
@@ -134,10 +134,10 @@ export function RegisterForm() {
           }}
           validate={(value) => {
             if (!value) {
-              return "Nomor HP wajib diisi";
+              return "Nomor HP wajib diisi.";
             }
             if (!/^08\d{8,11}$/.test(value)) {
-              return "Nomor HP tidak valid";
+              return "Nomor HP tidak valid.";
             }
           }}
         >
@@ -166,7 +166,7 @@ export function RegisterForm() {
           onChange={setPassword}
           validate={(value) => {
             if (!value) {
-              return "Password wajib diisi";
+              return "Password wajib diisi.";
             }
           }}
         >

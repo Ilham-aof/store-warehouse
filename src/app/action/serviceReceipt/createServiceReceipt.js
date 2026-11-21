@@ -4,6 +4,13 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+function formatName(value) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (char) => char.toUpperCase());
+}
+
 export async function createServiceReceipt(prevState, formData) {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
@@ -24,9 +31,12 @@ export async function createServiceReceipt(prevState, formData) {
   }
 
   const outletId = formData.get("outletId")?.trim();
-  const customerName = formData.get("customerName")?.trim();
+  const customerNameValue = formData.get("customerName")?.trim();
+  const customerName =
+    typeof customerNameValue === "string" ? formatName(customerNameValue) : "";
   const customerPhone = formData.get("customerPhone")?.trim();
-  const device = formData.get("device")?.trim();
+  const deviceValue = formData.get("device")?.trim();
+  const device = typeof deviceValue === "string" ? formatName(deviceValue) : "";
   const deviceInclusions = formData.getAll("deviceInclusions");
 
   const inclusionLabels = {
@@ -46,23 +56,28 @@ export async function createServiceReceipt(prevState, formData) {
   const errors = {};
 
   if (!outletId) {
-    errors.outlet = "Outlet wajib dipilih";
+    return {
+      success: false,
+      errors: {
+        general: "Minimal satu servis harus diisi.",
+      },
+    };
   }
 
   if (!customerName) {
-    errors.cusname = "Nama customer wajib diisi";
+    errors.cusname = "Nama customer wajib diisi.";
   }
 
   if (customerPhone && !/^08\d{8,11}$/.test(customerPhone)) {
-    errors.cusphone = "Nomor customer tidak valid";
+    errors.cusphone = "Nomor customer tidak valid.";
   }
 
   if (!device) {
-    errors.cusitem = "Device customer wajib diisi";
+    errors.cusitem = "Device customer wajib diisi.";
   }
 
   if (deviceInclusions.length === 0) {
-    errors.deviceInclusions = "Pilih minimal satu kelengkapan HP";
+    errors.deviceInclusions = "Pilih minimal satu kelengkapan HP.";
   } else if (
     deviceInclusions.some(
       (item) =>
@@ -70,13 +85,13 @@ export async function createServiceReceipt(prevState, formData) {
         !Object.prototype.hasOwnProperty.call(inclusionLabels, item),
     )
   ) {
-    errors.deviceInclusions = "Data kelengkapan tidak valid";
+    errors.deviceInclusions = "Data kelengkapan tidak valid.";
   }
 
   if (discount === "") {
-    errors.discount = "Discount wajib diisi";
+    errors.discount = "Discount wajib diisi.";
   } else if (!Number.isSafeInteger(discountAmount) || discountAmount < 0) {
-    errors.discount = "Discount harus berupa angka yang valid";
+    errors.discount = "Discount harus berupa angka yang valid.";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -102,7 +117,7 @@ export async function createServiceReceipt(prevState, formData) {
     return {
       success: false,
       errors: {
-        outlet: "Outlet tidak ditemukan",
+        general: "Outlet tidak ditemukan.",
       },
     };
   }
@@ -123,7 +138,7 @@ export async function createServiceReceipt(prevState, formData) {
         services[index] = {};
       }
 
-      services[index].description = value?.toString().trim();
+      services[index].description = formatName(value.toString());
     }
 
     if (priceMatch) {
@@ -153,7 +168,7 @@ export async function createServiceReceipt(prevState, formData) {
     return {
       success: false,
       errors: {
-        general: "Minimal satu servis harus diisi",
+        general: "Minimal satu servis harus diisi.",
       },
     };
   }
@@ -167,13 +182,13 @@ export async function createServiceReceipt(prevState, formData) {
 
     if (!description) {
       serviceErrors[index] ??= {};
-      serviceErrors[index].description = "Jenis kerusakan wajib diisi";
+      serviceErrors[index].description = "Jenis kerusakan wajib diisi.";
       return;
     }
 
     if (!service.price || !Number.isInteger(price) || price < 0) {
       serviceErrors[index] ??= {};
-      serviceErrors[index].price = "Biaya servis tidak valid";
+      serviceErrors[index].price = "Biaya servis tidak valid.";
     }
 
     if (
@@ -183,7 +198,7 @@ export async function createServiceReceipt(prevState, formData) {
       warranty < 0
     ) {
       serviceErrors[index] ??= {};
-      serviceErrors[index].warranty = "Garansi tidak valid";
+      serviceErrors[index].warranty = "Garansi tidak valid.";
     }
   });
 
@@ -205,7 +220,7 @@ export async function createServiceReceipt(prevState, formData) {
     return {
       success: false,
       errors: {
-        discount: "Potongan harga melebihi total biaya servis",
+        discount: "Potongan harga melebihi total biaya servis.",
       },
     };
   }
@@ -265,7 +280,7 @@ export async function createServiceReceipt(prevState, formData) {
     return {
       success: false,
       errors: {
-        general: "Gagal membuat nota servis",
+        general: "Terjadi kesalahan pada server. Coba lagi nanti.",
       },
     };
   }

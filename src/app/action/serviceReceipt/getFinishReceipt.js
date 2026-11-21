@@ -65,11 +65,21 @@ export async function getFinishReceipt(
     outletId,
     ...receiptStatusCondition,
 
-    ...(keyword.length >= 2 && {
-      customerName: {
-        contains: keyword,
-        mode: "insensitive",
-      },
+    ...(keyword.length > 0 && {
+      OR: [
+        {
+          invoiceNumber: {
+            contains: keyword,
+            mode: "insensitive",
+          },
+        },
+        {
+          customerName: {
+            contains: keyword,
+            mode: "insensitive",
+          },
+        },
+      ],
     }),
 
     ...(startDate && {
@@ -121,6 +131,7 @@ export async function getFinishReceipt(
       where,
       include: {
         outlet: true,
+        user: true,
         serviceItems: true,
       },
       orderBy: {

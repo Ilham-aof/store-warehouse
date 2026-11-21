@@ -34,21 +34,21 @@ export async function stockInAction(prevState, formData) {
   if (!productId) {
     return {
       success: false,
-      error: "Produk tidak ditemukan",
+      error: "Produk tidak ditemukan.",
     };
   }
 
   if (!quantity) {
     return {
       success: false,
-      error: "Jumlah stok wajib diisi",
+      error: "Jumlah produk wajib diisi.",
     };
   }
 
   if (!outletId) {
     return {
       success: false,
-      error: "Cabang tidak ditemukan",
+      error: "Cabang tidak ditemukan.",
     };
   }
 
@@ -119,7 +119,7 @@ export async function stockInAction(prevState, formData) {
   } catch (error) {
     return {
       success: false,
-      error: "Gagal menambahkan stok.",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 

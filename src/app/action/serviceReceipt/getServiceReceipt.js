@@ -20,10 +20,20 @@ export async function getDataServiceReceipt(outletId, search, page, pageSize) {
     receiptStatus: "Diproses",
 
     ...(keyword.length > 0 && {
-      customerName: {
-        contains: keyword,
-        mode: "insensitive",
-      },
+      OR: [
+        {
+          invoiceNumber: {
+            contains: keyword,
+            mode: "insensitive",
+          },
+        },
+        {
+          customerName: {
+            contains: keyword,
+            mode: "insensitive",
+          },
+        },
+      ],
     }),
   };
   try {

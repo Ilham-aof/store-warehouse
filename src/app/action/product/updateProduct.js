@@ -5,6 +5,13 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+function formatName(value) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (char) => char.toUpperCase());
+}
+
 export async function updateProductAction(prevState, formData) {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
@@ -26,49 +33,65 @@ export async function updateProductAction(prevState, formData) {
 
   const productId = formData.get("productId");
   const outletId = formData.get("outletId");
-  const productName = formData.get("productName");
-  const productCategory = formData.get("productCategory");
-  const productBrand = formData.get("productBrand");
+  const productNameValue = formData.get("productName");
+  const productName =
+    typeof productNameValue === "string" ? formatName(productNameValue) : "";
+  const productCategoryValue = formData.get("productCategory");
+  const productCategory =
+    typeof productCategoryValue === "string"
+      ? formatName(productCategoryValue)
+      : "";
+  const productBrandValue = formData.get("productBrand");
+  const productBrand =
+    typeof productBrandValue === "string" ? formatName(productBrandValue) : "";
   const productPrice = formData.get("productPrice");
 
   if (!productId) {
     return {
       success: false,
-      error: "Produk tidak ditemukan",
+      error: "Produk tidak ditemukan.",
     };
   }
 
   if (!outletId) {
     return {
       success: false,
-      error: "Cabang tidak ditemukan",
+      error: "Cabang tidak ditemukan.",
     };
   }
   if (!productName?.trim()) {
     return {
       success: false,
-      error: "Nama wajib diisi",
+      errors: {
+        name: "Nama wajib diisi.",
+      },
     };
   }
 
   if (!productCategory?.trim()) {
     return {
       success: false,
-      error: "Kategori wajib diisi",
+      errors: {
+        category: "Kategori wajib diisi.",
+      },
     };
   }
 
   if (!productBrand?.trim()) {
     return {
       success: false,
-      error: "Brand wajib diisi",
+      errors: {
+        brand: "Brand wajib diisi.",
+      },
     };
   }
 
   if (!productPrice) {
     return {
       success: false,
-      error: "Harga wajib diisi",
+      errors: {
+        price: "Harga wajib diisi.",
+      },
     };
   }
 
@@ -87,7 +110,7 @@ export async function updateProductAction(prevState, formData) {
   } catch (error) {
     return {
       success: false,
-      error: "Gagal memperbarui produk",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 

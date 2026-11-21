@@ -1,6 +1,6 @@
 "use client";
-import { Modal, Button, toast, ErrorMessage } from "@heroui/react";
-import { TriangleAlert } from "lucide-react";
+import { Modal, Button, toast } from "@heroui/react";
+import { TriangleAlert, Trash } from "lucide-react";
 import { useActionState } from "react";
 import { deleteOutletAction } from "@/app/action/outlet/deleteOutletAction";
 import { useRouter } from "next/navigation";
@@ -45,12 +45,13 @@ export function DeleteOutletModal({ isOpen, selectedOutlet, onClose }) {
         isDismissable={false}
       >
         <Modal.Container>
-          <Modal.Dialog>
+          <Modal.Dialog className="w-fit max-w-[90vw]">
             <Modal.CloseTrigger />
 
             <Modal.Header>
-              <Modal.Heading className="text-2xl font-bold">
-                Hapus Cabang
+              <Modal.Heading className="flex space-x-3 items-center text-2xl font-bold">
+                <Trash size={30} />
+                <span className="text-2xl font-bold"> Hapus Cabang</span>
               </Modal.Heading>
             </Modal.Header>
             <form action={action}>
@@ -62,24 +63,20 @@ export function DeleteOutletModal({ isOpen, selectedOutlet, onClose }) {
                   defaultValue={selectedOutlet?.id ?? ""}
                 />
                 <TriangleAlert
-                  size={250}
+                  size={200}
                   strokeWidth={1.5}
                   className="text-danger"
                 />
                 <p className="text-lg text-center">
-                  Apa anda yakin akan menghapus cabang{" "}
+                  Apa Anda yakin akan menghapus cabang{" "}
                   <span className="font-bold text-black">
                     {selectedOutlet?.name}
                   </span>{" "}
                   ?
                 </p>
-                <div className="text-center">
-                  {typeof state?.error === "string" && (
-                    <ErrorMessage slot="description">
-                      {state.error}
-                    </ErrorMessage>
-                  )}
-                </div>
+                <p className="test-muted text-center">
+                  Penghapusan ini bersifat permanen dan tidak bisa dibatalkan.
+                </p>
               </Modal.Body>
               <Modal.Footer>
                 <Button
@@ -91,7 +88,7 @@ export function DeleteOutletModal({ isOpen, selectedOutlet, onClose }) {
                   Batal
                 </Button>
                 <Button variant="danger" type="submit" isDisabled={isPending}>
-                  {isPending ? "Menghapus..." : "Ya"}
+                  {isPending ? "Menghapus..." : "Hapus"}
                 </Button>
               </Modal.Footer>
             </form>

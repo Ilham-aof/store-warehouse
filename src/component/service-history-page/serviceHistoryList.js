@@ -82,10 +82,8 @@ export function ServiceHistoryList({
   }
 
   function handleSearch() {
-    const keyword = searchKeyword.trim();
-
     updateQuery({
-      search: keyword.length >= 2 ? keyword : null,
+      search: searchKeyword.trim(),
       page: 1,
     });
   }
@@ -159,7 +157,7 @@ export function ServiceHistoryList({
         keyword={searchKeyword}
         onKeywordChange={setSearchKeyword}
         onSearch={handleSearch}
-        placeholder="Cari nama pelanggan..."
+        placeholder="Cari nota / nama pelanggan..."
       />
 
       <div className="flex space-x-5">
@@ -183,13 +181,14 @@ export function ServiceHistoryList({
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar nota servis" className="min-w-250">
             <Table.Header>
-              <Table.Column isRowHeader className="w-[20%]">
+              <Table.Column isRowHeader className="w-[15%]">
                 Kode Nota
               </Table.Column>
               <Table.Column className="w-[25%]">Pelanggan</Table.Column>
               <Table.Column className="w-[15%]">Detail Servis</Table.Column>
-              <Table.Column className="w-[15%]">Status Nota</Table.Column>
-              <Table.Column className="w-[15%]">Tanggal Nota</Table.Column>
+              <Table.Column className="w-[10%]">Status Nota</Table.Column>
+              <Table.Column className="w-[12%]">Staf</Table.Column>
+              <Table.Column className="w-[13%]">Tanggal Nota</Table.Column>
               <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
 
@@ -233,6 +232,8 @@ export function ServiceHistoryList({
                       {receipt.receiptStatus}
                     </Label>
                   </Table.Cell>
+
+                  <Table.Cell> {receipt.user.name}</Table.Cell>
 
                   <Table.Cell>
                     {receipt.createdAt.toLocaleDateString("id-ID")}

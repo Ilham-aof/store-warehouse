@@ -150,7 +150,7 @@ export function AddProductStockModal({
                   type="number"
                   validate={(value) => {
                     if (!value) {
-                      return "Quantity produk wajib diisi";
+                      return "Jumlah produk wajib diisi.";
                     }
                   }}
                 >
@@ -163,13 +163,6 @@ export function AddProductStockModal({
                     <FieldError />
                   </div>
                 </TextField>
-                <div className="text-center">
-                  {typeof state?.error === "string" && (
-                    <ErrorMessage slot="description">
-                      {state.error}
-                    </ErrorMessage>
-                  )}
-                </div>
               </Modal.Body>
 
               <Modal.Footer className="space-x-3">

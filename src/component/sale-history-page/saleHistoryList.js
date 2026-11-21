@@ -152,7 +152,7 @@ export function SaleHistoryList({
               </Table.Column>
               <Table.Column className="w-[20%]">Produk</Table.Column>
               <Table.Column className="w-[20%]">Total Transaksi</Table.Column>
-              <Table.Column className="w-[10%]">Staff</Table.Column>
+              <Table.Column className="w-[10%]">Staf</Table.Column>
               <Table.Column className="w-[20%]">Tanggal</Table.Column>
               <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>

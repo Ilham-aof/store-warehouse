@@ -35,12 +35,11 @@ export async function deleteUserAction(prevState, formData) {
   }
 
   const userId = formData.get("userId");
-  console.log(userId);
 
   if (!userId) {
     return {
       success: false,
-      error: "User tidak ditemukan",
+      error: "User tidak ditemukan.",
     };
   }
 
@@ -51,10 +50,9 @@ export async function deleteUserAction(prevState, formData) {
       },
     });
   } catch (error) {
-    console.log(error);
     return {
       success: false,
-      error: "Gagal menghapus user",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 

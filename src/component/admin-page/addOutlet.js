@@ -18,6 +18,8 @@ import { useRouter } from "next/navigation";
 export function AddOutlet() {
   const router = useRouter();
   const [outletCode, setOutletCode] = useState("");
+  const [phone, setPhone] = useState("");
+
   const [isOpen, setIsOpen] = useState(false);
   const [state, action, isPending] = useActionState(
     async (prevState, formData) => {
@@ -26,6 +28,8 @@ export function AddOutlet() {
       if (result.success) {
         toast.success("Cabang baru berhasil ditambahkan");
         setIsOpen(false);
+        setOutletCode("");
+        setPhone("");
         router.refresh();
       } else if (result.error) {
         toast.danger("Gagal menambahkan cabang", {
@@ -42,7 +46,6 @@ export function AddOutlet() {
       error: null,
     },
   );
-  const [phone, setPhone] = useState("");
   return (
     <>
       <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -85,7 +88,11 @@ export function AddOutlet() {
                         className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
-                        <FieldError />
+                        {state.errors?.name ? (
+                          <ErrorMessage>{state.errors.name}</ErrorMessage>
+                        ) : (
+                          <FieldError />
+                        )}
                       </div>
                     </TextField>
 
@@ -120,7 +127,11 @@ export function AddOutlet() {
                         className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
-                        <FieldError />
+                        {state.errors?.code ? (
+                          <ErrorMessage>{state.errors.code}</ErrorMessage>
+                        ) : (
+                          <FieldError />
+                        )}
                       </div>
                     </TextField>
 
@@ -139,7 +150,11 @@ export function AddOutlet() {
                         className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
-                        <FieldError />
+                        {state.errors?.address ? (
+                          <ErrorMessage>{state.errors.address}</ErrorMessage>
+                        ) : (
+                          <FieldError />
+                        )}
                       </div>
                     </TextField>
 
@@ -165,16 +180,13 @@ export function AddOutlet() {
                         className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
-                        <FieldError />
+                        {state.errors?.phone ? (
+                          <ErrorMessage>{state.errors.phone}</ErrorMessage>
+                        ) : (
+                          <FieldError />
+                        )}
                       </div>
                     </TextField>
-                  </div>
-                  <div className="text-center">
-                    {typeof state?.error === "string" && (
-                      <ErrorMessage slot="description">
-                        {state.error}
-                      </ErrorMessage>
-                    )}
                   </div>
                 </Modal.Body>
                 <Modal.Footer className="space-x-3">

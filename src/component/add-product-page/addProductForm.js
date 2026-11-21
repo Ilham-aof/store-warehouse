@@ -79,7 +79,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Barcode produk wajib diisi";
+                    return "Barcode produk wajib diisi.";
                   }
                 }}
               >
@@ -106,7 +106,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Nama produk wajib diisi";
+                    return "Nama produk wajib diisi.";
                   }
                 }}
               >
@@ -133,7 +133,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Kategori produk wajib diisi";
+                    return "Kategori produk wajib diisi.";
                   }
                 }}
               >
@@ -145,8 +145,8 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 />
 
                 <div className="min-h-6">
-                  {state.errors?.[index]?.type ? (
-                    <ErrorMessage>{state.errors[index].type}</ErrorMessage>
+                  {state.errors?.[index]?.category ? (
+                    <ErrorMessage>{state.errors[index].category}</ErrorMessage>
                   ) : (
                     <FieldError />
                   )}
@@ -160,7 +160,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Merek produk wajib diisi";
+                    return "Merek produk wajib diisi.";
                   }
                 }}
               >
@@ -194,7 +194,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 }}
                 validate={(value) => {
                   if (!value) {
-                    return "Jumlah produk wajib diisi";
+                    return "Jumlah produk wajib diisi.";
                   }
                 }}
               >
@@ -228,7 +228,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 }}
                 validate={(value) => {
                   if (!value) {
-                    return "Harga produk wajib diisi";
+                    return "Harga produk wajib diisi.";
                   }
                 }}
               >
@@ -277,12 +277,6 @@ export function AddProductForm({ outlets, selectedOutletId }) {
             <Plus />
             Tambah Form
           </Button>
-        </div>
-
-        <div className="text-center">
-          {typeof state?.error === "string" && (
-            <ErrorMessage slot="description">{state.error}</ErrorMessage>
-          )}
         </div>
 
         <div className="self-end space-x-5">

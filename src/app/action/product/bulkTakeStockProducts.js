@@ -31,14 +31,14 @@ export async function bulkStockOutAction(prevState, formData) {
   if (!outletId) {
     return {
       success: false,
-      error: "Cabang tidak ditemukan",
+      error: "Cabang tidak ditemukan.",
     };
   }
 
   if (!rawItems) {
     return {
       success: false,
-      error: "Daftar produk masih kosong",
+      error: "Daftar produk masih kosong.",
     };
   }
 
@@ -49,14 +49,14 @@ export async function bulkStockOutAction(prevState, formData) {
   } catch {
     return {
       success: false,
-      error: "Format daftar produk tidak valid",
+      error: "Format daftar produk tidak valid.",
     };
   }
 
   if (!Array.isArray(items) || items.length === 0) {
     return {
       success: false,
-      error: "Daftar produk masih kosong",
+      error: "Daftar produk masih kosong.",
     };
   }
 
@@ -66,14 +66,14 @@ export async function bulkStockOutAction(prevState, formData) {
     if (typeof item.productId !== "string" || !item.productId.trim()) {
       return {
         success: false,
-        error: "Terdapat produk yang tidak valid",
+        error: "Terdapat produk yang tidak valid.",
       };
     }
 
     if (seenProductIds.has(item.productId)) {
       return {
         success: false,
-        error: "Terdapat produk duplikat dalam daftar",
+        error: "Terdapat produk duplikat dalam daftar.",
       };
     }
 
@@ -82,7 +82,7 @@ export async function bulkStockOutAction(prevState, formData) {
     if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
       return {
         success: false,
-        error: "Jumlah setiap produk harus berupa bilangan bulat lebih dari 0",
+        error: "Jumlah setiap produk harus berupa bilangan bulat lebih dari 0.",
       };
     }
   }
@@ -91,14 +91,14 @@ export async function bulkStockOutAction(prevState, formData) {
     if (!targetOutlet) {
       return {
         success: false,
-        error: "Cabang asal wajib dipilih untuk transfer",
+        error: "Cabang asal wajib dipilih untuk transfer.",
       };
     }
 
     if (outletId === targetOutlet) {
       return {
         success: false,
-        error: "Cabang asal tidak boleh sama dengan cabang penerima",
+        error: "Cabang tujuan tidak boleh sama dengan cabang asal.",
       };
     }
   }
@@ -167,27 +167,27 @@ export async function bulkStockOutAction(prevState, formData) {
     if (error.message === "PRODUCT_NOT_FOUND") {
       return {
         success: false,
-        error: "Ada produk yang tidak ditemukan di outlet terpilih",
+        error: "Terdapat produk yang tidak ditemukan di outlet terpilih.",
       };
     }
 
     if (error.message === "INSUFFICIENT_STOCK") {
       return {
         success: false,
-        error: "Stok produk tidak mencukupi",
+        error: "Stok produk tidak mencukupi.",
       };
     }
 
     if (error.message === "SOURCE_OUTLET_NOT_FOUND") {
       return {
         success: false,
-        error: "Outlet asal tidak ditemukan",
+        error: "Outlet asal tidak ditemukan.",
       };
     }
 
     return {
       success: false,
-      error: "Gagal mengambil stok produk",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 

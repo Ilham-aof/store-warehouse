@@ -12,7 +12,7 @@ import {
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateOutletAction } from "@/app/action/outlet/updateOutletAction";
-import { BuildingComplexPlus } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
@@ -61,7 +61,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
             <Modal.Header>
               <Modal.Heading>
                 <div className="flex space-x-3 items-center">
-                  <BuildingComplexPlus size={30} />
+                  <Pencil size={30} />
                   <h1 className="text-2xl font-bold">Ubah Data Cabang</h1>
                 </div>
               </Modal.Heading>
@@ -118,7 +118,11 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.name ? (
+                        <ErrorMessage>{state.errors.name}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -152,7 +156,11 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.code ? (
+                        <ErrorMessage>{state.errors.code}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -174,7 +182,11 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.address ? (
+                        <ErrorMessage>{state.errors.address}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -200,14 +212,13 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.phone ? (
+                        <ErrorMessage>{state.errors.phone}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
-                </div>
-                <div className="text-center">
-                  {typeof state?.error === "string" && (
-                    <ErrorMessage>{state.error}</ErrorMessage>
-                  )}
                 </div>
               </Modal.Body>
 

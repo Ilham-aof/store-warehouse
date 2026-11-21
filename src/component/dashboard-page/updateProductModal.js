@@ -4,6 +4,7 @@ import {
   Input,
   TextField,
   FieldError,
+  ErrorMessage,
   Label,
   Button,
   Separator,
@@ -136,7 +137,11 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.name ? (
+                        <ErrorMessage>{state.errors.name}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -158,7 +163,11 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.category ? (
+                        <ErrorMessage>{state.errors.category}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -180,7 +189,11 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.brand ? (
+                        <ErrorMessage>{state.errors.brand}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -204,12 +217,13 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.price ? (
+                        <ErrorMessage>{state.errors.price}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
-                </div>
-                <div className="text-center">
-                  {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
 

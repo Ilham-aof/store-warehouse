@@ -25,19 +25,18 @@ export async function deleteProductAction(prevState, formData) {
   }
 
   const productId = formData.get("productId");
-  const outletId = formData.get("outletId");
 
   if (!productId) {
     return {
       success: false,
-      error: "ID produk tidak ditemukan",
+      error: "ID produk tidak ditemukan.",
     };
   }
 
   if (!productId) {
     return {
       success: false,
-      error: "Cabang tidak ditemukan",
+      error: "Cabang tidak ditemukan.",
     };
   }
 
@@ -50,7 +49,7 @@ export async function deleteProductAction(prevState, formData) {
   } catch (error) {
     return {
       success: false,
-      error: "Gagal menghapus produk",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 

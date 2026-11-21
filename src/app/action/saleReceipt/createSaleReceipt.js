@@ -232,7 +232,7 @@ export async function createSaleReceiptAction(prevState, formData) {
     }
     return {
       success: false,
-      error: "Gagal membuat nota penjualan",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 

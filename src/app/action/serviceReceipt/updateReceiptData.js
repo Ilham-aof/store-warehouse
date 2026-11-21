@@ -5,6 +5,13 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+function formatName(value) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (char) => char.toUpperCase());
+}
+
 export async function updateReceiptData(prevState, formData) {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
@@ -26,9 +33,12 @@ export async function updateReceiptData(prevState, formData) {
 
   const receiptId = formData.get("receiptId");
   const outletId = formData.get("outletId");
-  const customerName = formData.get("customerName");
+  const customerNameValue = formData.get("customerName");
+  const customerName =
+    typeof customerNameValue === "string" ? formatName(customerNameValue) : "";
   const customerPhone = formData.get("customerPhone");
-  const device = formData.get("device");
+  const deviceValue = formData.get("device");
+  const device = typeof deviceValue === "string" ? formatName(deviceValue) : "";
   const deviceInclusions = formData.getAll("deviceInclusions");
   const discount = Number(formData.get("discount"));
   const inclusionLabels = {

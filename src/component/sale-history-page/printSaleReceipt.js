@@ -80,7 +80,7 @@ export function PrintSaleReceipt({ receipt }) {
             <div>
               <p>No. Nota: {receipt.invoiceNumber}</p>
               <p>Tanggal: {formatDate(receipt.createdAt)}</p>
-              <p>Staff: {receipt.user.name}</p>
+              <p>Staf: {receipt.user.name}</p>
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>

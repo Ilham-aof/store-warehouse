@@ -127,7 +127,7 @@ export function ReceiptList({
           keyword={searchKeyword}
           onKeywordChange={setSearchKeyword}
           onSearch={handleSearch}
-          placeholder="Cari nama pelanggan..."
+          placeholder="Cari nota / nama pelanggan..."
         />
         <Separator orientation="vertical" />
         <CreateReceiptButton selectedOutletId={selectedOutletId} />
@@ -141,10 +141,10 @@ export function ReceiptList({
               </Table.Column>
               <Table.Column className="w-[20%]">Pelanggan</Table.Column>
               <Table.Column className="w-[15%]">Detail Servis</Table.Column>
-              <Table.Column className="w-[15%]">Status Pengerjaan</Table.Column>
-              <Table.Column className="w-[15%]">Status Barang</Table.Column>
-              <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
-              <Table.Column className="w-[10%]"></Table.Column>
+              <Table.Column className="w-[13%]">Status Pengerjaan</Table.Column>
+              <Table.Column className="w-[17%]">Status Barang</Table.Column>
+              <Table.Column className="w-[12%]">Tanggal Nota</Table.Column>
+              <Table.Column className="w-[8%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>

@@ -15,7 +15,7 @@ export function RegisterButton() {
         onClick={() => router.push("/register")}
       >
         <UserRoundPlus />
-        Tambah staff baru
+        Tambah staf baru
       </Button>
     </>
   );
