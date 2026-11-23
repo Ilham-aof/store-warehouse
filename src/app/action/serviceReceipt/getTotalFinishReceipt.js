@@ -25,7 +25,7 @@ export async function getTotalServiceReceipt(outletId, timeFilter) {
   }
 
   try {
-    const [totalService, chartDataService] = await Promise.all([
+    const [totalService, data] = await Promise.all([
       prisma.serviceReceipt.count({
         where: {
           receiptStatus: "Sukses",
@@ -51,6 +51,27 @@ export async function getTotalServiceReceipt(outletId, timeFilter) {
         },
       }),
     ]);
+
+    const groupedData = {};
+
+    data.forEach((item) => {
+      const date = item.createdAt.toLocaleDateString("en-CA", {
+        timeZone: "Asia/Jakarta",
+      });
+
+      if (!groupedData[date]) {
+        groupedData[date] = 0;
+      }
+
+      groupedData[date] += 1;
+    });
+
+    const chartDataService = Object.entries(groupedData).map(
+      ([date, total]) => ({
+        date,
+        total,
+      }),
+    );
 
     return {
       totalService,

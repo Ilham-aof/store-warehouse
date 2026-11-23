@@ -12,7 +12,14 @@ import {
 
 import { ColorSwatch } from "@heroui/react";
 
-export function BarChartUI({ serviceData, saleData, timeFilter }) {
+export function BarChartUI({
+  firstData,
+  secondData,
+  timeFilter,
+  title,
+  firstLabel,
+  secondLabel,
+}) {
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -35,32 +42,31 @@ export function BarChartUI({ serviceData, saleData, timeFilter }) {
           day: "numeric",
           month: "short",
         }),
-        totalService: 0,
-        totalSale: 0,
+        totalFirst: 0,
+        totalSecond: 0,
       };
     }
 
-    serviceData.forEach((item) => {
-      const date = new Date(item.createdAt);
+    firstData.forEach((item) => {
+      const [year, month, day] = item.date.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
       const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
       if (groupedData[key]) {
-        groupedData[key].totalService++;
+        groupedData[key].totalFirst += item.total;
       }
     });
 
-    saleData.forEach((item) => {
-      const date = new Date(item.createdAt);
+    secondData.forEach((item) => {
+      const [year, month, day] = item.date.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
       const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
       if (groupedData[key]) {
-        groupedData[key].totalSale++;
+        groupedData[key].totalSecond += item.total;
       }
     });
-  }
-
-  // Bulan ini, per minggu
-  else if (timeFilter === "thisMonth") {
+  } else if (timeFilter === "thisMonth") {
     const lastDay = new Date(year, month + 1, 0).getDate();
 
     for (let start = 1; start <= lastDay; start += 7) {
@@ -74,32 +80,31 @@ export function BarChartUI({ serviceData, saleData, timeFilter }) {
             month: "short",
           },
         )}`,
-        totalService: 0,
-        totalSale: 0,
+        totalFirst: 0,
+        totalSecond: 0,
       };
     }
 
-    serviceData.forEach((item) => {
-      const date = new Date(item.createdAt);
+    firstData.forEach((item) => {
+      const [year, month, day] = item.date.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
       const key = Math.floor((date.getDate() - 1) / 7);
 
       if (groupedData[key]) {
-        groupedData[key].totalService++;
+        groupedData[key].totalFirst += item.total;
       }
     });
 
-    saleData.forEach((item) => {
-      const date = new Date(item.createdAt);
+    secondData.forEach((item) => {
+      const [year, month, day] = item.date.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
       const key = Math.floor((date.getDate() - 1) / 7);
 
       if (groupedData[key]) {
-        groupedData[key].totalSale++;
+        groupedData[key].totalSecond += item.total;
       }
     });
-  }
-
-  // Tahun ini, per bulan
-  else if (timeFilter === "thisYear") {
+  } else if (timeFilter === "thisYear") {
     for (let i = 0; i < 12; i++) {
       const date = new Date(year, i, 1);
 
@@ -107,26 +112,28 @@ export function BarChartUI({ serviceData, saleData, timeFilter }) {
         date: date.toLocaleDateString("id-ID", {
           month: "short",
         }),
-        totalService: 0,
-        totalSale: 0,
+        totalFirst: 0,
+        totalSecond: 0,
       };
     }
 
-    serviceData.forEach((item) => {
-      const date = new Date(item.createdAt);
+    firstData.forEach((item) => {
+      const [year, month, day] = item.date.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
       const key = date.getMonth();
 
       if (groupedData[key]) {
-        groupedData[key].totalService++;
+        groupedData[key].totalFirst += item.total;
       }
     });
 
-    saleData.forEach((item) => {
-      const date = new Date(item.createdAt);
+    secondData.forEach((item) => {
+      const [year, month, day] = item.date.split("-").map(Number);
+      const date = new Date(year, month - 1, day);
       const key = date.getMonth();
 
       if (groupedData[key]) {
-        groupedData[key].totalSale++;
+        groupedData[key].totalSecond += item.total;
       }
     });
   }
@@ -134,53 +141,58 @@ export function BarChartUI({ serviceData, saleData, timeFilter }) {
   const chartData = Object.values(groupedData);
 
   const maxValue = Math.max(
-    ...chartData.map((item) => Math.max(item.totalService, item.totalSale)),
+    ...chartData.map((item) => Math.max(item.totalFirst, item.totalSecond)),
     0,
   );
 
+  const safeMax = Math.max(0, maxValue ?? 0);
+  const yPadding = safeMax === 0 ? 5 : Math.max(3, Math.ceil(safeMax * 0.15));
+  const yMax = safeMax + yPadding;
+
   return (
     <div className="w-full rounded-xl border bg-white p-5 space-y-3">
-      <h2 className="text-lg font-semibold">
-        Statistik Nota Servis & Penjualan
-      </h2>
+      <h2 className="text-lg font-semibold">{title}</h2>
 
       <div>
         <div className="flex space-x-3 items-center">
           <ColorSwatch aria-label="Blue" color="#1e293b" size="xs" />
-          <p>Total Nota Servis</p>
+          <p>{firstLabel}</p>
         </div>
 
         <div className="flex space-x-3 items-center">
           <ColorSwatch aria-label="Blue" color="#94a3b8" size="xs" />
-          <p>Total Nota Penjualan</p>
+          <p>{secondLabel}</p>
         </div>
       </div>
 
       <div className="h-100 w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <RechartsBarChart data={chartData}>
+          <RechartsBarChart
+            data={chartData}
+            margin={{ top: 20, right: 12, left: 0, bottom: 0 }}
+          >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
 
             <XAxis dataKey="date" />
 
-            <YAxis allowDecimals={false} domain={[0, maxValue + 2]} />
+            <YAxis allowDecimals={false} domain={[0, yMax]} />
 
             <Bar
-              dataKey="totalService"
-              name="Jumlah Nota Servis"
+              dataKey="totalFirst"
+              name="Data Pertama"
               fill="#1e293b"
               radius={[5, 5, 0, 0]}
             >
-              <LabelList dataKey="totalService" position="top" />
+              <LabelList dataKey="totalFirst" position="top" />
             </Bar>
 
             <Bar
-              dataKey="totalSale"
-              name="Jumlah Nota Penjualan"
+              dataKey="totalSecond"
+              name="Data Kedua"
               fill="#94a3b8"
               radius={[5, 5, 0, 0]}
             >
-              <LabelList dataKey="totalSale" position="top" />
+              <LabelList dataKey="totalSecond" position="top" />
             </Bar>
           </RechartsBarChart>
         </ResponsiveContainer>

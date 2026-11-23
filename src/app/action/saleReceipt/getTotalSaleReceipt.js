@@ -25,7 +25,7 @@ export async function getTotalSaleReceipt(outletId, timeFilter) {
   }
 
   try {
-    const [totalSale, chartDataSale] = await Promise.all([
+    const [totalSale, data] = await Promise.all([
       prisma.saleReceipt.count({
         where: {
           ...(outletId && { outletId }),
@@ -49,6 +49,25 @@ export async function getTotalSaleReceipt(outletId, timeFilter) {
         },
       }),
     ]);
+
+    const groupedData = {};
+
+    data.forEach((item) => {
+      const date = item.createdAt.toLocaleDateString("en-CA", {
+        timeZone: "Asia/Jakarta",
+      });
+
+      if (!groupedData[date]) {
+        groupedData[date] = 0;
+      }
+
+      groupedData[date] += 1;
+    });
+
+    const chartDataSale = Object.entries(groupedData).map(([date, total]) => ({
+      date,
+      total,
+    }));
 
     return {
       totalSale,

@@ -1,11 +1,11 @@
 timestamp negatif di logout karena terlalu cepat transisinya
 timestamp negatif di login karena terlalu cepat transisinya
-ubah search di history nota servis jadi search nama dan kode nota (done)
-tambahkan tulisan warning saat delete (done ok)
-ubah normalize nama customer tiap kata pakai uppercase (done)
-ubah pesan error ke toast (done ok)
-tambah clumn staf di table history nota (done ok)
-ubah pesan error di semua action ke toast (done ok)
-normalize text update (done ok)
+create akun admin masih pakai speed
+clear data per periode (per tahun / bulan)
 buat versi android
-ubah timefilter konvert dari UTC ke WIB
+ubah semua komponen yang menggunakan new date / time di sesuaikan dengan server
+
+buat grafik total barang keluar (done ok)
+rapikan tabel inventaris (done ok)
+
+

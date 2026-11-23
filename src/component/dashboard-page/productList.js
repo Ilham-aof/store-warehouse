@@ -41,13 +41,13 @@ export function ProductList({ products, outlets }) {
         <Table.ScrollContainer>
           <Table.Content aria-label="Daftar produk">
             <Table.Header>
-              <Table.Column isRowHeader id="name" className="w-[30%]">
+              <Table.Column isRowHeader id="name" className="w-[25%]">
                 Nama Produk
               </Table.Column>
 
-              <Table.Column className="w-[13%]">Kategori</Table.Column>
+              <Table.Column className="w-[15%]">Kategori</Table.Column>
 
-              <Table.Column className="w-[12%]">Merek</Table.Column>
+              <Table.Column className="w-[15%]">Merek</Table.Column>
 
               <Table.Column className="w-[8%]">Stok</Table.Column>
 

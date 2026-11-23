@@ -71,7 +71,7 @@ export function Sidebar({ user }) {
             href={transactionChartHref}
           >
             <ChartColumn />
-            Grafik Transaksi
+            Statistik
           </Link>
 
           <Separator variant="default" />

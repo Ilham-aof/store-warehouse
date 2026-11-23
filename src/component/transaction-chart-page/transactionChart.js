@@ -1,26 +1,9 @@
 "use client";
-import {
-  Table,
-  Switch,
-  Dropdown,
-  Label,
-  Separator,
-  Button,
-  Chip,
-} from "@heroui/react";
-import { EllipsisVertical, ChartColumn, Printer } from "lucide-react";
-import { useState, useEffect } from "react";
+import { ChartColumn } from "lucide-react";
 
-import { PaginationUi } from "@/component/pagination";
-import { updateProcessStatus } from "@/app/action/serviceReceipt/updateProcessStatus";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
-import { SearchBar } from "@/component/searchBar";
 import { TimeFilter } from "@/component/timeFilter";
-import { WarrantyFilter } from "@/component/warrantyFilter";
-import { ServiceDetailModal } from "@/component/service-page/ServiceDetailModal";
-import { parseDate } from "@internationalized/date";
-import { ReceiptStatusFilter } from "@/component/receiptStatusFilter";
 import { BarChartUI } from "@/component/transaction-chart-page/barChart";
 
 export function TransactionChart({
@@ -29,6 +12,8 @@ export function TransactionChart({
   timeFilter,
   serviceReceipt,
   saleReceipt,
+  stockIns,
+  stockOuts,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -60,14 +45,12 @@ export function TransactionChart({
       page: 1,
     });
   }
-  console.log("Service :", serviceReceipt.chartDataService);
-  console.log("sale :", saleReceipt.chartDataSale);
 
   return (
     <div className="space-y-5">
       <div className="flex gap-3 items-center">
         <ChartColumn size={30} />
-        <h1 className="text-2xl font-bold">Grafik Transaksi</h1>
+        <h1 className="text-2xl font-bold">Statistik</h1>
       </div>
 
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
@@ -78,9 +61,21 @@ export function TransactionChart({
         options={chartTimeOptions}
       />
       <BarChartUI
-        serviceData={serviceReceipt.chartDataService}
-        saleData={saleReceipt.chartDataSale}
+        firstData={serviceReceipt.chartDataService}
+        secondData={saleReceipt.chartDataSale}
         timeFilter={timeFilter}
+        title="Statistik Nota"
+        firstLabel="Total Nota Servis"
+        secondLabel="Total Nota Penjualan"
+      />
+
+      <BarChartUI
+        firstData={stockIns}
+        secondData={stockOuts}
+        timeFilter={timeFilter}
+        title="Statistik Stok Barang"
+        firstLabel="Stok Masuk"
+        secondLabel="Stok Keluar"
       />
     </div>
   );
