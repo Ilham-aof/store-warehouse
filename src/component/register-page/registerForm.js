@@ -1,19 +1,20 @@
 "use client";
-import React from "react";
+
 import {
   TextField,
   Input,
+  Label,
   FieldError,
   ErrorMessage,
   Button,
+  toast,
 } from "@heroui/react";
-import Link from "next/link";
 import { useState, useActionState } from "react";
 import { registerAction } from "@/app/action/auth/register";
+import { useRouter } from "next/navigation";
 
 function getPasswordStrength(password) {
   if (!password) return { score: 0, label: "", color: "" };
-
   const rules = [
     password.length >= 8,
     /[a-z]/.test(password),
@@ -28,24 +29,42 @@ function getPasswordStrength(password) {
   return { score, label: "Kuat", text: "text-green-600" };
 }
 
-export default function page() {
+export function RegisterForm() {
+  const router = useRouter();
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
 
   const strength = getPasswordStrength(password);
-  const isStrongEnough = strength.score === 4;
 
-  const [state, action, isPending] = useActionState(registerAction, {
-    success: false,
-    errors: {},
-  });
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await registerAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Staf baru berhasil ditambahkan");
+        router.push("/admin");
+      } else if (result.errors.general) {
+        toast.danger("Gagal menambahkan staf", {
+          description: result.errors.general,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      errors: {},
+    },
+  );
 
   return (
-    <main className="bg-white flex flex-col justify-center items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 p-4 w-xl h-fit space-y-5">
+    <main className="bg-white flex flex-col justify-center items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-slate-400 py-8 w-full h-fit space-y-5">
       <h1 className="text-3xl font-bold">Register</h1>
       <form
         action={action}
-        className="flex flex-col justify-center items-center"
+        className="flex flex-col justify-center items-center space-y-1"
       >
         <TextField
           name="name"
@@ -55,10 +74,11 @@ export default function page() {
           className="w-80"
           validate={(value) => {
             if (!value) {
-              return "Nama wajib diisi";
+              return "Nama wajib diisi.";
             }
           }}
         >
+          <Label>Nama</Label>
           <Input
             placeholder="Nama"
             className="hover:bg-gray-200 focus:ring-slate-800"
@@ -80,13 +100,14 @@ export default function page() {
           className="w-80"
           validate={(value) => {
             if (!value) {
-              return "E-mail wajib diisi";
+              return "E-mail wajib diisi.";
             }
             if (!value.endsWith("@gmail.com")) {
               return "E-mail wajib menggunakan @gmail.com";
             }
           }}
         >
+          <Label>E-mail</Label>
           <Input
             placeholder="E-mail"
             className="hover:bg-gray-200 focus:ring-slate-800"
@@ -112,13 +133,14 @@ export default function page() {
           }}
           validate={(value) => {
             if (!value) {
-              return "Nomor HP wajib diisi";
+              return "Nomor HP wajib diisi.";
             }
             if (!/^08\d{8,11}$/.test(value)) {
-              return "Nomor HP tidak valid";
+              return "Nomor HP tidak valid.";
             }
           }}
         >
+          <Label>No. HP/WA</Label>
           <Input
             placeholder="Nomor HP"
             inputMode="numeric"
@@ -143,10 +165,11 @@ export default function page() {
           onChange={setPassword}
           validate={(value) => {
             if (!value) {
-              return "Password wajib diisi";
+              return "Password wajib diisi.";
             }
           }}
         >
+          <Label>Password</Label>
           <Input
             placeholder="Password"
             className="hover:bg-gray-200 focus:ring-slate-800"
@@ -184,12 +207,6 @@ export default function page() {
           {isPending ? "Mendaftar..." : "Daftar"}
         </Button>
       </form>
-      <p>
-        Sudah punya akun ?{" "}
-        <Link href="/login" className="text-blue-500 hover:underline">
-          Login disini
-        </Link>
-      </p>
     </main>
   );
 }

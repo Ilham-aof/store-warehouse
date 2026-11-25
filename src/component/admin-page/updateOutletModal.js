@@ -7,15 +7,42 @@ import {
   Label,
   Button,
   Separator,
+  toast,
+  ErrorMessage,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateOutletAction } from "@/app/action/outlet/updateOutletAction";
-import { BuildingComplexPlus } from "lucide-react";
+import { Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
-  const [outletCode, setOutletCode] = useState(selectedOutlet?.code ?? "");
-  const [state, action, isPending] = useActionState(updateOutletAction, null);
+  const router = useRouter();
   const [phone, setPhone] = useState(selectedOutlet?.phone ?? "");
+  const [outletCode, setOutletCode] = useState(selectedOutlet?.code ?? "");
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await updateOutletAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Perubahan cabang berhasil disimpan");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal mengubah data cabang", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
   return (
     <>
       <Modal.Backdrop
@@ -34,7 +61,7 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
             <Modal.Header>
               <Modal.Heading>
                 <div className="flex space-x-3 items-center">
-                  <BuildingComplexPlus size={30} />
+                  <Pencil size={30} />
                   <h1 className="text-2xl font-bold">Ubah Data Cabang</h1>
                 </div>
               </Modal.Heading>
@@ -91,7 +118,11 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.name ? (
+                        <ErrorMessage>{state.errors.name}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -125,7 +156,11 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.code ? (
+                        <ErrorMessage>{state.errors.code}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -147,7 +182,11 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.address ? (
+                        <ErrorMessage>{state.errors.address}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -173,12 +212,13 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.phone ? (
+                        <ErrorMessage>{state.errors.phone}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
-                </div>
-                <div className="text-center">
-                  {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
 

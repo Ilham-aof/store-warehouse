@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Modal,
   Input,
@@ -9,10 +10,12 @@ import {
   Select,
   ListBox,
   Separator,
+  toast,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateReceiptData } from "@/app/action/serviceReceipt/updateReceiptData";
 import { Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const accessoryLabels = {
   handphone: "Handphone",
@@ -29,19 +32,18 @@ const accessoryIdsByLabel = Object.fromEntries(
 
 function getAccessoryIds(items) {
   if (!Array.isArray(items)) return [];
-
   return items
     .map((item) => {
       if (Object.prototype.hasOwnProperty.call(accessoryLabels, item)) {
         return item;
       }
-
       return accessoryIdsByLabel[item];
     })
     .filter(Boolean);
 }
 
 export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
+  const router = useRouter();
   const [customerPhone, setCustomerPhone] = useState(
     String(selectedReceipt?.customerPhone ?? ""),
   );
@@ -62,7 +64,28 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
     0,
   );
 
-  const [state, action, isPending] = useActionState(updateReceiptData, null);
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await updateReceiptData(prevState, formData);
+      if (result.success) {
+        toast.success("Perubahan data nota berhasil disimpan");
+
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal mengubah data nota servis", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
 
   return (
     <>
@@ -78,7 +101,6 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
         <Modal.Container size="lg">
           <Modal.Dialog className="space-y-2">
             <Modal.CloseTrigger />
-
             <Modal.Header>
               <Modal.Heading>
                 <div className="flex space-x-3 items-center">
@@ -135,6 +157,7 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     </span>
                   </div>
                 </div>
+
                 <Separator />
 
                 <input
@@ -240,7 +263,6 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     }
                   >
                     <Label>Kelengkapan</Label>
-
                     <Select.Trigger>
                       <Select.Value>
                         {({ defaultChildren, isPlaceholder }) => {
@@ -272,10 +294,8 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                           }`;
                         }}
                       </Select.Value>
-
                       <Select.Indicator />
                     </Select.Trigger>
-
                     <Select.Popover>
                       <ListBox selectionMode="multiple">
                         <ListBox.Item id="handphone" textValue="Handphone">
@@ -340,11 +360,6 @@ export function UpdateReceiptModal({ isOpen, selectedReceipt, onClose }) {
                     </div>
                   </TextField>
                 </div>
-                <div className="text-center">
-                  {state?.error && <p className="text-danger">{state.error}</p>}
-                </div>
-
-                <div className="space-x-3"></div>
               </Modal.Body>
 
               <Modal.Footer className="space-x-3">

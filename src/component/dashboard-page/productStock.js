@@ -9,6 +9,7 @@ import { PaginationUi } from "@/component/pagination";
 import { BestSellerList } from "@/component/dashboard-page/bestSellerList";
 import { Box, Boxes } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { StockFilterSelection } from "@/component/stockFilterSelection";
 
 export function ProductStock({
   outlets,
@@ -17,10 +18,10 @@ export function ProductStock({
   bestSellers,
   totalItems,
   totalPages,
+  stockFilter,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const [searchKeyword, setSearchKeyword] = useState(
     searchParams.get("search") ?? "",
   );
@@ -52,6 +53,13 @@ export function ProductStock({
     });
   }
 
+  function handleStockFilterChange(value) {
+    updateQuery({
+      stockFilter: value,
+      page: 1,
+    });
+  }
+
   function handlePageChange(page) {
     updateQuery({ page });
   }
@@ -72,13 +80,18 @@ export function ProductStock({
           <h1 className="text-2xl font-bold">Stok Produk</h1>
         </div>
 
+        <SearchBar
+          keyword={searchKeyword}
+          onKeywordChange={setSearchKeyword}
+          onSearch={handleSearch}
+          placeholder="Cari nama produk..."
+          showScanButton
+        />
+
         <div className="flex space-x-5">
-          <SearchBar
-            keyword={searchKeyword}
-            onKeywordChange={setSearchKeyword}
-            onSearch={handleSearch}
-            placeholder="Cari nama produk..."
-            showScanButton
+          <StockFilterSelection
+            stockFilter={stockFilter}
+            setStockFilter={handleStockFilterChange}
           />
           <Separator orientation="vertical" />
           <ProductActionButton selectedOutletId={selectedOutletId} />

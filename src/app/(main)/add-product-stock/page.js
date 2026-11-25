@@ -1,5 +1,5 @@
 import { getOutlet } from "@/app/action/outlet/getOutlet";
-import { AddProductStockForm } from "@/component/add-product-stock-page/addProductStockForm";
+import { ProductStockForm } from "@/component/add-product-stock-page/productStockForm";
 
 export default async function Page({ searchParams }) {
   const params = await searchParams;
@@ -7,7 +7,7 @@ export default async function Page({ searchParams }) {
   const selectedOutletId = params.outletId ?? outlets[0]?.id ?? null;
   return (
     <main className="w-full">
-      <AddProductStockForm
+      <ProductStockForm
         outlets={outlets}
         selectedOutletId={selectedOutletId}
         mode="in"

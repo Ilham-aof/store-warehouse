@@ -24,5 +24,7 @@ export const config = {
     "/take-product-stock/:path*",
     "/saleReceipt/:path*",
     "/serviceReceipt/:path*",
+    "/register/:path*",
+    "/transaction-chart/:path*",
   ],
 };

@@ -76,13 +76,14 @@ export async function deleteOutletAction(prevState, formData) {
       },
     });
   } catch (error) {
-    console.error("Delete outlet error:", error);
-
     return {
       success: false,
-      error: "Gagal menghapus outlet.",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
   revalidatePath("/admin");
-  redirect("/admin");
+  return {
+    success: true,
+    error: null,
+  };
 }

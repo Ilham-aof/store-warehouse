@@ -4,6 +4,13 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+function formatName(value) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (char) => char.toUpperCase());
+}
+
 export async function addProductAction(prevState, formData) {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
@@ -55,36 +62,40 @@ export async function addProductAction(prevState, formData) {
 
   while (formData.get(`products[${index}][name]`) !== null) {
     const barcode = formData.get(`products[${index}][barcode]`);
-    const name = formData.get(`products[${index}][name]`);
-    const category = formData.get(`products[${index}][category]`);
-    const brand = formData.get(`products[${index}][brand]`);
+    const nameValue = formData.get(`products[${index}][name]`);
+    const name = typeof nameValue === "string" ? formatName(nameValue) : "";
+    const categoryValue = formData.get(`products[${index}][category]`);
+    const category =
+      typeof categoryValue === "string" ? formatName(categoryValue) : "";
+    const brandValue = formData.get(`products[${index}][brand]`);
+    const brand = typeof brandValue === "string" ? formatName(brandValue) : "";
     const quantity = formData.get(`products[${index}][quantity]`);
     const price = formData.get(`products[${index}][price]`);
 
     const productErrors = {};
 
     if (!barcode?.trim()) {
-      productErrors.barcode = "Barcode produk wajib diisi";
+      productErrors.barcode = "Barcode produk wajib diisi.";
     }
 
     if (!name?.trim()) {
-      productErrors.name = "Nama produk wajib diisi";
+      productErrors.name = "Nama produk wajib diisi.";
     }
 
     if (!category?.trim()) {
-      productErrors.category = "Kategori produk wajib diisi";
+      productErrors.category = "Kategori produk wajib diisi.";
     }
 
     if (!brand?.trim()) {
-      productErrors.brand = "Brand produk wajib diisi";
+      productErrors.brand = "Brand produk wajib diisi.";
     }
 
     if (!quantity) {
-      productErrors.quantity = "Jumlah produk wajib diisi";
+      productErrors.quantity = "Jumlah produk wajib diisi.";
     }
 
     if (!price) {
-      productErrors.price = "Harga produk wajib diisi";
+      productErrors.price = "Harga produk wajib diisi.";
     }
 
     if (Object.keys(productErrors).length > 0) {
@@ -118,7 +129,7 @@ export async function addProductAction(prevState, formData) {
     if (seenBarcodes.has(barcode)) {
       errors[i] = {
         ...errors[i],
-        barcode: "Barcode duplikat dalam form",
+        barcode: "Barcode duplikat dalam form.",
       };
     }
 
@@ -146,7 +157,7 @@ export async function addProductAction(prevState, formData) {
       if (existingBarcodes.has(products[i].barcode)) {
         errors[i] = {
           ...errors[i],
-          barcode: "Barcode sudah digunakan di outlet ini",
+          barcode: "Barcode sudah digunakan di outlet ini.",
         };
       }
     }
@@ -178,7 +189,6 @@ export async function addProductAction(prevState, formData) {
                 id: product.id,
               },
             },
-
             user: {
               connect: {
                 id: session.userId,
@@ -189,15 +199,17 @@ export async function addProductAction(prevState, formData) {
       }
     });
   } catch (error) {
-    console.log(error);
     return {
       success: false,
       errors: {
-        general: "Gagal menambahkan produk",
+        general: "Terjadi kesalahan pada server. Coba lagi nanti.",
       },
     };
   }
 
   revalidatePath("/");
-  redirect(`/?outletId=${outletId}`);
+  return {
+    success: true,
+    errors: {},
+  };
 }

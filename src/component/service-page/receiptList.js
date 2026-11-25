@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Table,
   Switch,
@@ -6,18 +7,26 @@ import {
   Label,
   Separator,
   Button,
+  toast,
 } from "@heroui/react";
-import { Pencil, EllipsisVertical, ReceiptText, Printer } from "lucide-react";
+import {
+  Pencil,
+  EllipsisVertical,
+  ReceiptText,
+  Printer,
+  Check,
+  X,
+} from "lucide-react";
 import { useState, useEffect } from "react";
-
 import { PaginationUi } from "@/component/pagination";
+import { updateSwitchStatus } from "@/app/action/serviceReceipt/updateSwitchStatus";
 import { updateServiceReceiptStatus } from "@/app/action/serviceReceipt/updateServiceReceiptStatus";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CreateReceiptButton } from "@/component/receipt-page/createReceiptButton";
+import { CreateReceiptButton } from "@/component/service-page/createReceiptButton";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";
-import { UpdateReceiptModal } from "@/component/receipt-page/updateReceiptModal";
-import { ListWarrantyModal } from "@/component/receipt-page/listWarrantyModal";
+import { UpdateReceiptModal } from "@/component/service-page/updateReceiptModal";
+import { ServiceDetailModal } from "@/component/service-page/ServiceDetailModal";
 
 export function ReceiptList({
   outlets,
@@ -30,7 +39,6 @@ export function ReceiptList({
   const searchParams = useSearchParams();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
-
   const [searchKeyword, setSearchKeyword] = useState(
     searchParams.get("search") ?? "",
   );
@@ -43,7 +51,6 @@ export function ReceiptList({
 
   function updateQuery(params) {
     const query = new URLSearchParams(searchParams.toString());
-
     Object.entries(params).forEach(([key, value]) => {
       if (value === "" || value == null) {
         query.delete(key);
@@ -51,7 +58,6 @@ export function ReceiptList({
         query.set(key, String(value));
       }
     });
-
     router.push(`?${query.toString()}`);
   }
 
@@ -62,38 +68,72 @@ export function ReceiptList({
     });
   }
 
+  const handleReceiptStatusChange = async (receiptId, newStatus) => {
+    try {
+      const result = await updateServiceReceiptStatus(receiptId, newStatus);
+      if (!result.success) {
+        toast("Gagal memperbarui status nota", {
+          description: result.error,
+          variant: "danger",
+        });
+        return;
+      }
+      toast(
+        newStatus === "Sukses"
+          ? "Nota servis berhasil diselesaikan"
+          : "Nota servis telah dibatalkan",
+        {
+          variant: "success",
+        },
+      );
+      router.refresh();
+    } catch (error) {
+      toast("Terjadi kesalahan saat memperbarui status nota", {
+        variant: "danger",
+      });
+    }
+  };
+
   function handlePageChange(page) {
     updateQuery({ page });
   }
 
-  async function handleStatusChange(receiptId, statusType, value) {
-    console.log("Switch ditekan:", { receiptId, statusType, value });
+  async function handleSwitchStatusChange(receiptId, status, value) {
+    try {
+      const result = await updateSwitchStatus(receiptId, status, value);
 
-    const result = await updateServiceReceiptStatus(
-      receiptId,
-      statusType,
-      value,
-    );
+      if (!result.success) {
+        toast("Gagal memperbarui status nota", {
+          description: result.error,
+          variant: "danger",
+        });
+        return;
+      }
 
-    if (result?.success) {
+      toast("Status nota berhasil diperbarui", {
+        variant: "success",
+      });
+
       router.refresh();
+    } catch (error) {
+      toast("Terjadi kesalahan saat memperbarui status nota", {
+        variant: "danger",
+      });
     }
   }
-
   return (
     <section className="space-y-5">
       <div className="flex space-x-3 items-center">
         <ReceiptText size={30} />
         <h1 className="text-2xl font-bold">Daftar Servis</h1>
       </div>
-
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
       <div className="flex space-x-5">
         <SearchBar
           keyword={searchKeyword}
           onKeywordChange={setSearchKeyword}
           onSearch={handleSearch}
-          placeholder="Cari nama pelanggan..."
+          placeholder="Cari nota / nama pelanggan..."
         />
         <Separator orientation="vertical" />
         <CreateReceiptButton selectedOutletId={selectedOutletId} />
@@ -106,11 +146,11 @@ export function ReceiptList({
                 Kode Nota
               </Table.Column>
               <Table.Column className="w-[20%]">Pelanggan</Table.Column>
-              <Table.Column className="w-[10%]">Tanggal Nota</Table.Column>
-              <Table.Column className="w-[15%]">Garansi</Table.Column>
-              <Table.Column className="w-[15%]">Status Pengerjaan</Table.Column>
-              <Table.Column className="w-[15%]">Status Barang</Table.Column>
-              <Table.Column className="w-[10%]"></Table.Column>
+              <Table.Column className="w-[15%]">Detail Servis</Table.Column>
+              <Table.Column className="w-[13%]">Status Pengerjaan</Table.Column>
+              <Table.Column className="w-[17%]">Status Barang</Table.Column>
+              <Table.Column className="w-[12%]">Tanggal Nota</Table.Column>
+              <Table.Column className="w-[8%]"></Table.Column>
             </Table.Header>
 
             <Table.Body>
@@ -123,15 +163,11 @@ export function ReceiptList({
                   <Table.Cell>
                     <p className="text-md font-bold">{receipt.customerName}</p>
                     <p className="text-sm text-muted">
-                      No. HP/WA : {receipt.customerPhone}
+                      No. HP/WA : {receipt.customerPhone || "-"}
                     </p>
                     <p className="text-sm text-muted">
                       Tipe HP : {receipt.device}
                     </p>
-                  </Table.Cell>
-
-                  <Table.Cell>
-                    {receipt.createdAt.toLocaleDateString("id-ID")}
                   </Table.Cell>
 
                   <Table.Cell>
@@ -140,11 +176,11 @@ export function ReceiptList({
                         type="button"
                         onClick={() => {
                           setSelectedReceipt(receipt);
-                          setActiveModal("warranty");
+                          setActiveModal("serviceDetail");
                         }}
                         className="text-blue-600 hover:underline text-left"
                       >
-                        Lihat {receipt.serviceItems.length} garansi
+                        Lihat {receipt.serviceItems.length} perbaikan
                       </button>
                     </div>
                   </Table.Cell>
@@ -153,7 +189,11 @@ export function ReceiptList({
                     <Switch
                       isSelected={receipt.processStatus}
                       onChange={(value) =>
-                        handleStatusChange(receipt.id, "processStatus", value)
+                        handleSwitchStatusChange(
+                          receipt.id,
+                          "processStatus",
+                          value,
+                        )
                       }
                     >
                       <Switch.Content
@@ -177,7 +217,11 @@ export function ReceiptList({
                     <Switch
                       isSelected={receipt.pickupStatus}
                       onChange={(value) =>
-                        handleStatusChange(receipt.id, "pickupStatus", value)
+                        handleSwitchStatusChange(
+                          receipt.id,
+                          "pickupStatus",
+                          value,
+                        )
                       }
                     >
                       <Switch.Content
@@ -199,6 +243,10 @@ export function ReceiptList({
                     </Switch>
                   </Table.Cell>
 
+                  <Table.Cell>
+                    {receipt.createdAt.toLocaleDateString("id-ID")}
+                  </Table.Cell>
+
                   <Table.Cell className="ring-0 outline-none shadow-none ring-offset-0">
                     <div className="flex items-center justify-center">
                       <Dropdown>
@@ -210,11 +258,32 @@ export function ReceiptList({
                           <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
-                          <Dropdown.Menu className="space-y-3">
+                          <Dropdown.Menu className="space-y-2">
+                            <Dropdown.Item
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
+                              onAction={() =>
+                                handleReceiptStatusChange(receipt.id, "Sukses")
+                              }
+                            >
+                              <Check />
+                              <Label>Selesai</Label>
+                            </Dropdown.Item>
+                            <Dropdown.Item
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
+                              onAction={() =>
+                                handleReceiptStatusChange(receipt.id, "Cancel")
+                              }
+                            >
+                              <X />
+                              <Label>Batal Servis</Label>
+                            </Dropdown.Item>
+
+                            <Separator />
+
                             <Dropdown.Item
                               id="cetak"
                               textValue="Cetak Nota"
-                              className="flex items-center"
+                              className="flex items-center ring-0 outline-none shadow-none ring-offset-0"
                               onAction={() => {
                                 router.push(`/serviceReceipt/${receipt.id}`);
                               }}
@@ -222,6 +291,7 @@ export function ReceiptList({
                               <Printer />
                               <Label>Cetak Nota</Label>
                             </Dropdown.Item>
+
                             <Dropdown.Item
                               id="edit"
                               textValue="Edit Nota"
@@ -246,8 +316,8 @@ export function ReceiptList({
         </Table.ScrollContainer>
       </Table>
 
-      <ListWarrantyModal
-        isOpen={activeModal === "warranty"}
+      <ServiceDetailModal
+        isOpen={activeModal === "serviceDetail"}
         receipt={selectedReceipt}
         onClose={() => {
           setActiveModal(null);

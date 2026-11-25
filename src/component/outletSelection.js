@@ -2,6 +2,7 @@
 
 import { ListBox, Select, Header } from "@heroui/react";
 import { usePathname, useRouter } from "next/navigation";
+import { BuildingComplex } from "lucide-react";
 
 export function OutletSelection({ outlets, selectedOutletId }) {
   const router = useRouter();
@@ -13,7 +14,11 @@ export function OutletSelection({ outlets, selectedOutletId }) {
 
   return (
     <div className="flex items-center space-x-5">
-      <p>Cabang</p>
+      <div className="flex space-x-3 items-center">
+        <BuildingComplex />
+        <p>Cabang</p>
+      </div>
+
       <Select
         variant="secondary"
         aria-label="Pilih Outlet"

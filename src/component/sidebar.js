@@ -1,4 +1,5 @@
 "use client";
+
 import { Link, Separator, Avatar } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { LogoutButton } from "@/component/dashboard-page/logoutButton";
@@ -11,6 +12,7 @@ import {
   ClipboardClock,
   Calculator,
   ShoppingBag,
+  ChartColumn,
 } from "lucide-react";
 
 export function Sidebar({ user }) {
@@ -21,6 +23,10 @@ export function Sidebar({ user }) {
     ? `/product-history?outletId=${outletId}`
     : "/product-history";
 
+  const transactionChartHref = outletId
+    ? `/transaction-chart?outletId=${outletId}`
+    : "/transaction-chart";
+
   const stockHref = outletId ? `/?outletId=${outletId}` : "/";
 
   const cashierHref = outletId ? `/cashier?outletId=${outletId}` : "/cashier";
@@ -29,7 +35,7 @@ export function Sidebar({ user }) {
     ? `/sale-history?outletId=${outletId}`
     : "/sale-history";
 
-  const receiptHref = outletId ? `/order?outletId=${outletId}` : "/order";
+  const serviceHref = outletId ? `/service?outletId=${outletId}` : "/service";
 
   const receiptHistoryHref = outletId
     ? `/service-history?outletId=${outletId}`
@@ -61,6 +67,14 @@ export function Sidebar({ user }) {
             Mutasi Stok
           </Link>
 
+          <Link
+            className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
+            href={transactionChartHref}
+          >
+            <ChartColumn />
+            Statistik
+          </Link>
+
           <Separator variant="default" />
 
           <Link
@@ -70,23 +84,25 @@ export function Sidebar({ user }) {
             <Calculator />
             Kasir
           </Link>
+
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={saleHistoryHref}
           >
             <ShoppingBag />
-            Riwayat Transaksi
+            Riwayat Penjualan
           </Link>
 
           <Separator variant="default" />
 
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
-            href={receiptHref}
+            href={serviceHref}
           >
             <ReceiptText />
             Servis
           </Link>
+
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={receiptHistoryHref}

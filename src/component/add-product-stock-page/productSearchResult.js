@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
 import { ScanBarcode, LoaderCircle, PackageSearch } from "lucide-react";
 import { bulkStockInAction } from "@/app/action/product/bulkAddStockProducts";
 import { bulkStockOutAction } from "@/app/action/product/bulkTakeStockProducts";
@@ -14,6 +14,7 @@ export function ProductSearchResult({
   items,
   message,
   hasSearched,
+  onSubmitSuccess,
   isSearching,
   selectedOutletId,
   outlets,
@@ -31,7 +32,35 @@ export function ProductSearchResult({
 
   const selectedAction = mode === "in" ? bulkStockInAction : bulkStockOutAction;
 
-  const [state, action, isPending] = useActionState(selectedAction, null);
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await selectedAction(prevState, formData);
+
+      if (result.success) {
+        toast.success(
+          mode === "in" ? "Stok berhasil ditambahkan" : "Stok berhasil diambil",
+        );
+
+        onSubmitSuccess();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger(
+          mode === "in" ? "Gagal menambahkan stok" : "Gagal mengambil stok",
+          {
+            description: result.error,
+          },
+        );
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
 
   return (
     <div className="space-y-5">
@@ -143,10 +172,6 @@ export function ProductSearchResult({
                 )}
               </div>
             </div>
-
-            {state?.error && (
-              <p className="text-center text-danger">{state.error}</p>
-            )}
 
             <div className="flex justify-end space-x-5">
               <Button

@@ -5,6 +5,13 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+function formatText(value) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (char) => char.toUpperCase());
+}
+
 export async function addOutletAction(prevState, formData) {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
@@ -34,47 +41,61 @@ export async function addOutletAction(prevState, formData) {
     };
   }
 
-  const name = formData.get("outletName")?.trim();
+  const nameValue = formData.get("outletName")?.trim();
   const code = formData.get("outletCode")?.trim().toUpperCase();
   const address = formData.get("outletAddress")?.trim();
   const phone = formData.get("outletPhone")?.trim();
 
+  const name = typeof nameValue === "string" ? formatText(nameValue) : "";
+
   if (!name) {
     return {
       success: false,
-      error: "Nama cabang wajib diisi",
+      errors: {
+        name: "Nama cabang wajib diisi.",
+      },
     };
   }
 
   if (!code) {
     return {
       success: false,
-      error: "Kode cabang wajib diisi",
+      errors: {
+        code: "Kode cabang wajib diisi.",
+      },
     };
   }
   if (!/^[A-Z0-9]{2,5}$/.test(code)) {
     return {
       success: false,
-      error: "Kode cabang harus 2–5 huruf",
+      errors: {
+        code: "Kode cabang harus 2–5 huruf.",
+      },
     };
   }
 
   if (!address) {
     return {
       success: false,
-      error: "Alamat cabang wajib diisi",
+      errors: {
+        address: "Alamat cabang wajib diisi.",
+      },
     };
   }
 
   if (!phone) {
     return {
       success: false,
-      error: "Nomor telepon cabang wajib diisi",
+      errors: {
+        phone: "Nomor telepon cabang wajib diisi.",
+      },
     };
   } else if (!/^08\d{8,11}$/.test(phone)) {
     return {
       success: false,
-      error: "Nomor telepon cabang tidak valid",
+      errors: {
+        phone: "Nomor telepon cabang tidak valid.",
+      },
     };
   }
   try {
@@ -88,7 +109,7 @@ export async function addOutletAction(prevState, formData) {
     if (existingOutlet) {
       return {
         success: false,
-        error: "Nama cabang sudah digunakan",
+        error: "Nama cabang sudah digunakan.",
       };
     }
 
@@ -103,9 +124,12 @@ export async function addOutletAction(prevState, formData) {
   } catch (error) {
     return {
       success: false,
-      error: "Gagal menambahkan cabang",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
   revalidatePath("/admin");
-  redirect("/admin");
+  return {
+    success: true,
+    error: null,
+  };
 }

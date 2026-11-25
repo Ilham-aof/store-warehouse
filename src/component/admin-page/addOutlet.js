@@ -8,24 +8,51 @@ import {
   FieldError,
   Label,
   Modal,
+  toast,
 } from "@heroui/react";
 import { useActionState, useState } from "react";
 import { addOutletAction } from "@/app/action/outlet/addOutletAction";
 import { Plus, BuildingComplexPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function AddOutlet() {
+  const router = useRouter();
   const [outletCode, setOutletCode] = useState("");
-  const [state, action, isPending] = useActionState(addOutletAction, {
-    success: false,
-    errors: {},
-  });
   const [phone, setPhone] = useState("");
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await addOutletAction(prevState, formData);
+
+      if (result.success) {
+        toast.success("Cabang baru berhasil ditambahkan");
+        setIsOpen(false);
+        setOutletCode("");
+        setPhone("");
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal menambahkan cabang", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
   return (
     <>
-      <Modal>
+      <Modal isOpen={isOpen} onOpenChange={setIsOpen}>
         <Button
           type="submit"
           isDisabled={isPending}
+          onPress={() => setIsOpen(true)}
           className="bg-slate-800 text-yellow-100 hover:bg-slate-600"
         >
           <Plus />
@@ -61,7 +88,11 @@ export function AddOutlet() {
                         className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
-                        <FieldError />
+                        {state.errors?.name ? (
+                          <ErrorMessage>{state.errors.name}</ErrorMessage>
+                        ) : (
+                          <FieldError />
+                        )}
                       </div>
                     </TextField>
 
@@ -96,7 +127,11 @@ export function AddOutlet() {
                         className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
-                        <FieldError />
+                        {state.errors?.code ? (
+                          <ErrorMessage>{state.errors.code}</ErrorMessage>
+                        ) : (
+                          <FieldError />
+                        )}
                       </div>
                     </TextField>
 
@@ -115,7 +150,11 @@ export function AddOutlet() {
                         className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
-                        <FieldError />
+                        {state.errors?.address ? (
+                          <ErrorMessage>{state.errors.address}</ErrorMessage>
+                        ) : (
+                          <FieldError />
+                        )}
                       </div>
                     </TextField>
 
@@ -141,16 +180,13 @@ export function AddOutlet() {
                         className="hover:bg-gray-200 focus:ring-slate-800"
                       />
                       <div className="min-h-6">
-                        <FieldError />
+                        {state.errors?.phone ? (
+                          <ErrorMessage>{state.errors.phone}</ErrorMessage>
+                        ) : (
+                          <FieldError />
+                        )}
                       </div>
                     </TextField>
-                  </div>
-                  <div className="text-center">
-                    {state?.error && (
-                      <ErrorMessage slot="description">
-                        {state.error}
-                      </ErrorMessage>
-                    )}
                   </div>
                 </Modal.Body>
                 <Modal.Footer className="space-x-3">

@@ -2,7 +2,6 @@
 import { Table, Dropdown, Label, Separator, Button } from "@heroui/react";
 import { EllipsisVertical, ShoppingBag, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
-
 import { PaginationUi } from "@/component/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
@@ -77,6 +76,14 @@ export function SaleHistoryList({
     });
   }
 
+  const timeOptions = [
+    { id: "all", label: "Semua" },
+    { id: "today", label: "Hari Ini" },
+    { id: "week", label: "Minggu Ini" },
+    { id: "month", label: "Bulan Ini" },
+    { id: "custom", label: "Kustom" },
+  ];
+
   function handleTimeFilterChange(value) {
     setDateRange(null);
 
@@ -116,7 +123,7 @@ export function SaleHistoryList({
     <section className="space-y-5">
       <div className="flex gap-3 items-center">
         <ShoppingBag size={30} />
-        <h1 className="text-2xl font-bold">Daftar Riwayat Transaksi</h1>
+        <h1 className="text-2xl font-bold">Daftar Riwayat Penjualan</h1>
       </div>
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
       <div className="flex space-x-5">
@@ -125,6 +132,7 @@ export function SaleHistoryList({
           setTimeFilter={handleTimeFilterChange}
           dateRange={dateRange}
           setDateRange={handleDateRangeChange}
+          options={timeOptions}
         />
         <Separator orientation="vertical" />
         <SearchBar
@@ -143,7 +151,7 @@ export function SaleHistoryList({
               </Table.Column>
               <Table.Column className="w-[20%]">Produk</Table.Column>
               <Table.Column className="w-[20%]">Total Transaksi</Table.Column>
-              <Table.Column className="w-[10%]">Staff</Table.Column>
+              <Table.Column className="w-[10%]">Staf</Table.Column>
               <Table.Column className="w-[20%]">Tanggal</Table.Column>
               <Table.Column className="w-[10%]"></Table.Column>
             </Table.Header>
@@ -197,7 +205,7 @@ export function SaleHistoryList({
                           <EllipsisVertical className="text-slate-800" />
                         </Button>
                         <Dropdown.Popover className="p-1">
-                          <Dropdown.Menu className="space-y-3">
+                          <Dropdown.Menu className="space-y-2">
                             <Dropdown.Item
                               id="cetak"
                               textValue="Cetak Nota"

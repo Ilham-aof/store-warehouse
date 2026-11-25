@@ -98,7 +98,7 @@ export async function bulkStockInAction(prevState, formData) {
     if (outletId === targetOutlet) {
       return {
         success: false,
-        error: "Cabang asal tidak boleh sama dengan cabang penerima.",
+        error: "Cabang tujuan tidak boleh sama dengan cabang asal.",
       };
     }
   }
@@ -155,7 +155,7 @@ export async function bulkStockInAction(prevState, formData) {
     if (error.message === "PRODUCT_NOT_FOUND") {
       return {
         success: false,
-        error: "Ada produk yang tidak ditemukan di outlet terpilih.",
+        error: "Terdapat produk yang tidak ditemukan di outlet terpilih.",
       };
     }
 
@@ -168,7 +168,7 @@ export async function bulkStockInAction(prevState, formData) {
 
     return {
       success: false,
-      error: "Gagal menambahkan stok.",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 
@@ -177,7 +177,9 @@ export async function bulkStockInAction(prevState, formData) {
       ? `/add-product-stock?outletId=${outletId}`
       : `/?outletId=${outletId}`;
 
-  revalidatePath("/add-product-stock");
-  revalidatePath("/");
-  redirect(destination);
+  revalidatePath(destination);
+  return {
+    success: true,
+    error: null,
+  };
 }

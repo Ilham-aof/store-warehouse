@@ -28,9 +28,6 @@ export async function bulkStockOutAction(prevState, formData) {
   const redirectTo = formData.get("redirectTo");
   const rawItems = formData.get("items");
 
-  console.log(mutationType);
-  console.log(targetOutlet);
-
   if (!outletId) {
     return {
       success: false,
@@ -101,7 +98,7 @@ export async function bulkStockOutAction(prevState, formData) {
     if (outletId === targetOutlet) {
       return {
         success: false,
-        error: "Cabang asal tidak boleh sama dengan cabang penerima.",
+        error: "Cabang tujuan tidak boleh sama dengan cabang asal.",
       };
     }
   }
@@ -115,11 +112,22 @@ export async function bulkStockOutAction(prevState, formData) {
         },
         select: {
           id: true,
+          quantity: true,
         },
       });
 
       if (products.length !== items.length) {
         throw new Error("PRODUCT_NOT_FOUND");
+      }
+
+      for (const item of items) {
+        const product = products.find(
+          (product) => product.id === item.productId,
+        );
+
+        if (product.quantity < item.quantity) {
+          throw new Error("INSUFFICIENT_STOCK");
+        }
       }
 
       if (mutationType === "TRANSFER") {
@@ -159,7 +167,14 @@ export async function bulkStockOutAction(prevState, formData) {
     if (error.message === "PRODUCT_NOT_FOUND") {
       return {
         success: false,
-        error: "Ada produk yang tidak ditemukan di outlet terpilih.",
+        error: "Terdapat produk yang tidak ditemukan di outlet terpilih.",
+      };
+    }
+
+    if (error.message === "INSUFFICIENT_STOCK") {
+      return {
+        success: false,
+        error: "Stok produk tidak mencukupi.",
       };
     }
 
@@ -172,7 +187,7 @@ export async function bulkStockOutAction(prevState, formData) {
 
     return {
       success: false,
-      error: "Gagal menambahkan stok.",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 
@@ -181,7 +196,9 @@ export async function bulkStockOutAction(prevState, formData) {
       ? `/take-product-stock?outletId=${outletId}`
       : `/?outletId=${outletId}`;
 
-  revalidatePath("/add-product-stock");
-  revalidatePath("/");
-  redirect(destination);
+  revalidatePath(destination);
+  return {
+    success: true,
+    error: null,
+  };
 }

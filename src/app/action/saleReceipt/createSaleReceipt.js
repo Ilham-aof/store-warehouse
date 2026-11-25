@@ -232,11 +232,15 @@ export async function createSaleReceiptAction(prevState, formData) {
     }
     return {
       success: false,
-      error: "Gagal menambahkan stok.",
+      error: "Terjadi kesalahan pada server. Coba lagi nanti.",
     };
   }
 
   revalidatePath("/cashier");
   revalidatePath("/");
-  redirect(`/saleReceipt/${receiptId}`);
+  return {
+    success: true,
+    errors: null,
+    redirectUrl: `/saleReceipt/${receiptId}`,
+  };
 }

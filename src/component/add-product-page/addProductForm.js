@@ -7,6 +7,7 @@ import {
   TextField,
   ErrorMessage,
   FieldError,
+  toast,
 } from "@heroui/react";
 import { Plus, BadgePlus } from "lucide-react";
 import { useState, useActionState } from "react";
@@ -20,11 +21,29 @@ export function AddProductForm({ outlets, selectedOutletId }) {
   const [nextFormId, setNextFormId] = useState(1);
   const [quantity, setQuantity] = useState({});
   const [price, setPrice] = useState({});
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await addProductAction(prevState, formData);
 
-  const [state, action, isPending] = useActionState(addProductAction, {
-    success: false,
-    errors: {},
-  });
+      if (result.success) {
+        toast.success("Produk baru berhasil ditambahkan");
+        setForms([0]);
+        router.refresh();
+      } else if (result.errors.general) {
+        toast.danger("Gagal menambahkan produk", {
+          description: result.errors.general,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+
+      return result;
+    },
+    {
+      success: false,
+      errors: {},
+    },
+  );
 
   return (
     <div className="bg-white  items-center rounded-2xl shadow-[4px_4px_4px,inset_0_0_6px_rgba(0,0,0,0.2)] shadow-gray-400 p-4 space-y-5">
@@ -59,17 +78,15 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Barcode produk wajib diisi";
+                    return "Barcode produk wajib diisi.";
                   }
                 }}
               >
                 <Label>Barcode</Label>
-
                 <Input
                   placeholder="Barcode Produk"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
                   {state.errors?.[index]?.barcode ? (
                     <ErrorMessage>{state.errors[index].barcode}</ErrorMessage>
@@ -78,6 +95,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                   )}
                 </div>
               </TextField>
+
               <TextField
                 name={`products[${index}][name]`}
                 aria-label="product Name"
@@ -86,17 +104,15 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Nama produk wajib diisi";
+                    return "Nama produk wajib diisi.";
                   }
                 }}
               >
                 <Label>Nama</Label>
-
                 <Input
                   placeholder="Nama Produk"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
                   {state.errors?.[index]?.name ? (
                     <ErrorMessage>{state.errors[index].name}</ErrorMessage>
@@ -105,6 +121,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                   )}
                 </div>
               </TextField>
+
               <TextField
                 name={`products[${index}][category]`}
                 aria-label="product category"
@@ -113,25 +130,24 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Kategori produk wajib diisi";
+                    return "Kategori produk wajib diisi.";
                   }
                 }}
               >
                 <Label>Kategori</Label>
-
                 <Input
                   placeholder="Kategori Produk"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
-                  {state.errors?.[index]?.type ? (
-                    <ErrorMessage>{state.errors[index].type}</ErrorMessage>
+                  {state.errors?.[index]?.category ? (
+                    <ErrorMessage>{state.errors[index].category}</ErrorMessage>
                   ) : (
                     <FieldError />
                   )}
                 </div>
               </TextField>
+
               <TextField
                 name={`products[${index}][brand]`}
                 aria-label="product Brand"
@@ -140,17 +156,15 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 className="w-full"
                 validate={(value) => {
                   if (!value) {
-                    return "Merek produk wajib diisi";
+                    return "Merek produk wajib diisi.";
                   }
                 }}
               >
                 <Label>Merek</Label>
-
                 <Input
                   placeholder="Merek Produk"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
                   {state.errors?.[index]?.brand ? (
                     <ErrorMessage>{state.errors[index].brand}</ErrorMessage>
@@ -159,6 +173,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                   )}
                 </div>
               </TextField>
+
               <TextField
                 name={`products[${index}][quantity]`}
                 aria-label="product Quantity"
@@ -174,17 +189,15 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 }}
                 validate={(value) => {
                   if (!value) {
-                    return "Jumlah produk wajib diisi";
+                    return "Jumlah produk wajib diisi.";
                   }
                 }}
               >
                 <Label>Jumlah</Label>
-
                 <Input
                   placeholder="Jumlah Produk"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
                   {state.errors?.[index]?.quantity ? (
                     <ErrorMessage>{state.errors[index].quantity}</ErrorMessage>
@@ -193,6 +206,7 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                   )}
                 </div>
               </TextField>
+
               <TextField
                 name={`products[${index}][price]`}
                 aria-label="product Price"
@@ -208,17 +222,15 @@ export function AddProductForm({ outlets, selectedOutletId }) {
                 }}
                 validate={(value) => {
                   if (!value) {
-                    return "Harga produk wajib diisi";
+                    return "Harga produk wajib diisi.";
                   }
                 }}
               >
                 <Label>Harga</Label>
-
                 <Input
                   placeholder="Harga Produk"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
                   {state.errors?.[index]?.price ? (
                     <ErrorMessage>{state.errors[index].price}</ErrorMessage>
@@ -257,12 +269,6 @@ export function AddProductForm({ outlets, selectedOutletId }) {
             <Plus />
             Tambah Form
           </Button>
-        </div>
-
-        <div className="text-center">
-          {state.errors?.general && (
-            <ErrorMessage>{state.errors.general}</ErrorMessage>
-          )}
         </div>
 
         <div className="self-end space-x-5">

@@ -32,7 +32,6 @@ export function PrintServiceReceipt({ receipt }) {
     if (!element) return;
 
     const html2pdf = (await import("html2pdf.js")).default;
-
     const heightPx = element.scrollHeight;
     const heightMm = (heightPx * 25.4) / 96;
     const pageHeight = heightMm + 2;
@@ -79,9 +78,9 @@ export function PrintServiceReceipt({ receipt }) {
             <p>{receipt.outlet.address}</p>
             <p>Telp: {receipt.outlet.phone}</p>
             <p className="font-bold">
-              {receipt.processStatus
-                ? "NOTA SERVIS HP"
-                : "NOTA SEMENTARA SERVIS HP"}
+              {receipt.receiptStatus === "Diproses"
+                ? "NOTA SEMENTARA SERVIS HP"
+                : "NOTA SERVIS HP"}
             </p>
           </header>
 
@@ -90,12 +89,12 @@ export function PrintServiceReceipt({ receipt }) {
             <div>
               <p>No. Nota: {receipt.invoiceNumber}</p>
               <p>Tanggal: {formatDate(receipt.createdAt)}</p>
-              <p>Staff: {receipt.user.name}</p>
+              <p>Staf: {receipt.user.name}</p>
+              <p>Status: {receipt.receiptStatus}</p>
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>
               <h2 className="font-bold  border-black">Informasi Pelanggan</h2>
-
               <div>
                 <p>Nama: {receipt.customerName}</p>
                 <p>No. HP/WA: {receipt.customerPhone}</p>
@@ -115,7 +114,6 @@ export function PrintServiceReceipt({ receipt }) {
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>
               <h2 className="font-bold">Rincian Servis</h2>
-
               {receipt.serviceItems.map((service) => (
                 <div
                   key={service.id}
@@ -168,7 +166,6 @@ export function PrintServiceReceipt({ receipt }) {
                 </div>
               )}
               <div className="mt-1 w-full border-t-2 border-solid border-black" />
-
               <div className="flex justify-between font-bold">
                 <span>Total</span>
                 <span>
@@ -184,32 +181,27 @@ export function PrintServiceReceipt({ receipt }) {
 
           <footer>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
-
-            <div className="">
+            <div>
               <h3 className=" font-bold">PERINGATAN!</h3>
-              <ul className="">
+              <ul>
                 <li className="flex items-start gap-1">
                   <span className="shrink-0">-</span>
                   <span>
                     HP bermasalah hukum menjadi tanggung jawab pemilik.
                   </span>
                 </li>
-
                 <li className="flex items-start gap-1">
                   <span className="shrink-0">-</span>
                   <span>Pengambilan dan retur wajib membawa nota.</span>
                 </li>
-
                 <li className="flex items-start gap-1">
                   <span className="shrink-0">-</span>
                   <span>Garansi batal jika segel rusak.</span>
                 </li>
-
                 <li className="flex items-start gap-1">
                   <span className="shrink-0">-</span>
                   <span>Pergantian LCD/TS tidak ada garansi.</span>
                 </li>
-
                 <li className="flex items-start gap-1">
                   <span className="shrink-0">-</span>
                   <span>
@@ -220,8 +212,7 @@ export function PrintServiceReceipt({ receipt }) {
               </ul>
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
-
-            <p className="text-center">Terima kasih atas kepercayaan anda</p>
+            <p className="text-center">Terima kasih atas kepercayaan Anda.</p>
           </footer>
         </div>
       </div>

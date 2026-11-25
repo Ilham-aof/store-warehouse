@@ -1,14 +1,19 @@
 "use client";
 
 import { ListBox, Select, Header } from "@heroui/react";
+import { Shield } from "lucide-react";
 
 export function WarrantyFilter({ warrantyFilter, setWarrantyFilter }) {
   return (
     <div className="flex items-center space-x-5">
-      <p>Garansi</p>
+      <div className="flex space-x-3 items-center">
+        <Shield />
+        <p>Garansi</p>
+      </div>
+
       <Select
         variant="secondary"
-        className="w-40"
+        className="w-48"
         aria-label="Filter garansi"
         value={warrantyFilter}
         onChange={setWarrantyFilter}

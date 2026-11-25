@@ -26,7 +26,7 @@ export async function getUser(pageNumber, pageSize) {
       role: true,
     },
     orderBy: {
-      name: "desc",
+      name: "asc",
     },
     skip: (currentPage - 1) * safePageSize,
     take: safePageSize,

@@ -32,6 +32,12 @@ enum StockOutType {
   TRANSFER
 }
 
+enum ServiceStatus {
+  Diproses
+  Sukses
+  Cancel
+}
+
 model User {
   id                  String            @id @default(cuid())
   name                String
@@ -45,6 +51,7 @@ model User {
   stockOuts           StockOut[]
   saleReceipts        SaleReceipt[]
   serviceReceipts     ServiceReceipt[]
+  passwordResetTokens PasswordResetToken[]
 
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
@@ -141,7 +148,8 @@ model ServiceReceipt {
 
   processStatus     Boolean       @default(false)
   pickupStatus      Boolean       @default(false)
-
+  receiptStatus     ServiceStatus @default(Diproses)
+  
   outletId          String
   userId            String
 
@@ -206,4 +214,14 @@ model SaleReceiptCounter {
 
   outlet Outlet @relation( fields: [outletId], references: [id], onDelete: Cascade )
   @@unique([outletId, date])
+}
+
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  token     String    @unique
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  user      User      @relation( fields: [userId], references: [id], onDelete: Cascade )
 }

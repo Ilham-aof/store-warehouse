@@ -1,21 +1,45 @@
 "use client";
+
 import {
   Modal,
   Input,
   TextField,
   FieldError,
+  ErrorMessage,
   Label,
   Button,
   Separator,
+  toast,
 } from "@heroui/react";
 import { useState, useActionState } from "react";
 import { updateProductAction } from "@/app/action/product/updateProduct";
 import { Pencil } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
+  const router = useRouter();
   const [price, setPrice] = useState(String(selectedProduct?.price ?? ""));
-
-  const [state, action, isPending] = useActionState(updateProductAction, null);
+  const [state, action, isPending] = useActionState(
+    async (prevState, formData) => {
+      const result = await updateProductAction(prevState, formData);
+      if (result.success) {
+        toast.success("Perubahan data produk berhasil disimpan");
+        onClose();
+        router.refresh();
+      } else if (result.error) {
+        toast.danger("Gagal mengubah data produk", {
+          description: result.error,
+        });
+      } else {
+        toast.danger("Periksa kembali data yang kamu masukkan");
+      }
+      return result;
+    },
+    {
+      success: false,
+      error: null,
+    },
+  );
 
   return (
     <>
@@ -31,7 +55,6 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
         <Modal.Container size="lg">
           <Modal.Dialog className="space-y-3">
             <Modal.CloseTrigger />
-
             <Modal.Header>
               <Modal.Heading>
                 <div className="flex space-x-3 items-center">
@@ -110,7 +133,11 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.name ? (
+                        <ErrorMessage>{state.errors.name}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -132,7 +159,11 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.category ? (
+                        <ErrorMessage>{state.errors.category}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -154,7 +185,11 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.brand ? (
+                        <ErrorMessage>{state.errors.brand}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
                   <TextField
@@ -178,12 +213,13 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
                     <div className="min-h-6">
-                      <FieldError />
+                      {state.errors?.price ? (
+                        <ErrorMessage>{state.errors.price}</ErrorMessage>
+                      ) : (
+                        <FieldError />
+                      )}
                     </div>
                   </TextField>
-                </div>
-                <div className="text-center">
-                  {state?.error && <p className="text-danger">{state.error}</p>}
                 </div>
               </Modal.Body>
 

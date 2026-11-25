@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-export async function updateServiceReceiptStatus(receiptId, status, value) {
+export async function updateServiceReceiptStatus(receiptId, newStatus) {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
 
@@ -27,23 +27,17 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
   if (!receiptId) {
     return {
       success: false,
-      error: "ID nota tidak ditemukan",
+      error: "ID nota tidak ditemukan.",
     };
   }
 
-  if (status !== "processStatus" && status !== "pickupStatus") {
+  if (!["Sukses", "Cancel"].includes(newStatus)) {
     return {
       success: false,
-      error: "Status tidak valid",
+      error: "Status nota tidak valid.",
     };
   }
 
-  if (typeof value !== "boolean") {
-    return {
-      success: false,
-      error: "Nilai status tidak valid",
-    };
-  }
   try {
     const receipt = await prisma.serviceReceipt.findUnique({
       where: {
@@ -53,6 +47,7 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
         id: true,
         processStatus: true,
         pickupStatus: true,
+        receiptStatus: true,
         createdAt: true,
         serviceItems: {
           select: {
@@ -66,15 +61,26 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
     if (!receipt) {
       return {
         success: false,
-        error: "Nota tidak ditemukan",
+        error: "Nota tidak ditemukan.",
       };
     }
 
-    const newProcessStatus =
-      status === "processStatus" ? value : receipt.processStatus;
+    if (receipt.receiptStatus !== "Diproses") {
+      return {
+        success: false,
+        error: "Status nota sudah diubah sebelumnya.",
+      };
+    }
 
-    const newPickupStatus =
-      status === "pickupStatus" ? value : receipt.pickupStatus;
+    if (
+      newStatus === "Sukses" &&
+      (!receipt.processStatus || !receipt.pickupStatus)
+    ) {
+      return {
+        success: false,
+        error: "Servis harus selesai dan barang harus sudah diambil.",
+      };
+    }
 
     await prisma.$transaction(async (tx) => {
       await tx.serviceReceipt.update({
@@ -82,11 +88,11 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
           id: receiptId,
         },
         data: {
-          [status]: value,
+          receiptStatus: newStatus,
         },
       });
 
-      if (newProcessStatus && newPickupStatus) {
+      if (newStatus === "Sukses") {
         const pickupDate = new Date();
         pickupDate.setHours(0, 0, 0, 0);
 
@@ -122,16 +128,16 @@ export async function updateServiceReceiptStatus(receiptId, status, value) {
         });
       }
     });
-
-    revalidatePath("/receipt");
+    revalidatePath("/service");
 
     return {
       success: true,
+      error: null,
     };
   } catch (error) {
     return {
       success: false,
-      error: "Gagal memperbarui nota",
+      error: "Terjadi kesalahan pada server. Silakan coba lagi.",
     };
   }
 }

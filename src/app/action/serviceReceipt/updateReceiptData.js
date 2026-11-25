@@ -5,6 +5,13 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
+function formatName(value) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/\b\p{L}/gu, (char) => char.toUpperCase());
+}
+
 export async function updateReceiptData(prevState, formData) {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
@@ -26,9 +33,12 @@ export async function updateReceiptData(prevState, formData) {
 
   const receiptId = formData.get("receiptId");
   const outletId = formData.get("outletId");
-  const customerName = formData.get("customerName");
+  const customerNameValue = formData.get("customerName");
+  const customerName =
+    typeof customerNameValue === "string" ? formatName(customerNameValue) : "";
   const customerPhone = formData.get("customerPhone");
-  const device = formData.get("device");
+  const deviceValue = formData.get("device");
+  const device = typeof deviceValue === "string" ? formatName(deviceValue) : "";
   const deviceInclusions = formData.getAll("deviceInclusions");
   const discount = Number(formData.get("discount"));
   const inclusionLabels = {
@@ -40,44 +50,45 @@ export async function updateReceiptData(prevState, formData) {
     softcase: "Soft Case",
   };
 
-  const warranty = formData.get("warranty");
-
   if (!receiptId) {
     return {
       success: false,
-      error: "Nota tidak ditemukan",
+      error: "Nota tidak ditemukan.",
     };
   }
 
   if (!outletId) {
     return {
       success: false,
-      error: "Cabang tidak ditemukan",
+      error: "Cabang tidak ditemukan.",
     };
   }
   if (!customerName?.trim()) {
     return {
       success: false,
-      error: "Nama customer wajib diisi",
+      error: "Nama customer wajib diisi.",
     };
   }
 
   if (!customerPhone?.trim()) {
     return {
       success: false,
-      error: "Nomor customer wajib diisi",
+      error: "Nomor customer wajib diisi.",
     };
   }
 
   if (!device?.trim()) {
     return {
       success: false,
-      error: "Device wajib diisi",
+      error: "Device wajib diisi.",
     };
   }
 
   if (deviceInclusions.length === 0) {
-    errors.deviceInclusions = "Pilih minimal satu kelengkapan HP";
+    return {
+      success: false,
+      error: "Pilih minimal satu kelengkapan HP.",
+    };
   } else if (
     deviceInclusions.some(
       (item) =>
@@ -85,22 +96,16 @@ export async function updateReceiptData(prevState, formData) {
         !Object.prototype.hasOwnProperty.call(inclusionLabels, item),
     )
   ) {
-    errors.deviceInclusions = "Data kelengkapan tidak valid";
+    return {
+      success: false,
+      error: "Data kelengkapan tidak valid.",
+    };
   }
 
   if (!Number.isInteger(discount) || discount < 0) {
     return {
       success: false,
-      error: "discount tidak valid",
-    };
-  }
-
-  const warrantyDays = Number(warranty);
-
-  if (!warranty || !Number.isInteger(warrantyDays) || warrantyDays < 0) {
-    return {
-      success: false,
-      error: "Garansi harus berupa jumlah hari yang valid",
+      error: "Discount tidak valid.",
     };
   }
 
@@ -127,7 +132,7 @@ export async function updateReceiptData(prevState, formData) {
     if (!receipt) {
       return {
         success: false,
-        error: "Nota tidak ditemukan",
+        error: "Nota tidak ditemukan.",
       };
     }
 
@@ -139,16 +144,8 @@ export async function updateReceiptData(prevState, formData) {
     if (discount > totalService) {
       return {
         success: false,
-        error: "Potongan tidak boleh melebihi total biaya servis",
+        error: "Potongan tidak boleh melebihi total biaya servis.",
       };
-    }
-
-    let warrantyUntil = null;
-
-    if (receipt.processStatus && receipt.pickupStatus) {
-      warrantyUntil = new Date(receipt.createdAt);
-
-      warrantyUntil.setDate(warrantyUntil.getDate() + warrantyDays);
     }
 
     await prisma.serviceReceipt.update({
@@ -160,18 +157,19 @@ export async function updateReceiptData(prevState, formData) {
         customerPhone: customerPhone.trim(),
         device: device.trim(),
         deviceInclusions: inclusionNames,
-        warrantyDays,
-        warrantyUntil,
         discount,
       },
     });
   } catch (error) {
     return {
       success: false,
-      error: "Gagal memperbarui nota",
+      error: "Terjadi kesalahan pada server. Silakan coba lagi.",
     };
   }
 
-  revalidatePath("/order");
-  redirect(`/order?outletId=${outletId}`);
+  revalidatePath("/service");
+  return {
+    success: true,
+    error: null,
+  };
 }

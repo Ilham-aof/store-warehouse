@@ -46,8 +46,6 @@ export async function searchProduct(barcode, outletId) {
       message: "",
     };
   } catch (error) {
-    console.error("Gagal mencari produk:", error);
-
     return {
       success: false,
       product: null,

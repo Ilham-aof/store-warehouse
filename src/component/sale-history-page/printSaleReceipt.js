@@ -26,7 +26,6 @@ export function PrintSaleReceipt({ receipt }) {
     if (!element) return;
 
     const html2pdf = (await import("html2pdf.js")).default;
-
     const heightPx = element.scrollHeight;
     const heightMm = (heightPx * 25.4) / 96;
     const pageHeight = heightMm + 2;
@@ -72,7 +71,7 @@ export function PrintSaleReceipt({ receipt }) {
 
             <p>{receipt.outlet.address}</p>
             <p>Telp: {receipt.outlet.phone}</p>
-            <p className="font-bold">NOTA TRANSAKSI</p>
+            <p className="font-bold">NOTA PENJUALAN</p>
           </header>
 
           <section>
@@ -80,7 +79,7 @@ export function PrintSaleReceipt({ receipt }) {
             <div>
               <p>No. Nota: {receipt.invoiceNumber}</p>
               <p>Tanggal: {formatDate(receipt.createdAt)}</p>
-              <p>Staff: {receipt.user.name}</p>
+              <p>Staf: {receipt.user.name}</p>
             </div>
             <div className="mt-1 w-full border-t-2 border-solid border-black" />
             <div>

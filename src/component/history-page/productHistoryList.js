@@ -1,4 +1,5 @@
 "use client";
+
 import { Table, Label } from "@heroui/react";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
@@ -38,7 +39,6 @@ export function ProductHistoryList({
       setDateRange(null);
       return;
     }
-
     setDateRange({
       start: parseDate(customStartDate),
       end: parseDate(customEndDate),
@@ -55,14 +55,20 @@ export function ProductHistoryList({
         query.set(key, String(value));
       }
     });
-
     const queryString = query.toString();
     router.push(queryString ? `?${queryString}` : "?");
   }
 
+  const timeOptions = [
+    { id: "all", label: "Semua" },
+    { id: "today", label: "Hari Ini" },
+    { id: "week", label: "Minggu Ini" },
+    { id: "month", label: "Bulan Ini" },
+    { id: "custom", label: "Kustom" },
+  ];
+
   function handleTimeFilterChange(value) {
     setDateRange(null);
-
     updateQuery({
       timeFilter: value,
       startDate: null,
@@ -73,7 +79,6 @@ export function ProductHistoryList({
 
   function handleDateRangeChange(value) {
     setDateRange(value);
-
     if (!value) {
       updateQuery({
         startDate: null,
@@ -100,6 +105,7 @@ export function ProductHistoryList({
   function handlePageChange(page) {
     updateQuery({ page });
   }
+
   return (
     <>
       <div className="flex gap-3 items-center">
@@ -114,6 +120,7 @@ export function ProductHistoryList({
           setTimeFilter={handleTimeFilterChange}
           dateRange={dateRange}
           setDateRange={handleDateRangeChange}
+          options={timeOptions}
         />
         <ActivityFilter
           activityFilter={activityFilter}
@@ -132,7 +139,7 @@ export function ProductHistoryList({
               <Table.Column className="w-[16%]">Mutasi Stok</Table.Column>
               <Table.Column className="w-[13%]">Transfer Produk</Table.Column>
               <Table.Column className="w-[8%]">Jumlah</Table.Column>
-              <Table.Column className="w-[10%]">Staff</Table.Column>
+              <Table.Column className="w-[10%]">Staf</Table.Column>
               <Table.Column className="w-[15%]">Waktu</Table.Column>
             </Table.Header>
 
