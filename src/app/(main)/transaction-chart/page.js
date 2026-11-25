@@ -3,7 +3,6 @@ import { getTotalSaleReceipt } from "@/app/action/saleReceipt/getTotalSaleReceip
 import { getTotalServiceReceipt } from "@/app/action/serviceReceipt/getTotalFinishReceipt";
 import { getStockInProduct } from "@/app/action/product/getStockInProduct";
 import { getStockOutProduct } from "@/app/action/product/getStockOutProduct";
-
 import { TransactionChart } from "@/component/transaction-chart-page/transactionChart";
 
 export default async function page({ searchParams }) {
@@ -19,7 +18,6 @@ export default async function page({ searchParams }) {
     : "7days";
 
   const serviceReceipt = await getTotalServiceReceipt(outletId, timeFilter);
-
   const saleReceipt = await getTotalSaleReceipt(outletId, timeFilter);
 
   const stockIns = await getStockInProduct(outletId, timeFilter);

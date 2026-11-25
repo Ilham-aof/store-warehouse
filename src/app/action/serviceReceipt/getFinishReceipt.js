@@ -154,7 +154,7 @@ export async function getFinishReceipt(
       totalPages: 0,
       currentPage: 1,
       success: false,
-      error: "Gagal mengambil data nota",
+      error: "Gagal mengambil data nota.",
     };
   }
 }

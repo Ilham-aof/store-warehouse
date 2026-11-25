@@ -1,7 +1,6 @@
 "use server";
 import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 export async function loginAction(prevState, formData) {
@@ -14,15 +13,13 @@ export async function loginAction(prevState, formData) {
   const errors = {};
 
   if (!email) {
-    errors.email = "Email wajib diisi menggunakan @gmail.com";
-  } else if (email.length > 100) {
-    errors.email = "Email terlalu panjang";
+    errors.email = "Email wajib diisi menggunakan @gmail.com.";
   } else if (!/^[^\s@]+@gmail\.com$/i.test(email)) {
-    errors.email = "Email harus menggunakan format nama@gmail.com";
+    errors.email = "Email harus menggunakan format nama@gmail.com.";
   }
 
   if (!password) {
-    errors.password = "Password wajib diisi";
+    errors.password = "Password wajib diisi.";
   }
 
   if (Object.keys(errors).length > 0) {
@@ -42,7 +39,7 @@ export async function loginAction(prevState, formData) {
       return {
         success: false,
         errors: {
-          general: "E-mail atau password salah",
+          general: "E-mail atau password salah.",
         },
       };
     }
@@ -92,7 +89,7 @@ export async function loginAction(prevState, formData) {
     return {
       success: false,
       errors: {
-        general: "Terjadi kesalahan pada server. Silakan coba lagi",
+        general: "Terjadi kesalahan pada server. Silakan coba lagi.",
       },
     };
   }

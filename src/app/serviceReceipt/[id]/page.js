@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { PrintServiceReceipt } from "@/component/service-page/printServiceReceipt";
-import React from "react";
+import { notFound } from "next/navigation";
 
 export default async function page({ params }) {
   const { id } = await params;

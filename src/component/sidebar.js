@@ -1,4 +1,5 @@
 "use client";
+
 import { Link, Separator, Avatar } from "@heroui/react";
 import { useSearchParams } from "next/navigation";
 import { LogoutButton } from "@/component/dashboard-page/logoutButton";
@@ -83,6 +84,7 @@ export function Sidebar({ user }) {
             <Calculator />
             Kasir
           </Link>
+
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={saleHistoryHref}
@@ -100,6 +102,7 @@ export function Sidebar({ user }) {
             <ReceiptText />
             Servis
           </Link>
+
           <Link
             className="no-underline gap-3 font-bold w-full px-4 py-2 rounded-full text-white hover:bg-yellow-100 hover:text-slate-800"
             href={receiptHistoryHref}

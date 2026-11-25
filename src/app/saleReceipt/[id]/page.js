@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { PrintSaleReceipt } from "@/component/sale-history-page/printSaleReceipt";
-import React from "react";
+import { notFound } from "next/navigation";
 
 export default async function page({ params }) {
   const { id } = await params;

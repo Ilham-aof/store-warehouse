@@ -29,7 +29,6 @@ export function TakeProductStockModal({
       const result = await stockOutAction(prevState, formData);
       if (result.success) {
         toast.success("Stok berhasil diambil");
-
         onClose();
         router.refresh();
       } else if (result.error) {
@@ -39,7 +38,6 @@ export function TakeProductStockModal({
       } else {
         toast.danger("Periksa kembali data yang kamu masukkan");
       }
-
       return result;
     },
     {
@@ -63,7 +61,6 @@ export function TakeProductStockModal({
         <Modal.Container>
           <Modal.Dialog className="space-y-3">
             <Modal.CloseTrigger />
-
             <Modal.Header>
               <Modal.Heading>
                 <div className="flex space-x-3 items-center">

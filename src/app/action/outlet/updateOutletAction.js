@@ -77,7 +77,7 @@ export async function updateOutletAction(prevState, formData) {
     return {
       success: false,
       error: {
-        code: "Kode cabang harus 2–5 huruf",
+        code: "Kode cabang harus 2–5 huruf.",
       },
     };
   }
@@ -95,14 +95,14 @@ export async function updateOutletAction(prevState, formData) {
     return {
       success: false,
       errors: {
-        phone: "Nomor telepon cabang wajib diisi",
+        phone: "Nomor telepon cabang wajib diisi.",
       },
     };
   } else if (!/^08\d{8,11}$/.test(phone)) {
     return {
       success: false,
       errors: {
-        phone: "Nomor telepon cabang tidak valid",
+        phone: "Nomor telepon cabang tidak valid.",
       },
     };
   }

@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Table,
   Switch,
@@ -17,9 +18,8 @@ import {
   X,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-
 import { PaginationUi } from "@/component/pagination";
-import { updateProcessStatus } from "@/app/action/serviceReceipt/updateProcessStatus";
+import { updateSwitchStatus } from "@/app/action/serviceReceipt/updateSwitchStatus";
 import { updateServiceReceiptStatus } from "@/app/action/serviceReceipt/updateServiceReceiptStatus";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CreateReceiptButton } from "@/component/service-page/createReceiptButton";
@@ -39,7 +39,6 @@ export function ReceiptList({
   const searchParams = useSearchParams();
   const [activeModal, setActiveModal] = useState(null);
   const [selectedReceipt, setSelectedReceipt] = useState(null);
-
   const [searchKeyword, setSearchKeyword] = useState(
     searchParams.get("search") ?? "",
   );
@@ -52,7 +51,6 @@ export function ReceiptList({
 
   function updateQuery(params) {
     const query = new URLSearchParams(searchParams.toString());
-
     Object.entries(params).forEach(([key, value]) => {
       if (value === "" || value == null) {
         query.delete(key);
@@ -60,7 +58,6 @@ export function ReceiptList({
         query.set(key, String(value));
       }
     });
-
     router.push(`?${query.toString()}`);
   }
 
@@ -74,15 +71,13 @@ export function ReceiptList({
   const handleReceiptStatusChange = async (receiptId, newStatus) => {
     try {
       const result = await updateServiceReceiptStatus(receiptId, newStatus);
-
       if (!result.success) {
-        toast(result.error || "Gagal memperbarui status nota", {
+        toast("Gagal memperbarui status nota", {
+          description: result.error,
           variant: "danger",
         });
-
         return;
       }
-
       toast(
         newStatus === "Sukses"
           ? "Nota servis berhasil diselesaikan"
@@ -91,11 +86,8 @@ export function ReceiptList({
           variant: "success",
         },
       );
-
       router.refresh();
     } catch (error) {
-      console.error(error);
-
       toast("Terjadi kesalahan saat memperbarui status nota", {
         variant: "danger",
       });
@@ -106,21 +98,35 @@ export function ReceiptList({
     updateQuery({ page });
   }
 
-  async function handleProcessStatusChange(receiptId, processStatus, value) {
-    const result = await updateProcessStatus(receiptId, processStatus, value);
+  async function handleSwitchStatusChange(receiptId, status, value) {
+    try {
+      const result = await updateSwitchStatus(receiptId, status, value);
 
-    if (result?.success) {
+      if (!result.success) {
+        toast("Gagal memperbarui status nota", {
+          description: result.error,
+          variant: "danger",
+        });
+        return;
+      }
+
+      toast("Status nota berhasil diperbarui", {
+        variant: "success",
+      });
+
       router.refresh();
+    } catch (error) {
+      toast("Terjadi kesalahan saat memperbarui status nota", {
+        variant: "danger",
+      });
     }
   }
-
   return (
     <section className="space-y-5">
       <div className="flex space-x-3 items-center">
         <ReceiptText size={30} />
         <h1 className="text-2xl font-bold">Daftar Servis</h1>
       </div>
-
       <OutletSelection outlets={outlets} selectedOutletId={selectedOutletId} />
       <div className="flex space-x-5">
         <SearchBar
@@ -183,7 +189,7 @@ export function ReceiptList({
                     <Switch
                       isSelected={receipt.processStatus}
                       onChange={(value) =>
-                        handleProcessStatusChange(
+                        handleSwitchStatusChange(
                           receipt.id,
                           "processStatus",
                           value,
@@ -211,7 +217,11 @@ export function ReceiptList({
                     <Switch
                       isSelected={receipt.pickupStatus}
                       onChange={(value) =>
-                        updateProcessStatus(receipt.id, "pickupStatus", value)
+                        handleSwitchStatusChange(
+                          receipt.id,
+                          "pickupStatus",
+                          value,
+                        )
                       }
                     >
                       <Switch.Content

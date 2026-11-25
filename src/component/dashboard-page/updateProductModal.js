@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Modal,
   Input,
@@ -18,14 +19,11 @@ import { useRouter } from "next/navigation";
 export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
   const router = useRouter();
   const [price, setPrice] = useState(String(selectedProduct?.price ?? ""));
-
   const [state, action, isPending] = useActionState(
     async (prevState, formData) => {
       const result = await updateProductAction(prevState, formData);
-
       if (result.success) {
         toast.success("Perubahan data produk berhasil disimpan");
-
         onClose();
         router.refresh();
       } else if (result.error) {
@@ -35,7 +33,6 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
       } else {
         toast.danger("Periksa kembali data yang kamu masukkan");
       }
-
       return result;
     },
     {
@@ -58,7 +55,6 @@ export function UpdateProductModal({ isOpen, selectedProduct, onClose }) {
         <Modal.Container size="lg">
           <Modal.Dialog className="space-y-3">
             <Modal.CloseTrigger />
-
             <Modal.Header>
               <Modal.Heading>
                 <div className="flex space-x-3 items-center">

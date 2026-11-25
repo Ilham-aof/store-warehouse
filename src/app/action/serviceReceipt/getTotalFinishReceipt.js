@@ -78,8 +78,6 @@ export async function getTotalServiceReceipt(outletId, timeFilter) {
       chartDataService,
     };
   } catch (error) {
-    console.error("Gagal mengambil nota servis:", error);
-
     return {
       totalService: 0,
       chartDataService: [],

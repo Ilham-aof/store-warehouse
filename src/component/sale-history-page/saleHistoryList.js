@@ -2,7 +2,6 @@
 import { Table, Dropdown, Label, Separator, Button } from "@heroui/react";
 import { EllipsisVertical, ShoppingBag, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
-
 import { PaginationUi } from "@/component/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";

@@ -1,4 +1,5 @@
 "use client";
+
 import { Table, Label } from "@heroui/react";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
@@ -38,7 +39,6 @@ export function ProductHistoryList({
       setDateRange(null);
       return;
     }
-
     setDateRange({
       start: parseDate(customStartDate),
       end: parseDate(customEndDate),
@@ -55,7 +55,6 @@ export function ProductHistoryList({
         query.set(key, String(value));
       }
     });
-
     const queryString = query.toString();
     router.push(queryString ? `?${queryString}` : "?");
   }
@@ -70,7 +69,6 @@ export function ProductHistoryList({
 
   function handleTimeFilterChange(value) {
     setDateRange(null);
-
     updateQuery({
       timeFilter: value,
       startDate: null,
@@ -81,7 +79,6 @@ export function ProductHistoryList({
 
   function handleDateRangeChange(value) {
     setDateRange(value);
-
     if (!value) {
       updateQuery({
         startDate: null,

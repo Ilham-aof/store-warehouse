@@ -53,41 +53,41 @@ export async function updateReceiptData(prevState, formData) {
   if (!receiptId) {
     return {
       success: false,
-      error: "Nota tidak ditemukan",
+      error: "Nota tidak ditemukan.",
     };
   }
 
   if (!outletId) {
     return {
       success: false,
-      error: "Cabang tidak ditemukan",
+      error: "Cabang tidak ditemukan.",
     };
   }
   if (!customerName?.trim()) {
     return {
       success: false,
-      error: "Nama customer wajib diisi",
+      error: "Nama customer wajib diisi.",
     };
   }
 
   if (!customerPhone?.trim()) {
     return {
       success: false,
-      error: "Nomor customer wajib diisi",
+      error: "Nomor customer wajib diisi.",
     };
   }
 
   if (!device?.trim()) {
     return {
       success: false,
-      error: "Device wajib diisi",
+      error: "Device wajib diisi.",
     };
   }
 
   if (deviceInclusions.length === 0) {
     return {
       success: false,
-      error: "Pilih minimal satu kelengkapan HP",
+      error: "Pilih minimal satu kelengkapan HP.",
     };
   } else if (
     deviceInclusions.some(
@@ -98,14 +98,14 @@ export async function updateReceiptData(prevState, formData) {
   ) {
     return {
       success: false,
-      error: "Data kelengkapan tidak valid",
+      error: "Data kelengkapan tidak valid.",
     };
   }
 
   if (!Number.isInteger(discount) || discount < 0) {
     return {
       success: false,
-      error: "discount tidak valid",
+      error: "Discount tidak valid.",
     };
   }
 
@@ -132,7 +132,7 @@ export async function updateReceiptData(prevState, formData) {
     if (!receipt) {
       return {
         success: false,
-        error: "Nota tidak ditemukan",
+        error: "Nota tidak ditemukan.",
       };
     }
 
@@ -144,7 +144,7 @@ export async function updateReceiptData(prevState, formData) {
     if (discount > totalService) {
       return {
         success: false,
-        error: "Potongan tidak boleh melebihi total biaya servis",
+        error: "Potongan tidak boleh melebihi total biaya servis.",
       };
     }
 
@@ -163,13 +163,13 @@ export async function updateReceiptData(prevState, formData) {
   } catch (error) {
     return {
       success: false,
-      error: "Gagal memperbarui data nota",
+      error: "Terjadi kesalahan pada server. Silakan coba lagi.",
     };
   }
 
-  revalidatePath("/order");
+  revalidatePath("/service");
   return {
     success: true,
-    error: {},
+    error: null,
   };
 }

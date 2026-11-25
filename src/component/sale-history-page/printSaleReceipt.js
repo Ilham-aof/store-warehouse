@@ -26,7 +26,6 @@ export function PrintSaleReceipt({ receipt }) {
     if (!element) return;
 
     const html2pdf = (await import("html2pdf.js")).default;
-
     const heightPx = element.scrollHeight;
     const heightMm = (heightPx * 25.4) / 96;
     const pageHeight = heightMm + 2;

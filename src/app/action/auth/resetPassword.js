@@ -12,17 +12,12 @@ export async function resetPasswordAction(prevState, formData) {
   if (!email) {
     return {
       success: false,
-      error: "Email wajib diisi menggunakan @gmail.com",
-    };
-  } else if (email.length > 100) {
-    return {
-      success: false,
-      error: "Email terlalu panjang",
+      error: "Email wajib diisi menggunakan @gmail.com.",
     };
   } else if (!/^[^\s@]+@gmail\.com$/i.test(email)) {
     return {
       success: false,
-      error: "Email harus menggunakan format nama@gmail.com",
+      error: "Email harus menggunakan format nama@gmail.com.",
     };
   }
 
@@ -76,13 +71,13 @@ export async function resetPasswordAction(prevState, formData) {
 
       return {
         success: false,
-        error: "Gagal mengirim email reset password",
+        error: "Gagal mengirim email reset password.",
       };
     }
   } catch (error) {
     return {
       success: false,
-      error: "Terjadi kesalahan pada server. Silakan coba lagi",
+      error: "Terjadi kesalahan pada server. Silakan coba lagi.",
     };
   }
   return {

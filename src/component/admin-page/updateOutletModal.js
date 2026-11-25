@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 
 export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
   const router = useRouter();
+  const [phone, setPhone] = useState(selectedOutlet?.phone ?? "");
   const [outletCode, setOutletCode] = useState(selectedOutlet?.code ?? "");
   const [state, action, isPending] = useActionState(
     async (prevState, formData) => {
@@ -42,7 +43,6 @@ export function UpdateOutletModal({ isOpen, selectedOutlet, onClose }) {
       error: null,
     },
   );
-  const [phone, setPhone] = useState(selectedOutlet?.phone ?? "");
   return (
     <>
       <Modal.Backdrop

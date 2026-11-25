@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-export async function updateProcessStatus(receiptId, processStatus, value) {
+export async function updateSwitchStatus(receiptId, processStatus, value) {
   const cookieStore = await cookies();
   const sessionId = cookieStore.get("session")?.value;
 
@@ -27,21 +27,21 @@ export async function updateProcessStatus(receiptId, processStatus, value) {
   if (!receiptId) {
     return {
       success: false,
-      error: "ID nota tidak ditemukan",
+      error: "ID nota tidak ditemukan.",
     };
   }
 
   if (processStatus !== "processStatus" && processStatus !== "pickupStatus") {
     return {
       success: false,
-      error: "Proses status tidak valid",
+      error: "Proses status tidak valid.",
     };
   }
 
   if (typeof value !== "boolean") {
     return {
       success: false,
-      error: "Nilai status tidak valid",
+      error: "Nilai status tidak valid.",
     };
   }
   try {
@@ -59,7 +59,7 @@ export async function updateProcessStatus(receiptId, processStatus, value) {
     if (!receipt) {
       return {
         success: false,
-        error: "Nota tidak ditemukan",
+        error: "Nota tidak ditemukan.",
       };
     }
 
@@ -76,11 +76,12 @@ export async function updateProcessStatus(receiptId, processStatus, value) {
 
     return {
       success: true,
+      error: null,
     };
   } catch (error) {
     return {
       success: false,
-      error: "Gagal memperbarui nota",
+      error: "Terjadi kesalahan pada server. Silakan coba lagi.",
     };
   }
 }

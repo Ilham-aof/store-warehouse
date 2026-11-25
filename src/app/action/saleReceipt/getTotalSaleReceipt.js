@@ -74,8 +74,6 @@ export async function getTotalSaleReceipt(outletId, timeFilter) {
       chartDataSale,
     };
   } catch (error) {
-    console.error("Gagal mengambil nota penjualan:", error);
-
     return {
       totalSale: 0,
       chartDataSale: [],

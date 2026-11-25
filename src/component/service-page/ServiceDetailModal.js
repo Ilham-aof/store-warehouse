@@ -1,4 +1,5 @@
 "use client";
+
 import { Modal } from "@heroui/react";
 import { Wrench, Shield } from "lucide-react";
 
@@ -45,7 +46,6 @@ export function ServiceDetailModal({ isOpen, receipt, onClose }) {
                       <div className="flex w-8 justify-center">
                         <span className="font-bold">{index + 1}</span>
                       </div>
-
                       <div className="min-w-0 flex-1">
                         <p className="truncate font-semibold">
                           {item.description}

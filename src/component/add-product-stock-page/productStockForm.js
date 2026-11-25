@@ -70,7 +70,6 @@ export function ProductStockForm({ outlets, selectedOutletId, mode }) {
     setItems([]);
     setMessage("");
     setHasSearched(false);
-
     searchInputRef.current?.focus();
   }
   return (

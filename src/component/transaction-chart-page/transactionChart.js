@@ -1,6 +1,6 @@
 "use client";
-import { ChartColumn } from "lucide-react";
 
+import { ChartColumn } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
@@ -60,6 +60,7 @@ export function TransactionChart({
         setTimeFilter={handleTimeFilterChange}
         options={chartTimeOptions}
       />
+
       <BarChartUI
         firstData={serviceReceipt.chartDataService}
         secondData={saleReceipt.chartDataSale}

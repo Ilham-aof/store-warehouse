@@ -1,6 +1,5 @@
 import { getDataProduct } from "@/app/action//product/getDataProduct";
 import { getBestSeller } from "@/app/action//product/getBestSeller";
-
 import { ProductStock } from "@/component/dashboard-page/productStock";
 import { getOutlet } from "@/app/action/outlet/getOutlet";
 

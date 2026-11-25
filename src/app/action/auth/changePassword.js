@@ -10,9 +10,7 @@ export async function changePasswordAction(prevState, formData) {
   const confirmPasswordValue = formData.get("confirmPassword");
 
   const token = typeof tokenValue === "string" ? tokenValue.trim() : "";
-
   const password = typeof passwordValue === "string" ? passwordValue : "";
-
   const confirmPassword =
     typeof confirmPasswordValue === "string" ? confirmPasswordValue : "";
 
@@ -134,8 +132,6 @@ export async function changePasswordAction(prevState, formData) {
       error: null,
     };
   } catch (error) {
-    console.error("Update password error:", error);
-
     return {
       success: false,
       error: "Terjadi kesalahan pada server. Silakan coba lagi.",

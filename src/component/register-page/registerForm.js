@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+
 import {
   TextField,
   Input,
@@ -15,7 +15,6 @@ import { useRouter } from "next/navigation";
 
 function getPasswordStrength(password) {
   if (!password) return { score: 0, label: "", color: "" };
-
   const rules = [
     password.length >= 8,
     /[a-z]/.test(password),

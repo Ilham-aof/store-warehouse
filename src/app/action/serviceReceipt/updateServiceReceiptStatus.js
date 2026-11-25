@@ -27,14 +27,14 @@ export async function updateServiceReceiptStatus(receiptId, newStatus) {
   if (!receiptId) {
     return {
       success: false,
-      error: "ID nota tidak ditemukan",
+      error: "ID nota tidak ditemukan.",
     };
   }
 
   if (!["Sukses", "Cancel"].includes(newStatus)) {
     return {
       success: false,
-      error: "Status nota tidak valid",
+      error: "Status nota tidak valid.",
     };
   }
 
@@ -61,14 +61,14 @@ export async function updateServiceReceiptStatus(receiptId, newStatus) {
     if (!receipt) {
       return {
         success: false,
-        error: "Nota tidak ditemukan",
+        error: "Nota tidak ditemukan.",
       };
     }
 
     if (receipt.receiptStatus !== "Diproses") {
       return {
         success: false,
-        error: "Status nota sudah diubah sebelumnya",
+        error: "Status nota sudah diubah sebelumnya.",
       };
     }
 
@@ -78,7 +78,7 @@ export async function updateServiceReceiptStatus(receiptId, newStatus) {
     ) {
       return {
         success: false,
-        error: "Servis harus selesai dan barang harus sudah diambil",
+        error: "Servis harus selesai dan barang harus sudah diambil.",
       };
     }
 
@@ -132,12 +132,12 @@ export async function updateServiceReceiptStatus(receiptId, newStatus) {
 
     return {
       success: true,
+      error: null,
     };
   } catch (error) {
-    console.error(error);
     return {
       success: false,
-      error: "Gagal memperbarui nota",
+      error: "Terjadi kesalahan pada server. Silakan coba lagi.",
     };
   }
 }

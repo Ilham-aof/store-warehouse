@@ -107,7 +107,7 @@ export async function getDataSaleReceipt(
   } catch (error) {
     return {
       success: false,
-      error: "Gagal mengambil data nota",
+      error: "Gagal mengambil data nota.",
     };
   }
 }

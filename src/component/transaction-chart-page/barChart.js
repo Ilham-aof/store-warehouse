@@ -9,7 +9,6 @@ import {
   ResponsiveContainer,
   LabelList,
 } from "recharts";
-
 import { ColorSwatch } from "@heroui/react";
 
 export function BarChartUI({
@@ -174,7 +173,6 @@ export function BarChartUI({
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
 
             <XAxis dataKey="date" />
-
             <YAxis allowDecimals={false} domain={[0, yMax]} />
 
             <Bar

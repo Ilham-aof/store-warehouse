@@ -189,7 +189,6 @@ export async function addProductAction(prevState, formData) {
                 id: product.id,
               },
             },
-
             user: {
               connect: {
                 id: session.userId,

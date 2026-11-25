@@ -1,4 +1,5 @@
 "use client";
+
 import React from "react";
 import {
   TextField,
@@ -18,7 +19,6 @@ export function LoginForm() {
   const [state, action, isPending] = useActionState(
     async (prevState, formData) => {
       const result = await loginAction(prevState, formData);
-
       if (result.success) {
         toast.success("Berhasil login");
         router.push("/");
@@ -29,7 +29,6 @@ export function LoginForm() {
       } else {
         toast.danger("Terjadi Kesalahan pada server, coba lagi nanti");
       }
-
       return result;
     },
     {

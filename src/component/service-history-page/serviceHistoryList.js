@@ -1,18 +1,9 @@
 "use client";
-import {
-  Table,
-  Switch,
-  Dropdown,
-  Label,
-  Separator,
-  Button,
-  Chip,
-} from "@heroui/react";
+
+import { Table, Dropdown, Label, Button } from "@heroui/react";
 import { EllipsisVertical, ClipboardClock, Printer } from "lucide-react";
 import { useState, useEffect } from "react";
-
 import { PaginationUi } from "@/component/pagination";
-import { updateProcessStatus } from "@/app/action/serviceReceipt/updateProcessStatus";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
 import { SearchBar } from "@/component/searchBar";

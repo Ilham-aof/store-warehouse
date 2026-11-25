@@ -32,7 +32,6 @@ export default async function page({ searchParams }) {
             <AddOutlet />
           </div>
         </div>
-
         <OutletList outlets={outlets} />
       </section>
 

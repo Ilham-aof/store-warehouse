@@ -27,11 +27,9 @@ export function ProductList({ products, outlets }) {
     if (product.quantity === 0) {
       return "bg-danger";
     }
-
     if (product.quantity <= 5) {
       return "bg-warning";
     }
-
     return "bg-success";
   }
 
@@ -44,19 +42,13 @@ export function ProductList({ products, outlets }) {
               <Table.Column isRowHeader id="name" className="w-[25%]">
                 Nama Produk
               </Table.Column>
-
               <Table.Column className="w-[15%]">Kategori</Table.Column>
-
               <Table.Column className="w-[15%]">Merek</Table.Column>
-
               <Table.Column className="w-[8%]">Stok</Table.Column>
-
               <Table.Column className="w-[14%]">Harga</Table.Column>
-
               <Table.Column className="w-[15%]">
                 Tanggal Stok Masuk
               </Table.Column>
-
               <Table.Column className="w-[8%]"></Table.Column>
             </Table.Header>
 

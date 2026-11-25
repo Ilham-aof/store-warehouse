@@ -66,10 +66,8 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
   const [state, action, isPending] = useActionState(
     async (prevState, formData) => {
       const result = await createServiceReceipt(prevState, formData);
-
       if (result.success) {
         toast.success("Nota servis berhasil dibuat");
-
         router.push(`/service?outletId=${selectedOutletId}`);
       } else if (result.errors?.general) {
         toast.danger("Gagal membuat nota servis", {
@@ -78,7 +76,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
       } else {
         toast.danger("Periksa kembali data yang kamu masukkan");
       }
-
       return result;
     },
     {
@@ -93,7 +90,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
         <FilePlus size={30} />
         <h1 className="text-2xl font-bold">Tambah Servis Baru</h1>
       </div>
-
       <form
         action={action}
         onSubmit={(event) => {
@@ -131,12 +127,10 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 }}
               >
                 <Label>Nama</Label>
-
                 <Input
                   placeholder="Nama Pelanggan"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
                   {state.errors?.cusname ? (
                     <ErrorMessage>{state.errors.cusname}</ErrorMessage>
@@ -145,6 +139,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   )}
                 </div>
               </TextField>
+
               <TextField
                 name="customerPhone"
                 aria-label="Cutomer Phone"
@@ -163,7 +158,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   placeholder="Nomor Pelanggan"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
                   {state.errors?.cusphone ? (
                     <ErrorMessage>{state.errors.cusphone}</ErrorMessage>
@@ -172,6 +166,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   )}
                 </div>
               </TextField>
+
               <TextField
                 name="device"
                 aria-label="Device Customer"
@@ -188,7 +183,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                   placeholder="Tipe HP Pelanggan"
                   className="hover:bg-gray-200 focus:ring-slate-800"
                 />
-
                 <div className="min-h-6">
                   {state.errors?.cusitem ? (
                     <ErrorMessage>{state.errors.cusitem}</ErrorMessage>
@@ -206,7 +200,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 value={selectedDeviceInclusions}
                 onChange={(value) => {
                   setSelectedDeviceInclusions(value ?? []);
-
                   if (value?.length > 0) {
                     setShowDeviceInclusionsError(false);
                   }
@@ -217,7 +210,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                 }
               >
                 <Label>Kelengkapan</Label>
-
                 <Select.Trigger className="ring-0 outline-none shadow-none ring-offset-0">
                   <Select.Value>
                     {({ defaultChildren, isPlaceholder }) => {
@@ -227,32 +219,25 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                       ) {
                         return defaultChildren;
                       }
-
                       const labels = selectedDeviceInclusions
                         .map((value) => accessoryLabels[value])
                         .filter(Boolean);
-
                       if (labels.length === 0) {
                         return defaultChildren;
                       }
-
                       if (labels.length === 1) {
                         return labels[0];
                       }
-
                       if (labels.length === 2) {
                         return `${labels[0]} dan ${labels[1]}`;
                       }
-
                       return `${labels.slice(0, -1).join(", ")}, dan ${
                         labels[labels.length - 1]
                       }`;
                     }}
                   </Select.Value>
-
                   <Select.Indicator />
                 </Select.Trigger>
-
                 <Select.Popover>
                   <ListBox selectionMode="multiple">
                     <ListBox.Item
@@ -353,12 +338,10 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     }}
                   >
                     <Label>Kerusakan</Label>
-
                     <Input
                       placeholder="Jenis Kerusakan"
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
-
                     <div className="min-h-6">
                       {state.errors?.service?.[index]?.description ? (
                         <ErrorMessage>
@@ -369,6 +352,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                       )}
                     </div>
                   </TextField>
+
                   <TextField
                     name={`servicePrice[${index}][price]`}
                     aria-label="Service Price"
@@ -378,7 +362,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     value={item.price}
                     onChange={(value) => {
                       const numericValue = value.replace(/\D/g, "");
-
                       setServices((prev) =>
                         prev.map((service, i) =>
                           i === index
@@ -394,12 +377,10 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                     }}
                   >
                     <Label>Biaya</Label>
-
                     <Input
                       placeholder="Biaya Servis"
                       className="hover:bg-gray-200 focus:ring-slate-800"
                     />
-
                     <div className="min-h-6">
                       {state.errors?.service?.[index]?.price ? (
                         <ErrorMessage>
@@ -410,6 +391,7 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                       )}
                     </div>
                   </TextField>
+
                   <TextField
                     name={`serviceWarranty[${index}][warranty]`}
                     aria-label="Service Warranty"
@@ -436,7 +418,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
                       )}
                     </div>
                   </TextField>
-
                   <div className="pt-6">
                     {services.length > 1 && (
                       <Button
@@ -499,7 +480,6 @@ export function ReceiptForm({ outlets, selectedOutletId }) {
             </div>
           </div>
         </div>
-
         <div className="self-center flex flex-col items-center w-full">
           <div className="self-end space-x-5">
             <Button
