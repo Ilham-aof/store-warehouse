@@ -98,7 +98,7 @@ export async function bulkStockOutAction(prevState, formData) {
     if (outletId === targetOutlet) {
       return {
         success: false,
-        error: "Cabang tujuan tidak boleh sama dengan cabang asal.",
+        error: "Cabang tujuan tidak boleh sama dengan cabang pengirim.",
       };
     }
   }
