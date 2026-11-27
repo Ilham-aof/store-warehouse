@@ -6,7 +6,7 @@ import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
 import { BarChartUI } from "@/component/transaction-chart-page/barChart";
 
-export function TransactionChart({
+export function StatisticChart({
   outlets,
   selectedOutletId,
   timeFilter,

@@ -168,7 +168,19 @@ export function ProductSearchResult({
               <div className="w-full">
                 {(stockInSelection === "TRANSFER" ||
                   stockOutSelection === "TRANSFER") && (
-                  <OutletInputForm outlets={outlets} label="Terima Dari" />
+                  <OutletInputForm
+                    outlets={outlets}
+                    label={
+                      stockOutSelection === "TRANSFER"
+                        ? "Cabang tujuan"
+                        : "Cabang pengirim"
+                    }
+                    placeholder={
+                      stockOutSelection === "TRANSFER"
+                        ? "Pilih cabang tujuan"
+                        : "Pilih cabang pengirim"
+                    }
+                  />
                 )}
               </div>
             </div>

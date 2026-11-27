@@ -2,7 +2,7 @@
 
 import { ListBox, Select, Header, Label } from "@heroui/react";
 
-export function OutletInputForm({ outlets, label }) {
+export function OutletInputForm({ outlets, label, placeholder }) {
   return (
     <div className="flex items-center space-x-3">
       <Select
@@ -10,7 +10,7 @@ export function OutletInputForm({ outlets, label }) {
         variant="secondary"
         aria-label="Pilih Outlet"
         className="w-full"
-        placeholder="Pilih Cabang Tujuan"
+        placeholder={placeholder}
       >
         <Label>{label}</Label>
         <Select.Trigger className="ring-0 outline-none shadow-none ring-offset-0">
