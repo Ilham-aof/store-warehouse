@@ -3,7 +3,7 @@ import { getTotalSaleReceipt } from "@/app/action/saleReceipt/getTotalSaleReceip
 import { getTotalServiceReceipt } from "@/app/action/serviceReceipt/getTotalFinishReceipt";
 import { getStockInProduct } from "@/app/action/product/getStockInProduct";
 import { getStockOutProduct } from "@/app/action/product/getStockOutProduct";
-import { StatisticChart } from "@/component/transaction-chart-page/statisticChart";
+import { StatisticChart } from "@/component/statistic-chart-page/statisticChart";
 
 export default async function page({ searchParams }) {
   const params = await searchParams;

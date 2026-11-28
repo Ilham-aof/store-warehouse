@@ -4,7 +4,7 @@ import { ChartColumn } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { OutletSelection } from "@/component/outletSelection";
 import { TimeFilter } from "@/component/timeFilter";
-import { BarChartUI } from "@/component/transaction-chart-page/barChart";
+import { BarChartUI } from "@/component/statistic-chart-page/barChart";
 
 export function StatisticChart({
   outlets,
